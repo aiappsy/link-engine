@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIAPPSY Link Shortener & URL Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #151d30;
+      --border: #222f4c;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #10b981;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 780px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      margin-bottom: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-row { flex-direction: column; }
+    }
+
+    .input-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    input {
+      background: #0d1322;
+      border: 1px solid var(--border);
+      color: white;
+      padding: 0.85rem 1rem;
+      border-radius: 0.6rem;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+    }
+
+    .slug-prefix-wrap {
+      display: flex;
+      align-items: center;
+      background: #0d1322;
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      overflow: hidden;
+    }
+
+    .slug-prefix-wrap span {
+      background: #182238;
+      color: var(--text-muted);
+      padding: 0.85rem 0.75rem;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      border-right: 1px solid var(--border);
+    }
+
+    .slug-prefix-wrap input {
+      border: none;
+      border-radius: 0;
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.85rem 1.6rem;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    button.btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .result-banner {
+      display: none;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 1rem 1.25rem;
+      border-radius: 0.6rem;
+      margin-top: 1.25rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .result-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: #34d399;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    .btn-copy {
+      background: #10b981;
+      color: #0b0f19;
+      border: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover {
+      background: #059669;
+      color: white;
+    }
+
+    /* Links Table */
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .table-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 0.75rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.85rem 0.75rem;
+      border-bottom: 1px solid rgba(34, 47, 76, 0.5);
+      font-size: 0.88rem;
+    }
+
+    .slug-cell {
+      font-family: 'JetBrains Mono', monospace;
+      color: #818cf8;
+      font-weight: 700;
+    }
+
+    .slug-cell a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .slug-cell a:hover {
+      text-decoration: underline;
+    }
+
+    .dest-cell {
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-muted);
+    }
+
+    .clicks-badge {
+      display: inline-block;
+      background: #1e293b;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.2rem 0.55rem;
+      border-radius: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .btn-del {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.2rem;
+      transition: color 0.2s;
+    }
+
+    .btn-del:hover {
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">⚡ Din Egen URL-Forkorter</div>
+      <h1><span>AIAPPSY</span> Link Engine</h1>
+      <p>Lag korte, pene lenker for alle dine Cloud Run- og AI Studio-apper.</p>
+    </header>
+
+    <!-- Create Card -->
+    <div class="card">
+      <form id="shorten-form">
+        <div class="form-row">
+          <div class="input-group" style="flex: 2;">
+            <label for="target-url">Mål-adresse (Lang Cloud Run / nettside-URL)</label>
+            <input type="text" id="target-url" placeholder="https://saasapps-ai-studio-910579541086.us-west1.run.app" required>
+          </div>
+
+          <div class="input-group" style="flex: 1.2;">
+            <label for="custom-slug">Kortnavn / Slug (valgfritt)</label>
+            <div class="slug-prefix-wrap">
+              <span>/</span>
+              <input type="text" id="custom-slug" placeholder="apps">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <span>⚡</span>
+          <span>Opprett Kortlenke</span>
+        </button>
+      </form>
+
+      <div class="result-banner" id="result-box">
+        <div>
+          <span style="font-size: 0.75rem; color: #a7f3d0; text-transform: uppercase; font-weight: 700; display: block;">Din nye kortlenke er klar:</span>
+          <a href="#" target="_blank" class="result-link" id="result-link"></a>
+        </div>
+        <button class="btn-copy" id="btn-copy">Kopier Lenke</button>
+      </div>
+    </div>
+
+    <!-- Active Links Table -->
+    <div class="card">
+      <div class="table-header">
+        <h3>Aktive Kortlenker & Klikkstatistikk</h3>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Kortlenke</th>
+              <th>Mål-adresse</th>
+              <th>Klikk</th>
+              <th>Handling</th>
+            </tr>
+          </thead>
+          <tbody id="links-tbody">
+            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Laster lenker...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('shorten-form');
+    const targetUrlInput = document.getElementById('target-url');
+    const customSlugInput = document.getElementById('custom-slug');
+    const resultBox = document.getElementById('result-box');
+    const resultLink = document.getElementById('result-link');
+    const btnCopy = document.getElementById('btn-copy');
+    const tbody = document.getElementById('links-tbody');
+
+    async function fetchLinks() {
+      try {
+        const res = await fetch('/api/links');
+        const data = await res.json();
+        if (data.success) {
+          renderTable(data.links);
+        }
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    function renderTable(links) {
+      const keys = Object.keys(links);
+      if (keys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen kortlenker opprettet ennå.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = keys.map(slug => {
+        const item = links[slug];
+        const fullShort = window.location.origin + '/' + slug;
+        return `
+          <tr>
+            <td class="slug-cell"><a href="${fullShort}" target="_blank">/${slug}</a></td>
+            <td class="dest-cell" title="${item.url}">${item.url}</td>
+            <td><span class="clicks-badge">${item.clicks || 0} klikk</span></td>
+            <td>
+              <button class="btn-del" onclick="deleteLink('${slug}')" title="Slett lenke">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = targetUrlInput.value.trim();
+      const customSlug = customSlugInput.value.trim();
+
+      try {
+        const res = await fetch('/api/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, customSlug })
+        });
+        const data = await res.json();
+        if (data.success) {
+          resultLink.textContent = data.shortUrl;
+          resultLink.href = data.shortUrl;
+          resultBox.style.display = 'flex';
+          targetUrlInput.value = '';
+          customSlugInput.value = '';
+          fetchLinks();
+        } else {
+          alert('Feil: ' + (data.error || 'Kunne ikke opprette lenke'));
+        }
+      } catch(err) {
+        alert('Nettverksfeil: ' + err.message);
+      }
+    });
+
+    btnCopy.addEventListener('click', () => {
+      navigator.clipboard.writeText(resultLink.textContent);
+      btnCopy.textContent = 'Kopiert!';
+      setTimeout(() => btnCopy.textContent = 'Kopier Lenke', 2000);
+    });
+
+    async function deleteLink(slug) {
+      if (!confirm('Er du sikker på at du vil slette /' + slug + '?')) return;
+      try {
+        const res = await fetch('/api/links/' + slug, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) fetchLinks();
+      } catch(err) {
+        alert('Kunne ikke slette lenke');
+      }
+    }
+
+    fetchLinks();
+  </script>
+</body>
+</html>
