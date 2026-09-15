@@ -1740,3 +1740,195 @@ body {
     width: 100%;
   }
 }
+
+
+/* ==========================================================================
+   FLAGSHIP HOMEPAGE & 4-PILLAR ECOSYSTEM STYLES
+   ========================================================================== */
+.hero-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-hero-primary, .btn-hero-secondary, .btn-hero-tertiary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-hero-primary {
+  background: #6366f1;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+}
+.btn-hero-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+}
+
+.btn-hero-secondary {
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #334155;
+}
+.btn-hero-secondary:hover {
+  background: #1e293b;
+  border-color: #6366f1;
+  transform: translateY(-2px);
+}
+
+.btn-hero-tertiary {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid var(--border-medium);
+}
+.btn-hero-tertiary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--text-heading);
+  transform: translateY(-2px);
+}
+
+.four-pillars-section {
+  margin: 1.5rem 0 3.5rem;
+}
+
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.pillar-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.pillar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+  border-color: #6366f1;
+}
+
+.pillar-card-featured {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(99, 102, 241, 0.03) 100%);
+}
+
+.pillar-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+}
+
+.pillar-icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.pillar-card h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.pillar-card p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.pillar-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6366f1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: transform 0.15s;
+}
+
+.pillar-card:hover .pillar-link {
+  transform: translateX(3px);
+}
+
+.homepage-articles-section {
+  margin-top: 4.5rem;
+  background: #0f172a;
+  border-radius: var(--radius-lg);
+  padding: 3.5rem 2.5rem;
+  color: #f8fafc;
+}
+
+.homepage-articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.homepage-article-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.homepage-article-card:hover {
+  transform: translateY(-3px);
+  border-color: #818cf8;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.homepage-article-card h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  line-height: 1.35;
+}
+
+.homepage-article-card p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}

@@ -51,20 +51,129 @@
       </div>
     </header>
 
-    <!-- CENTERED HERO SECTION (Selling Whitelabel SaaS Platforms) -->
-    <section class="hero-centered">
+    <!-- ========================================================================
+         FLAGSHIP HERO SECTION (Tying Together Products, Custom Dev & Whitelabel)
+         ======================================================================== -->
+    <section class="hero-centered flagship-hero">
       <div class="hero-pill-tag">
-        <span>🚀</span>
-        <span>Turnkey SaaS Business Portfolio</span>
+        <span>⚡</span>
+        <span>The Frontier AI Software Suite & Bespoke Engineering</span>
       </div>
 
       <h2>
-        Own & Operate Your Own <span class="highlight">AI SaaS Business</span> This Weekend.
+        The Complete Ecosystem for <span class="highlight">Frontier AI Software</span> & Custom Engineering.
       </h2>
 
       <p class="hero-intro-text">
-        <strong>Zero technical ability, coding skills, or SaaS experience needed.</strong> We take care of everything behind the scenes—including high-speed cloud hosting, database management, 24/7 technical support, and continuous frontier AI model upgrades.
+        Welcome to <strong>AIAPPSY</strong>. We engineer, operate, and deliver high-impact artificial intelligence software. Explore our 7 flagship production SaaS platforms, commission bespoke AI agents & full-stack web applications, or launch a fully managed turnkey software business under your own brand.
       </p>
+
+      <!-- Hero Quick Action Buttons -->
+      <div class="hero-action-buttons">
+        <a href="#apps-showcase" class="btn-hero-primary">
+          <span>🚀</span>
+          <span>Explore 7 AI Platforms</span>
+        </a>
+        <a href="custom-development.html" class="btn-hero-secondary">
+          <span>🛠️</span>
+          <span>Custom AI Development</span>
+        </a>
+        <a href="#whitelabel-section" class="btn-hero-tertiary">
+          <span>🏷️</span>
+          <span>Whitelabel & Licensing</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         THE 4 CORE PILLARS OF AIAPPSY (Tying Everything Together)
+         ======================================================================== -->
+    <section class="four-pillars-section" aria-label="Core AIAPPSY Pillars">
+      <div class="pillars-grid">
+        <!-- Pillar 1: Turnkey Platforms -->
+        <a href="#apps-showcase" class="pillar-card">
+          <div class="pillar-icon">⚡</div>
+          <h3>7 Flagship AI Platforms</h3>
+          <p>Production-grade software for sales closing, generative video, prompt engineering, media processing, and autonomous agents.</p>
+          <span class="pillar-link">Browse Platforms ↓</span>
+        </a>
+
+        <!-- Pillar 2: Custom AI Engineering -->
+        <a href="custom-development.html" class="pillar-card pillar-card-featured">
+          <div class="pillar-badge">Bespoke Builds</div>
+          <div class="pillar-icon">🛠️</div>
+          <h3>Custom AI & Agent Engineering</h3>
+          <p>We build tailored AI web applications, autonomous action agents, generative multimodal pipelines, and ERP integrations in 7–14 days.</p>
+          <span class="pillar-link">Explore Custom Dev →</span>
+        </a>
+
+        <!-- Pillar 3: Turnkey Whitelabeling -->
+        <a href="#whitelabel-section" class="pillar-card">
+          <div class="pillar-icon">🏷️</div>
+          <h3>Turnkey SaaS Whitelabeling</h3>
+          <p>Own & operate any of our platforms under your own brand and custom domain with zero technical, coding, or maintenance hassle.</p>
+          <span class="pillar-link">View Licensing Plans ↓</span>
+        </a>
+
+        <!-- Pillar 4: AI Insights & Blueprints -->
+        <a href="articles/index.html" class="pillar-card">
+          <div class="pillar-icon">📚</div>
+          <h3>AI Insights & SEO Blueprints</h3>
+          <p>Deep-dive research, speed-to-lead automation playbooks, and prompt engineering architecture for high-converting workflows.</p>
+          <span class="pillar-link">Read Latest Articles →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         APPS SHOWCASE SECTION (All 7 Production SaaS Applications)
+         ======================================================================== -->
+    <section id="apps-showcase" style="scroll-margin-top: 2rem;">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto 2rem auto;">
+        <div class="hero-pill-tag" style="margin-bottom: 0.75rem;">
+          <span>🚀</span>
+          <span>Production-Ready SaaS Platforms</span>
+        </div>
+        <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-heading); letter-spacing: -0.02em; margin-bottom: 0.5rem;">
+          Our 7 Flagship Production Platforms
+        </h3>
+        <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
+          Tested in production, engineered for enterprise reliability, and ready to use immediately or whitelabel as your own product.
+        </p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <nav class="category-filter-bar" aria-label="Filter by Category">
+        <button class="filter-btn active" data-cat="all">All 7 Platforms</button>
+        <button class="filter-btn" data-cat="sales-crm">Sales & CRM</button>
+        <button class="filter-btn" data-cat="media-video">AI Video & Media</button>
+        <button class="filter-btn" data-cat="saas-finance">SaaS & FinTech</button>
+        <button class="filter-btn" data-cat="autonomous-agents">Autonomous Agents</button>
+        <button class="filter-btn filter-btn-templates" id="filter-btn-templates"><span>📁</span> <span id="txt-filter-templates">Templates (50+)</span></button>
+      </nav>
+    </section>
+
+    <!-- CENTERED CARDS STREAM (One centered card for each app) -->
+    <main class="centered-cards-stream" id="cards-container">
+      <!-- Dynamically populated with all 7 apps -->
+    </main>
+
+    <!-- ========================================================================
+         WHITELABEL VALUE PROMISE & LICENSING SECTION
+         ======================================================================== -->
+    <section id="whitelabel-section" style="margin-top: 4rem; scroll-margin-top: 2rem;">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto 2rem auto;">
+        <div class="hero-pill-tag" style="margin-bottom: 0.75rem;">
+          <span>💼</span>
+          <span>Turnkey Whitelabel Licensing</span>
+        </div>
+        <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-heading); letter-spacing: -0.02em; margin-bottom: 0.5rem;">
+          Own & Operate Any App Under Your Own Brand
+        </h3>
+        <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
+          <strong>Zero coding or technical overhead required.</strong> We configure your custom domain, customize the branding, and manage cloud infrastructure, security, and updates.
+        </p>
+      </div>
 
       <!-- Zero-Tech & Always Included Value Banner -->
       <div class="turnkey-promise-banner">
@@ -111,24 +220,8 @@
         <div class="trust-item"><span class="icon">✓</span> 80% to 95% Gross Margins</div>
         <div class="trust-item"><span class="icon">✓</span> Fully Managed Hosting & Tech Support</div>
       </div>
-
-      <!-- Category Filter Pills -->
-      <nav class="category-filter-bar" aria-label="Filter by Category">
-        <button class="filter-btn active" data-cat="all">All 7 Platforms</button>
-        <button class="filter-btn" data-cat="sales-crm">Sales & CRM</button>
-        <button class="filter-btn" data-cat="media-video">AI Video & Media</button>
-        <button class="filter-btn" data-cat="saas-finance">SaaS & FinTech</button>
-        <button class="filter-btn" data-cat="autonomous-agents">Autonomous Agents</button>
-        <button class="filter-btn filter-btn-templates" id="filter-btn-templates"><span>📁</span> <span id="txt-filter-templates">Templates (50+)</span></button>
-      </nav>
     </section>
-
-    <!-- CENTERED CARDS STREAM (One centered card for each app) -->
-    <main class="centered-cards-stream" id="cards-container">
-      <!-- Dynamically populated with all 7 apps -->
-    </main>
-
-    <!-- BESPOKE CUSTOM AI ENGINEERING SHOWCASE SECTION -->
+<!-- BESPOKE CUSTOM AI ENGINEERING SHOWCASE SECTION -->
     <section class="custom-dev-showcase-section" style="margin-top: 4rem; background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 3rem; box-shadow: var(--shadow-card);" aria-labelledby="custom-dev-heading">
       <div style="text-align: center; max-width: 760px; margin: 0 auto 2.5rem auto;">
         <div class="hero-pill-tag" style="margin-bottom: 1rem;">
@@ -175,6 +268,60 @@
         </a>
         <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Project%20Scope" class="btn-secondary" style="padding: 0.85rem 1.5rem; text-decoration: none; font-weight: 600;">
           <span>✉️ Book Project Scoping Call</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         FEATURED ARTICLES & THOUGHT LEADERSHIP (SEO Authority Engine)
+         ======================================================================== -->
+    <section class="homepage-articles-section" aria-labelledby="insights-heading">
+      <div style="text-align: center; max-width: 760px; margin: 0 auto;">
+        <div class="hero-pill-tag" style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.4); color: #a5b4fc; margin-bottom: 1rem;">
+          <span>📚</span>
+          <span>Engineering Blueprints & Insights</span>
+        </div>
+        <h2 id="insights-heading" style="font-size: 2.1rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 0.75rem;">
+          Battle-Tested AI Strategies, Frameworks & Guides
+        </h2>
+        <p style="color: #94a3b8; font-size: 1rem; line-height: 1.6;">
+          In-depth technical breakdowns and conversion frameworks from our engineering team to help you optimize conversion, automate sales, and build autonomous agents.
+        </p>
+      </div>
+
+      <div class="homepage-articles-grid">
+        <a href="articles/the-220-character-rule-upwork-proposals.html" class="homepage-article-card">
+          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Upwork Conversion</span>
+          <h4>The 220-Character Rule: How to Hook Clients in Mobile Previews</h4>
+          <p>Why 90% of freelance proposals get ignored before being opened, and how to craft the first two lines that guarantee client clicks.</p>
+          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+        </a>
+
+        <a href="articles/contractor-speed-to-lead-automation.html" class="homepage-article-card">
+          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Contractor Automation</span>
+          <h4>The Speed-to-Lead Equation: Why Contractors Lose 60% of Deals</h4>
+          <p>How 60-second mobile quote delivery and automated multi-touch follow-ups transform trade businesses and double close rates.</p>
+          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+        </a>
+
+        <a href="articles/building-autonomous-ai-action-agents-2026.html" class="homepage-article-card">
+          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Autonomous Systems</span>
+          <h4>Building Autonomous Action Agents: Beyond Passive Chatbots</h4>
+          <p>The architectural blueprint for browser automation, state machines, and self-healing action loops that complete work unattended.</p>
+          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+        </a>
+
+        <a href="articles/how-to-prevent-duplicate-saas-billing.html" class="homepage-article-card">
+          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">SaaS FinTech</span>
+          <h4>How to Expose Hidden Dark Patterns & Prevent Duplicate SaaS Billing</h4>
+          <p>Practical audit checklists to uncover phantom subscriptions, recurring billing leaks, and deceptive checkout opt-ins.</p>
+          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="articles/index.html" class="btn-hero-secondary" style="border-color: #475569;">
+          <span>Explore All Articles in Knowledge Hub →</span>
         </a>
       </div>
     </section>
