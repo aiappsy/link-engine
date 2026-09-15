@@ -3,614 +3,1098 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIAPPSY — Turnkey AI SaaS Platforms & Custom AI Engineering</title>
-  <meta name="description" content="Discover and operate our suite of 7 production-grade AI SaaS applications, explore bespoke AI engineering services, and scale your business with AIAPPSY.">
+  <title>AIAPPSY — Frontier AI Applications, Custom Engineering & Product Studio</title>
+  <meta name="description" content="AIAPPSY is a premier AI software studio and engineering consultancy. We design and deploy proprietary SaaS platforms, build bespoke autonomous AI action agents, and deliver custom full-stack solutions.">
   <link rel="canonical" href="https://aiappsy.com/">
   <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AIAPPSY — Frontier AI Applications & Custom Engineering Studio">
+  <meta property="og:description" content="Proprietary AI SaaS platforms, custom autonomous action agents, and bespoke full-stack engineering for modern businesses.">
+  <meta property="og:url" content="https://aiappsy.com/">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f1629;
+      --card-hover: #141e36;
+      --border: #1e2942;
+      --border-glow: rgba(99, 102, 241, 0.4);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #818cf8;
+      --accent: #06b6d4;
+      --accent-green: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1400px;
+      height: 600px;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(99, 102, 241, 0.22), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation Bar */
+    nav.site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(30, 41, 66, 0.6);
+      margin-bottom: 3.5rem;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+    .brand-text h1 span {
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-link:hover { color: #ffffff; }
+
+    .btn-nav-cta {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #ffffff;
+      padding: 0.55rem 1.15rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-nav-cta:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 0 4.5rem;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .hero h2 {
+      font-size: 3.4rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+
+    .hero h2 span.gradient-text {
+      background: linear-gradient(135deg, #818cf8 0%, #38bdf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p.lead {
+      font-size: 1.22rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+      max-width: 780px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+
+    .btn-primary-hero {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: #ffffff;
+      padding: 0.95rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary-hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(99, 102, 241, 0.55);
+    }
+
+    .btn-secondary-hero {
+      background: #131b2e;
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 0.95rem 1.75rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-secondary-hero:hover {
+      background: #1e293b;
+      border-color: #475569;
+      transform: translateY(-2px);
+    }
+
+    /* Trust / Metric Strip */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      padding: 1.75rem 2rem;
+      background: rgba(19, 27, 46, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-align: center;
+      margin-bottom: 5.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .metric-item strong {
+      display: block;
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 0.2rem;
+    }
+    .metric-item span {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 2.3rem; }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+      nav.site-nav { flex-direction: column; gap: 1rem; }
+    }
+
+    /* Section Headings */
+    .section-header {
+      text-align: center;
+      max-width: 740px;
+      margin: 0 auto 3.5rem auto;
+    }
+    .section-header .section-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .section-header h3 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.85rem;
+    }
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    /* 3 Pillars Cards Grid */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 6rem;
+    }
+
+    .pillar-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .pillar-box:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-glow);
+      background: var(--card-hover);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .pillar-box-featured {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: linear-gradient(180deg, #131a33 0%, #0f1629 100%);
+    }
+
+    .pillar-tag {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    .pillar-icon-large {
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .pillar-box h4 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .pillar-box p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .pillar-box a.pillar-cta {
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.15s;
+    }
+    .pillar-box:hover a.pillar-cta {
+      gap: 0.65rem;
+      color: #ffffff;
+    }
+
+    @media (max-width: 960px) {
+      .pillars-grid { grid-template-columns: 1fr; }
+    }
+
+    /* 7 Apps Showcase Grid */
+    .apps-section {
+      padding: 4rem 0 6rem;
+      border-top: 1px solid rgba(30, 41, 66, 0.6);
+    }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .app-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .app-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .app-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .app-icon {
+      width: 48px;
+      height: 48px;
+      background: #18223d;
+      border: 1px solid #253358;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .app-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #cbd5e1;
+    }
+
+    .app-card h4 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.4rem;
+    }
+
+    .app-tagline {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .app-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .app-card-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .btn-app-guide {
+      flex: 1;
+      background: #18223d;
+      border: 1px solid #253358;
+      color: #ffffff;
+      padding: 0.6rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-app-guide:hover {
+      background: #253358;
+      border-color: #818cf8;
+    }
+
+    .btn-app-launch {
+      background: var(--primary);
+      color: #ffffff;
+      padding: 0.6rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: background 0.15s;
+    }
+    .btn-app-launch:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Custom Dev Showcase Box */
+    .custom-dev-spotlight {
+      background: linear-gradient(135deg, #10172e 0%, #151d38 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 20px;
+      padding: 3.5rem;
+      margin: 4rem 0 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .custom-dev-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .custom-dev-grid { grid-template-columns: 1fr; }
+      .custom-dev-spotlight { padding: 2.25rem; }
+    }
+
+    .custom-dev-text h3 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .custom-dev-text p {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+
+    .capabilities-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .cap-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .cap-icon { color: var(--accent-green); font-size: 1.1rem; }
+
+    /* Articles / Insights Grid */
+    .articles-section {
+      padding: 4rem 0 6rem;
+      border-top: 1px solid rgba(30, 41, 66, 0.6);
+    }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .article-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.6rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+    .article-item:hover {
+      transform: translateY(-3px);
+      border-color: #818cf8;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+    .article-tag-label {
+      font-size: 0.72rem;
+      color: var(--primary-light);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .article-item h4 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-bottom: 0.6rem;
+    }
+    .article-item p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+    .article-item span.read-more {
+      color: #a5b4fc;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Consultation / Contact Section */
+    .contact-box {
+      background: #0f1629;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3.5rem;
+      text-align: center;
+      max-width: 840px;
+      margin: 0 auto 6rem auto;
+    }
+    .contact-box h3 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+    }
+    .contact-box p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-options {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid rgba(30, 41, 66, 0.6);
+      padding: 3.5rem 0 2.5rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 800px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .footer-col h5 {
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 0.6rem; }
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-col a:hover { color: #ffffff; }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(30, 41, 66, 0.4);
+      font-size: 0.78rem;
+    }
+    .footer-bottom a { color: var(--text-muted); text-decoration: none; }
+    .footer-bottom a:hover { color: #ffffff; }
+  </style>
 </head>
 <body>
 
-  <div class="page-container">
+  <div class="ambient-glow"></div>
+
+  <div class="container">
     
-    <!-- Top Brand Header -->
-    <header class="top-header">
-      <a href="/" class="brand-link">
-        <div class="brand-logo-badge">⚡</div>
-        <div class="brand-meta">
+    <!-- Top Navigation -->
+    <nav class="site-nav">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
           <h1>aiappsy<span>.com</span></h1>
-          <span>Turnkey AI SaaS Suite & Custom Engineering Hub</span>
+          <p>Frontier AI Product Studio</p>
         </div>
       </a>
 
-      <div class="header-actions">
-        <a href="custom-development.html" class="btn-header-templates" style="text-decoration: none;" title="Custom AI Engineering & Bespoke Builds">
-          <span>🛠️</span>
-          <span>Custom Dev</span>
+      <div class="nav-links">
+        <a href="#apps" class="nav-link">Our Apps</a>
+        <a href="custom-development.html" class="nav-link">Custom Engineering</a>
+        <a href="portfolio.html" class="nav-link">Whitelabel Portfolio</a>
+        <a href="articles/index.html" class="nav-link">Articles</a>
+        <a href="#contact" class="btn-nav-cta">
+          <span>✉️</span>
+          <span>Contact Studio</span>
         </a>
-        <a href="articles/index.html" class="btn-header-templates" style="text-decoration: none;" title="AI Strategy Guides & Insights">
-          <span>📚</span>
-          <span>Articles</span>
-        </a>
-        <button class="btn-header-templates" id="btn-templates-tab" title="Templates / Maler (50+)">
-          <span>📁</span>
-          <span id="txt-header-templates">Templates</span>
-        </button>
-        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt til norsk / Switch to English">
-          <span class="lang-flag" id="lang-flag">🇳🇴</span>
-          <span class="lang-label" id="lang-label">Norsk</span>
-        </button>
-
-        <button class="btn-header-inquiry" id="btn-top-inquiry">
-          <span>💼</span>
-          <span id="txt-header-inquiry">Whitelabel Licensing Guide</span>
-        </button>
       </div>
-    </header>
+    </nav>
 
-    <!-- ========================================================================
-         FLAGSHIP HERO SECTION (Tying Together Products, Custom Dev & Whitelabel)
-         ======================================================================== -->
-    <section class="hero-centered flagship-hero">
-      <div class="hero-pill-tag">
+    <!-- Master Hero -->
+    <header class="hero">
+      <div class="badge-pill">
         <span>⚡</span>
-        <span>The Frontier AI Software Suite & Bespoke Engineering</span>
+        <span>Proprietary AI Platforms & Bespoke Engineering</span>
       </div>
 
       <h2>
-        The Complete Ecosystem for <span class="highlight">Frontier AI Software</span> & Custom Engineering.
+        Engineering the Future of <span class="gradient-text">Autonomous AI Software</span> & Production SaaS.
       </h2>
 
-      <p class="hero-intro-text">
-        Welcome to <strong>AIAPPSY</strong>. We engineer, operate, and deliver high-impact artificial intelligence software. Explore our 7 flagship production SaaS platforms, commission bespoke AI agents & full-stack web applications, or launch a fully managed turnkey software business under your own brand.
+      <p class="lead">
+        <strong>AIAPPSY</strong> is an independent AI product studio and engineering consultancy. We conceive and build high-impact proprietary SaaS applications, engineer bespoke autonomous AI agents for clients, and license turnkey enterprise software.
       </p>
 
-      <!-- Hero Quick Action Buttons -->
-      <div class="hero-action-buttons">
-        <a href="#apps-showcase" class="btn-hero-primary">
-          <span>🚀</span>
-          <span>Explore 7 AI Platforms</span>
-        </a>
-        <a href="custom-development.html" class="btn-hero-secondary">
+      <div class="hero-ctas">
+        <a href="custom-development.html" class="btn-primary-hero">
           <span>🛠️</span>
-          <span>Custom AI Development</span>
+          <span>Commission Custom AI Dev</span>
         </a>
-        <a href="#whitelabel-section" class="btn-hero-tertiary">
+        <a href="#apps" class="btn-secondary-hero">
+          <span>🚀</span>
+          <span>Explore Our 7 SaaS Apps</span>
+        </a>
+        <a href="portfolio.html" class="btn-secondary-hero">
           <span>🏷️</span>
-          <span>Whitelabel & Licensing</span>
+          <span>Whitelabel Catalog</span>
         </a>
       </div>
-    </section>
+    </header>
 
-    <!-- ========================================================================
-         THE 4 CORE PILLARS OF AIAPPSY (Tying Everything Together)
-         ======================================================================== -->
-    <section class="four-pillars-section" aria-label="Core AIAPPSY Pillars">
+    <!-- Metric Strip -->
+    <div class="metrics-bar">
+      <div class="metric-item">
+        <strong>7</strong>
+        <span>Live SaaS Platforms</span>
+      </div>
+      <div class="metric-item">
+        <strong>7–14 Days</strong>
+        <span>Custom MVP Delivery</span>
+      </div>
+      <div class="metric-item">
+        <strong>100%</strong>
+        <span>Automated Cloud Run</span>
+      </div>
+      <div class="metric-item">
+        <strong>Frontier AI</strong>
+        <span>Multi-Model Architecture</span>
+      </div>
+    </div>
+
+    <!-- Section 1: The 3 Core Pillars -->
+    <section>
+      <div class="section-header">
+        <span class="section-tag">WHAT WE DO</span>
+        <h3>Three Ways to Build & Scale with AIAPPSY</h3>
+        <p>Whether you need custom software engineered from scratch, want to use our production platforms, or desire your own whitelabeled software business.</p>
+      </div>
+
       <div class="pillars-grid">
-        <!-- Pillar 1: Turnkey Platforms -->
-        <a href="#apps-showcase" class="pillar-card">
-          <div class="pillar-icon">⚡</div>
-          <h3>7 Flagship AI Platforms</h3>
-          <p>Production-grade software for sales closing, generative video, prompt engineering, media processing, and autonomous agents.</p>
-          <span class="pillar-link">Browse Platforms ↓</span>
-        </a>
+        <!-- Pillar 1: Custom Dev -->
+        <div class="pillar-box pillar-box-featured">
+          <span class="pillar-tag">Client Services</span>
+          <div class="pillar-icon-large">🛠️</div>
+          <h4>Bespoke AI Engineering</h4>
+          <p>We build tailored autonomous action agents, generative media workflows, modern Next.js web applications, and enterprise ERP integrations from ground up.</p>
+          <a href="custom-development.html" class="pillar-cta">Explore Custom AI Services →</a>
+        </div>
 
-        <!-- Pillar 2: Custom AI Engineering -->
-        <a href="custom-development.html" class="pillar-card pillar-card-featured">
-          <div class="pillar-badge">Bespoke Builds</div>
-          <div class="pillar-icon">🛠️</div>
-          <h3>Custom AI & Agent Engineering</h3>
-          <p>We build tailored AI web applications, autonomous action agents, generative multimodal pipelines, and ERP integrations in 7–14 days.</p>
-          <span class="pillar-link">Explore Custom Dev →</span>
-        </a>
+        <!-- Pillar 2: Proprietary Apps -->
+        <div class="pillar-box">
+          <div class="pillar-icon-large">🚀</div>
+          <h4>Our 7 Flagship SaaS Apps</h4>
+          <p>Our proprietary suite of production tools spanning sales proposal acceleration, multi-model video generation, mobile trade quoting, and autonomous agents.</p>
+          <a href="#apps" class="pillar-cta">Browse 7 Applications ↓</a>
+        </div>
 
-        <!-- Pillar 3: Turnkey Whitelabeling -->
-        <a href="#whitelabel-section" class="pillar-card">
-          <div class="pillar-icon">🏷️</div>
-          <h3>Turnkey SaaS Whitelabeling</h3>
-          <p>Own & operate any of our platforms under your own brand and custom domain with zero technical, coding, or maintenance hassle.</p>
-          <span class="pillar-link">View Licensing Plans ↓</span>
-        </a>
-
-        <!-- Pillar 4: AI Insights & Blueprints -->
-        <a href="articles/index.html" class="pillar-card">
-          <div class="pillar-icon">📚</div>
-          <h3>AI Insights & SEO Blueprints</h3>
-          <p>Deep-dive research, speed-to-lead automation playbooks, and prompt engineering architecture for high-converting workflows.</p>
-          <span class="pillar-link">Read Latest Articles →</span>
-        </a>
+        <!-- Pillar 3: Whitelabel -->
+        <div class="pillar-box">
+          <div class="pillar-icon-large">🏷️</div>
+          <h4>Turnkey SaaS Whitelabeling</h4>
+          <p>License, rebrand, and operate any of our platforms under your own company domain with 100% managed cloud hosting and zero technical maintenance.</p>
+          <a href="portfolio.html" class="pillar-cta">View Whitelabel Marketplace →</a>
+        </div>
       </div>
     </section>
 
-    <!-- ========================================================================
-         APPS SHOWCASE SECTION (All 7 Production SaaS Applications)
-         ======================================================================== -->
-    <section id="apps-showcase" style="scroll-margin-top: 2rem;">
-      <div style="text-align: center; max-width: 720px; margin: 0 auto 2rem auto;">
-        <div class="hero-pill-tag" style="margin-bottom: 0.75rem;">
-          <span>🚀</span>
-          <span>Production-Ready SaaS Platforms</span>
-        </div>
-        <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-heading); letter-spacing: -0.02em; margin-bottom: 0.5rem;">
-          Our 7 Flagship Production Platforms
-        </h3>
-        <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
-          Tested in production, engineered for enterprise reliability, and ready to use immediately or whitelabel as your own product.
-        </p>
+    <!-- Section 2: Flagship 7 Apps Showcase -->
+    <section class="apps-section" id="apps">
+      <div class="section-header">
+        <span class="section-tag">PRODUCTION SOFTWARE</span>
+        <h3>Our 7 Flagship AI Applications</h3>
+        <p>Click any application to view dedicated architectural guides, specifications, and live demonstrations.</p>
       </div>
 
-      <!-- Category Filter Pills -->
-      <nav class="category-filter-bar" aria-label="Filter by Category">
-        <button class="filter-btn active" data-cat="all">All 7 Platforms</button>
-        <button class="filter-btn" data-cat="sales-crm">Sales & CRM</button>
-        <button class="filter-btn" data-cat="media-video">AI Video & Media</button>
-        <button class="filter-btn" data-cat="saas-finance">SaaS & FinTech</button>
-        <button class="filter-btn" data-cat="autonomous-agents">Autonomous Agents</button>
-        <button class="filter-btn filter-btn-templates" id="filter-btn-templates"><span>📁</span> <span id="txt-filter-templates">Templates (50+)</span></button>
-      </nav>
-    </section>
-
-    <!-- CENTERED CARDS STREAM (One centered card for each app) -->
-    <main class="centered-cards-stream" id="cards-container">
-      <!-- Dynamically populated with all 7 apps -->
-    </main>
-
-    <!-- ========================================================================
-         WHITELABEL VALUE PROMISE & LICENSING SECTION
-         ======================================================================== -->
-    <section id="whitelabel-section" style="margin-top: 4rem; scroll-margin-top: 2rem;">
-      <div style="text-align: center; max-width: 720px; margin: 0 auto 2rem auto;">
-        <div class="hero-pill-tag" style="margin-bottom: 0.75rem;">
-          <span>💼</span>
-          <span>Turnkey Whitelabel Licensing</span>
-        </div>
-        <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-heading); letter-spacing: -0.02em; margin-bottom: 0.5rem;">
-          Own & Operate Any App Under Your Own Brand
-        </h3>
-        <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
-          <strong>Zero coding or technical overhead required.</strong> We configure your custom domain, customize the branding, and manage cloud infrastructure, security, and updates.
-        </p>
-      </div>
-
-      <!-- Zero-Tech & Always Included Value Banner -->
-      <div class="turnkey-promise-banner">
-        <div class="promise-highlight-badge">✨ WHAT'S ALWAYS INCLUDED IN EVERY LICENSE</div>
-        <div class="promise-grid">
-          <div class="promise-item">
-            <span class="promise-icon">🏷️</span>
-            <div>
-              <strong>100% Turnkey Whitelabel</strong>
-              <p>Your brand, your custom logo, and your color scheme.</p>
-            </div>
-          </div>
-          <div class="promise-item">
-            <span class="promise-icon">🌐</span>
-            <div>
-              <strong>Custom Domain & SSL</strong>
-              <p>Fully configured on your domain (e.g. app.yourbrand.com).</p>
-            </div>
-          </div>
-          <div class="promise-item">
-            <span class="promise-icon">⏱️</span>
-            <div>
-              <strong>Dedicated Custom Hours Included</strong>
-              <p>Tailored onboarding, branding adjustments & prompt tuning.</p>
-            </div>
-          </div>
-          <div class="promise-item">
-            <span class="promise-icon">🛡️</span>
-            <div>
-              <strong>Hands-Off Cloud & Tech Support</strong>
-              <p>We manage servers, databases, security patches & uptime.</p>
-            </div>
-          </div>
-        </div>
-        <div class="promise-addon-footer">
-          <span>➕ Need bespoke features or custom ERP integrations later? Flexible add-ons are available at <strong>very reasonable, transparent prices</strong>.</span>
-        </div>
-      </div>
-
-      <!-- Trust Bar -->
-      <div class="trust-values-bar">
-        <div class="trust-item"><span class="icon">✓</span> Zero Technical Skill Needed</div>
-        <div class="trust-item"><span class="icon">✓</span> Whitelabel, Domain & Custom Hours Included</div>
-        <div class="trust-item"><span class="icon">✓</span> 80% to 95% Gross Margins</div>
-        <div class="trust-item"><span class="icon">✓</span> Fully Managed Hosting & Tech Support</div>
-      </div>
-    </section>
-<!-- BESPOKE CUSTOM AI ENGINEERING SHOWCASE SECTION -->
-    <section class="custom-dev-showcase-section" style="margin-top: 4rem; background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 3rem; box-shadow: var(--shadow-card);" aria-labelledby="custom-dev-heading">
-      <div style="text-align: center; max-width: 760px; margin: 0 auto 2.5rem auto;">
-        <div class="hero-pill-tag" style="margin-bottom: 1rem;">
-          <span>🛠️</span>
-          <span>Bespoke Engineering & Custom Builds</span>
-        </div>
-        <h2 id="custom-dev-heading" style="font-size: 2.1rem; font-weight: 900; color: var(--text-heading); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1rem;">
-          Need a Custom Solution? We Build Tailored AI Platforms From Scratch.
-        </h2>
-        <p style="font-size: 1.05rem; color: var(--text-body); line-height: 1.6;">
-          Beyond our 7 production platforms and 50+ templates, we engineer bespoke AI systems for agencies, enterprises, and founders. From multi-agent autonomous loops to generative video studios and deep ERP bridges.
-        </p>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🤖</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Action Agents</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Headless browser controllers, automated DOM navigation, and self-healing task loops.</p>
-        </div>
-
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🎬</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Generative Media</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Multi-model video pipelines (Wan 2.1, Kling, Minimax) with WebAssembly on-device processing.</p>
-        </div>
-
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">⚡</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Full-Stack Apps</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">High-speed Next.js 15, TypeScript, Stripe/Vipps billing, and sub-second PWA load times.</p>
-        </div>
-
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🔗</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">ERP & API Bridges</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Two-way sync with Fiken, Tripletex, HubSpot, Salesforce, and enterprise SQL databases.</p>
-        </div>
-      </div>
-
-      <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <a href="custom-development.html" class="btn-primary" style="padding: 0.85rem 1.75rem; text-decoration: none; font-weight: 700;">
-          <span>Explore Custom AI Engineering Services →</span>
-        </a>
-        <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Project%20Scope" class="btn-secondary" style="padding: 0.85rem 1.5rem; text-decoration: none; font-weight: 600;">
-          <span>✉️ Book Project Scoping Call</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ========================================================================
-         FEATURED ARTICLES & THOUGHT LEADERSHIP (SEO Authority Engine)
-         ======================================================================== -->
-    <section class="homepage-articles-section" aria-labelledby="insights-heading">
-      <div style="text-align: center; max-width: 760px; margin: 0 auto;">
-        <div class="hero-pill-tag" style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.4); color: #a5b4fc; margin-bottom: 1rem;">
-          <span>📚</span>
-          <span>Engineering Blueprints & Insights</span>
-        </div>
-        <h2 id="insights-heading" style="font-size: 2.1rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 0.75rem;">
-          Battle-Tested AI Strategies, Frameworks & Guides
-        </h2>
-        <p style="color: #94a3b8; font-size: 1rem; line-height: 1.6;">
-          In-depth technical breakdowns and conversion frameworks from our engineering team to help you optimize conversion, automate sales, and build autonomous agents.
-        </p>
-      </div>
-
-      <div class="homepage-articles-grid">
-        <a href="articles/the-220-character-rule-upwork-proposals.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Upwork Conversion</span>
-          <h4>The 220-Character Rule: How to Hook Clients in Mobile Previews</h4>
-          <p>Why 90% of freelance proposals get ignored before being opened, and how to craft the first two lines that guarantee client clicks.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
-        </a>
-
-        <a href="articles/contractor-speed-to-lead-automation.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Contractor Automation</span>
-          <h4>The Speed-to-Lead Equation: Why Contractors Lose 60% of Deals</h4>
-          <p>How 60-second mobile quote delivery and automated multi-touch follow-ups transform trade businesses and double close rates.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
-        </a>
-
-        <a href="articles/building-autonomous-ai-action-agents-2026.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Autonomous Systems</span>
-          <h4>Building Autonomous Action Agents: Beyond Passive Chatbots</h4>
-          <p>The architectural blueprint for browser automation, state machines, and self-healing action loops that complete work unattended.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
-        </a>
-
-        <a href="articles/how-to-prevent-duplicate-saas-billing.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">SaaS FinTech</span>
-          <h4>How to Expose Hidden Dark Patterns & Prevent Duplicate SaaS Billing</h4>
-          <p>Practical audit checklists to uncover phantom subscriptions, recurring billing leaks, and deceptive checkout opt-ins.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
-        </a>
-      </div>
-
-      <div style="text-align: center; margin-top: 2.5rem;">
-        <a href="articles/index.html" class="btn-hero-secondary" style="border-color: #475569;">
-          <span>Explore All Articles in Knowledge Hub →</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Crawlable Static SEO Footer Directory (Guarantees Googlebot indexes all standalone landing pages & articles) -->
-    <section class="seo-directory-section" aria-label="Software Directory & Specifications">
-      <div class="seo-directory-header">
-        <h3>Direct Platform Guides & Technical Specifications</h3>
-        <p>Explore dedicated search-indexed guides, technical specifications, and whitelabel documentation for each of our 7 production AI SaaS platforms:</p>
-      </div>
-      <div class="seo-directory-links">
-        <a href="apps/hubzoo.html"><strong>Hubzoo</strong> — AI Sales Agent & CRM for Contractors & SMBs</a>
-        <a href="apps/upworkz.html"><strong>Upworkz</strong> — Proposal Architect & Deal Closer for Freelancers</a>
-        <a href="apps/subsentry.html"><strong>SubSentry</strong> — Subscription Watchdog & 1-Click Cancellation Shield</a>
-        <a href="apps/maxmotion.html"><strong>MaxMotion AI</strong> — Multi-Model Generative Video Studio (Wan 2.1, Kling, Minimax)</a>
-        <a href="apps/appsave.html"><strong>AppSave</strong> — 'Honey' for SaaS, Cloud Hosting & AI Discounts</a>
-        <a href="apps/mediabunny.html"><strong>MediaBunny</strong> — In-Browser WASM Media Converter & EBU R128 Audio</a>
-        <a href="apps/manus.html"><strong>Manus AI Studio</strong> — Autonomous General-Purpose Action Agent</a>
-        <a href="custom-development.html"><strong>Custom AI Engineering</strong> — Bespoke Agents, Generative Media & ERP Bridges</a>
-      </div>
-
-      <div class="seo-directory-header" style="margin-top: 2rem;">
-        <h3>AI Insights, Playbooks & Strategic Guides</h3>
-        <p>In-depth technical breakdowns and conversion frameworks from our engineering team:</p>
-      </div>
-      <div class="seo-directory-links">
-        <a href="articles/the-220-character-rule-upwork-proposals.html"><strong>The 220-Character Rule</strong> — How to Hook Upwork Clients in Mobile Inbox Previews</a>
-        <a href="articles/contractor-speed-to-lead-automation.html"><strong>Speed-to-Lead Equation</strong> — Why Contractors Lose 60% of Deals to Slow Quotes</a>
-        <a href="articles/building-autonomous-ai-action-agents-2026.html"><strong>Autonomous Action Agents</strong> — Why Chatbots Are Obsolete & How to Build Execution Agents</a>
-        <a href="articles/index.html"><strong>All Articles & Guides</strong> — Browse the AIAppsy Knowledge Base</a>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- ========================================================================
-       MODAL 1: FULL-SCREEN DEEP DIVE (Users & Whitelabel Operators)
-       ======================================================================== -->
-  <div class="modal-backdrop" id="modal-deepdive" aria-hidden="true">
-    <div class="modal-container" role="dialog" aria-modal="true">
-      
-      <!-- Header -->
-      <div class="modal-header">
-        <div class="modal-header-info">
-          <div class="modal-header-icon" id="md1-icon">⚡</div>
-          <div class="modal-header-title">
-            <h3 id="md1-title">App Name — Deep Dive</h3>
-            <p id="md1-url">https://app.ai.studio</p>
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-launch-app" id="md1-direct-link" style="padding: 0.45rem 0.9rem; font-size: 0.8rem;">
-            <span>Open App</span>
-            <span>↗</span>
-          </a>
-          <button class="modal-close-btn" id="btn-close-md1" aria-label="Close modal">✕</button>
-        </div>
-      </div>
-
-      <!-- Internal Tabs -->
-      <div class="modal-tabs">
-        <button class="modal-tab active" data-tab="overview">🌟 Executive Overview</button>
-        <button class="modal-tab" data-tab="features">⚡ Core Superpowers</button>
-        <button class="modal-tab" data-tab="benefits">📈 User & Business ROI</button>
-        <button class="modal-tab" data-tab="whitelabel">💼 Whitelabel Operator Hub</button>
-      </div>
-
-      <!-- Body -->
-      <div class="modal-body">
+      <div class="apps-grid">
         
-        <!-- Tab 1: Overview -->
-        <div class="modal-pane active" id="pane-overview">
-          <h4 class="pane-headline" id="md1-headline">Overview</h4>
-          <div class="story-lead-box" id="md1-story"></div>
+        <!-- App 1: Hubzoo -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">👷</div>
+            <span class="app-badge">Sales & CRM</span>
+          </div>
+          <h4>Hubzoo</h4>
+          <div class="app-tagline">Mobile Quoting & Automated Lead Closer</div>
+          <p>Send professional client estimates in 60 seconds from your phone. Built-in multi-channel follow-ups and native 1-click accounting sync to Fiken and Tripletex.</p>
+          <div class="app-card-actions">
+            <a href="apps/hubzoo.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://hubzoo.ai.studio" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
         </div>
 
-        <!-- Tab 2: Features -->
-        <div class="modal-pane" id="pane-features">
-          <h4 class="pane-headline">Core Functions & Automated Capabilities</h4>
-          <div class="detail-grid-2col" id="md1-features-grid"></div>
+        <!-- App 2: Upworkz -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">💼</div>
+            <span class="app-badge">Freelance & Sales</span>
+          </div>
+          <h4>Upworkz</h4>
+          <div class="app-tagline">Proposal Architect & Deal Closer</div>
+          <p>Deconstruct client postings in 45 seconds, audit scope gotchas, and craft winning 220-character hooks that bypass mobile client inbox truncation.</p>
+          <div class="app-card-actions">
+            <a href="apps/upworkz.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
         </div>
 
-        <!-- Tab 3: Benefits -->
-        <div class="modal-pane" id="pane-benefits">
-          <h4 class="pane-headline">Tangible User & Commercial Benefits</h4>
-          <div class="detail-grid-2col" id="md1-benefits-grid"></div>
+        <!-- App 3: MaxMotion AI -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">🎬</div>
+            <span class="app-badge">AI Video Studio</span>
+          </div>
+          <h4>MaxMotion AI</h4>
+          <div class="app-tagline">Multi-Model Generative Video Canvas</div>
+          <p>Orchestrate Wan 2.1, Kling, and Minimax in a single unified timeline. Persistent Google Cloud Storage that ensures created clips never expire.</p>
+          <div class="app-card-actions">
+            <a href="apps/maxmotion.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://maxmotion.ai.studio" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
         </div>
 
-        <!-- Tab 4: Whitelabel -->
-        <div class="modal-pane" id="pane-whitelabel">
-          <h4 class="pane-headline">Whitelabel Operator & Monetization Potential</h4>
-          <div class="operator-pitch-card" id="md1-operator-pitch"></div>
+        <!-- App 4: SubSentry -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">🛡️</div>
+            <span class="app-badge">FinTech & Security</span>
+          </div>
+          <h4>SubSentry</h4>
+          <div class="app-tagline">SaaS Dark Pattern Buster & Shield</div>
+          <p>Identify hidden recurring card charges, expose deceptive checkout traps, and execute 1-click cancellations with pre-built dispute playbooks.</p>
+          <div class="app-card-actions">
+            <a href="apps/subsentry.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
+        </div>
+
+        <!-- App 5: AppSave -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">🏷️</div>
+            <span class="app-badge">Browser Extension</span>
+          </div>
+          <h4>AppSave</h4>
+          <div class="app-tagline">The 'Honey' for SaaS & Cloud Hosting</div>
+          <p>Lightweight Manifest V3 Chrome extension that auto-tests verified promo codes on checkout pages to save teams 15% to 40% on recurring software.</p>
+          <div class="app-card-actions">
+            <a href="apps/appsave.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
+        </div>
+
+        <!-- App 6: MediaBunny -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">🐰</div>
+            <span class="app-badge">WebAssembly</span>
+          </div>
+          <h4>MediaBunny</h4>
+          <div class="app-tagline">On-Device Media Converter & Audio Normalizer</div>
+          <p>Client-side AI background removal, broadcast-standard EBU R128 audio normalization, and 75% CRF video compression with zero server data uploads.</p>
+          <div class="app-card-actions">
+            <a href="apps/mediabunny.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
+        </div>
+
+        <!-- App 7: Manus AI Studio -->
+        <div class="app-card">
+          <div class="app-card-top">
+            <div class="app-icon">🤖</div>
+            <span class="app-badge">Action Agent</span>
+          </div>
+          <h4>Manus AI Studio</h4>
+          <div class="app-tagline">Autonomous General-Purpose Action Agent</div>
+          <p>Moving beyond chat: Manus autonomously navigates websites, writes code, provisions infrastructure, and completes end-to-end knowledge work unattended.</p>
+          <div class="app-card-actions">
+            <a href="apps/manus.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align: center;">
+        <a href="portfolio.html" class="btn-secondary-hero">
+          <span>📁 Explore Turnkey Whitelabel Marketplace & 50+ Templates →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Section 3: Custom Dev Spotlight -->
+    <section class="custom-dev-spotlight">
+      <div class="custom-dev-grid">
+        <div class="custom-dev-text">
+          <span style="color: var(--accent); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem;">BESPOKE AI ENGINEERING</span>
+          <h3>Need a Custom AI Platform Built For Your Company?</h3>
+          <p>We take companies from raw prompt concept to high-speed production software in 7 to 14 days. We specialize in complex autonomous agents, custom generative media pipelines, and deep API integrations.</p>
           
-          <h5 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">
-            Turnkey Ownership & Licensing Models (BizBox Framework)
-          </h5>
-          <div class="licensing-grid" id="md1-licensing-grid"></div>
-
-          <div class="operator-calc-row">
-            <div>
-              <h5 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Estimated Monthly Operator Revenue</h5>
-              <p style="font-size: 0.82rem; color: #64748b;" id="md1-revenue-text"></p>
-            </div>
-            <button class="btn-card-action btn-learn-more" id="btn-modal-inquire-trigger">Inquire About Licensing</button>
+          <div class="capabilities-list">
+            <div class="cap-item"><span class="cap-icon">✓</span> Autonomous Action Agents</div>
+            <div class="cap-item"><span class="cap-icon">✓</span> Multimodal Video & Media</div>
+            <div class="cap-item"><span class="cap-icon">✓</span> Next.js 15 & Cloud Run Apps</div>
+            <div class="cap-item"><span class="cap-icon">✓</span> ERP Sync (Fiken, Tripletex)</div>
           </div>
+
+          <a href="custom-development.html" class="btn-primary-hero">
+            <span>Explore Full Custom Dev Specs →</span>
+          </a>
         </div>
 
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ========================================================================
-       MODAL 2: TECH STACK, DURABILITY & CONTINUOUS EVOLUTION
-       ======================================================================== -->
-  <div class="modal-backdrop" id="modal-techstack" aria-hidden="true">
-    <div class="modal-container" role="dialog" aria-modal="true">
-      
-      <!-- Header -->
-      <div class="modal-header">
-        <div class="modal-header-info">
-          <div class="modal-header-icon" style="background: #e0f2fe; color: #0284c7;">⚡</div>
-          <div class="modal-header-title">
-            <h3 id="md2-title">App Name — Technical Architecture</h3>
-            <p>Durability, Cloud Infrastructure & Continuous Evolution</p>
+        <div style="background: #090e1d; border: 1px solid var(--border); border-radius: 14px; padding: 2rem;">
+          <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: #ffffff;">Our Engineering Standards:</h4>
+          <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.9rem; color: #94a3b8;">
+            <div><strong style="color: #ffffff;">⚡ Sub-Second Speeds:</strong> Zero-dependency node and WebAssembly routines for lightning load times.</div>
+            <div><strong style="color: #ffffff;">🔒 Enterprise Security:</strong> Cloud Run isolation, OAuth authentication, and encrypted credential handling.</div>
+            <div><strong style="color: #ffffff;">🧠 Model Agnostic:</strong> We wire the optimal models for the job: Claude 3.7 Sonnet, Gemini 2.0 Flash, GPT-4o, Wan 2.1, Minimax.</div>
+            <div><strong style="color: #ffffff;">📦 You Own the IP:</strong> 100% intellectual property transfer and full code ownership for custom builds.</div>
           </div>
         </div>
-        <button class="modal-close-btn" id="btn-close-md2" aria-label="Close tech stack modal">✕</button>
+      </div>
+    </section>
+
+    <!-- Section 4: Engineering Insights & Articles -->
+    <section class="articles-section">
+      <div class="section-header">
+        <span class="section-tag">ENGINEERING BLUEPRINTS</span>
+        <h3>Insights, Frameworks & Playbooks</h3>
+        <p>Technical breakdowns and tactical conversion guides authored by our engineering team.</p>
       </div>
 
-      <!-- Body -->
-      <div class="modal-body">
-        <h4 class="pane-headline" id="md2-headline">Engineered for Extreme Reliability</h4>
-        <p style="font-size: 0.95rem; color: #475569; line-height: 1.6;" id="md2-summary"></p>
+      <div class="articles-grid">
+        <a href="articles/the-220-character-rule-upwork-proposals.html" class="article-item">
+          <span class="article-tag-label">Sales Conversion</span>
+          <h4>The 220-Character Rule: Hooking Upwork Clients</h4>
+          <p>Why 90% of freelance proposals are discarded in inbox previews and how to engineer hooks that guarantee clicks.</p>
+          <span class="read-more">Read Guide →</span>
+        </a>
 
-        <!-- Stack Badges -->
-        <div class="tech-chips-list" id="md2-chips-list"></div>
+        <a href="articles/contractor-speed-to-lead-automation.html" class="article-item">
+          <span class="article-tag-label">Workflow Automation</span>
+          <h4>Speed-to-Lead: Why Contractors Lose 60% of Deals</h4>
+          <p>How 60-second mobile quoting and automated multi-channel sequences double close rates for tradesmen.</p>
+          <span class="read-more">Read Guide →</span>
+        </a>
 
-        <!-- 4 Pillars of Durability -->
-        <h5 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
-          Why This Platform Is Strong, Resilient & Durable
-        </h5>
-        <div class="tech-durability-grid" id="md2-durability-grid"></div>
+        <a href="articles/building-autonomous-ai-action-agents-2026.html" class="article-item">
+          <span class="article-tag-label">AI Architecture</span>
+          <h4>Building Autonomous Action Agents in 2026</h4>
+          <p>The state machine architecture behind headless browser navigation and self-healing action loops.</p>
+          <span class="read-more">Read Guide →</span>
+        </a>
 
-        <!-- Continuous Evolution -->
-        <div class="evolution-card">
-          <h5>⚡ Continuous Evolution Protocol: Staying Ahead of AI</h5>
-          <div id="md2-evolution-text"></div>
-        </div>
+        <a href="articles/how-to-prevent-duplicate-saas-billing.html" class="article-item">
+          <span class="article-tag-label">FinTech & Security</span>
+          <h4>Preventing Duplicate SaaS Billing & Dark Patterns</h4>
+          <p>Tactical checklists to expose hidden checkout add-ons and eliminate recurring software card bloat.</p>
+          <span class="read-more">Read Guide →</span>
+        </a>
       </div>
 
-    </div>
-  </div>
-
-  <!-- ========================================================================
-       MODAL 3: WHITELABEL OPERATOR INQUIRY DIALOG
-       ======================================================================== -->
-  <div class="modal-backdrop" id="modal-inquiry" aria-hidden="true">
-    <div class="modal-container" style="max-width: 540px;" role="dialog" aria-modal="true">
-      
-      <div class="modal-header">
-        <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Whitelabel Licensing Request</h3>
-        <button class="modal-close-btn" id="btn-close-inquiry">✕</button>
+      <div style="text-align: center;">
+        <a href="articles/index.html" class="btn-secondary-hero">
+          <span>Browse All Articles in Knowledge Hub →</span>
+        </a>
       </div>
+    </section>
 
-      <div class="modal-body">
-        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem;">
-          Select your software of interest and desired licensing tier. We will provide staging access, exact margin calculations, and turnkey launch documentation.
-        </p>
+    <!-- Section 5: Consultation / Contact Box -->
+    <section id="contact" class="contact-box">
+      <span class="badge-pill" style="margin-bottom: 1rem;">GET IN TOUCH</span>
+      <h3>Ready to Build or Scale Your AI Platform?</h3>
+      <p>Whether you're scoping custom development, interested in licensing one of our 7 platforms, or want to discuss enterprise AI workflows, let's connect.</p>
 
-        <form id="inquiry-form">
-          <div class="form-group-item">
-            <label for="form-app-select">Target Platform</label>
-            <select id="form-app-select" class="form-field">
-              <option value="templates-inquiry" id="opt-templates-inquiry">📁 Templates (50+ Offline Library / Custom Build)</option>
-              <option value="hubzoo">Hubzoo (AI Sales Agent & CRM)</option>
-              <option value="maxmotion">MaxMotion AI (Multi-Model Video Studio)</option>
-              <option value="mediabunny">MediaBunny (AI Media & Audio Suite)</option>
-              <option value="subsentry">SubSentry (Subscription Watchdog & Shield)</option>
-              <option value="appsave">AppSave ('Honey' for SaaS & AI Discounts)</option>
-              <option value="upworkz">Upworkz (Proposal Architect & Deal Closer)</option>
-              <option value="manus">Manus AI Studio (Autonomous Action Agent)</option>
-            </select>
-          </div>
-
-          <div class="form-group-item">
-            <label for="form-tier-select">Licensing Model (BizBox Framework)</label>
-            <select id="form-tier-select" class="form-field">
-              <option value="turnkey">Tier 1: Non-Exclusive Turnkey Whitelabel (Keep 100% MRR)</option>
-              <option value="lease">Tier 2: Monthly Lease with 70% Purchase Equity Credit</option>
-              <option value="buyout">Tier 3: Master Buyout with Full Source Code IP Transfer</option>
-            </select>
-          </div>
-
-          <div class="form-group-item">
-            <label for="form-name">Your Name & Company</label>
-            <input type="text" id="form-name" class="form-field" placeholder="e.g. Marcus Thorne · Apex Media Group" required>
-          </div>
-
-          <div class="form-group-item">
-            <label for="form-email">Work Email</label>
-            <input type="email" id="form-email" class="form-field" placeholder="name@company.com" required>
-          </div>
-
-          <div class="form-group-item">
-            <label for="form-source">Where did you find us?</label>
-            <select id="form-source" class="form-field" required>
-              <option value="" disabled selected>Please select an option...</option>
-              <option value="Agenturer.no">Agenturer.no</option>
-              <option value="Google / Web Search">Google / Web Search</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Twitter / X">Twitter / X</option>
-              <option value="AI Studio / Google AI Showcase">AI Studio / Google AI Showcase</option>
-              <option value="Direct Referral / Recommendation">Direct Referral / Recommendation</option>
-              <option value="SaaS Directory / Product Hunt">SaaS Directory / Product Hunt</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="form-group-item">
-            <label for="form-notes">Audience or Target Launch Goals</label>
-            <textarea id="form-notes" class="form-field" rows="3" placeholder="Tell us about your client base, existing agency traffic, or specific integrations..."></textarea>
-          </div>
-
-          <button type="submit" class="btn-card-action btn-learn-more" style="width: 100%; padding: 0.85rem; font-size: 0.92rem; margin-top: 0.5rem;" id="btn-submit-inquiry">
-            <span>🚀</span>
-            <span>Request Whitelabel Prospectus</span>
-          </button>
-        </form>
+      <div class="contact-options">
+        <a href="mailto:paljuritzen@gmail.com?subject=AIAPPSY%20Project%20Scope%20Inquiry" class="btn-primary-hero">
+          <span>✉️ Email Direct: paljuritzen@gmail.com</span>
+        </a>
+        <a href="custom-development.html" class="btn-secondary-hero">
+          <span>🛠️ View Custom Dev Services</span>
+        </a>
       </div>
+    </section>
 
-    </div>
-  </div>
-
-  <script src="data.js"></script>
-  <script src="data_no.js"></script>
-  <script src="app.js"></script>
-  <script src="advisor.js"></script>
-
-  <!-- ========================================================================
-       MODAL: TEMPLATES (50+ Offline Templates Inquiry)
-       ======================================================================== -->
-  <div class="modal-backdrop" id="modal-templates" aria-hidden="true">
-    <div class="modal-container modal-templates-container" role="dialog" aria-modal="true">
-      <div class="modal-header">
-        <div class="modal-header-info">
-          <div class="modal-header-icon" style="background: rgba(99, 102, 241, 0.12); color: #6366f1;">📁</div>
-          <div class="modal-header-title">
-            <h3 id="tpl-modal-title">Templates & Custom Solutions</h3>
-            <p id="tpl-modal-sub">Over 50 other architectures available upon inquiry</p>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <div style="width: 26px; height: 26px; background: #6366f1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">⚡</div>
+            <strong style="color: #ffffff; font-size: 1.1rem;">AIAPPSY</strong>
           </div>
-        </div>
-        <button class="modal-close-btn" id="btn-close-templates" aria-label="Close modal">&times;</button>
-      </div>
-
-      <div class="modal-body" style="padding: 2rem;">
-        <div class="templates-explanation-card">
-          <div class="templates-badge" id="tpl-badge">✨ 50+ OTHER TEMPLATES AVAILABLE</div>
-          <h4 id="tpl-headline" class="tpl-main-headline">
-            Can't find any apps of interest? We have more than 50 other templates ready to be tailored to you.
-          </h4>
-          <p id="tpl-intro-p1" class="tpl-intro-text">
-            If you cannot find any apps of interest among the ones currently displayed, we have <strong>more than 50 other templates that are not currently online</strong>.
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; max-width: 280px;">
+            Frontier AI applications, bespoke action agent engineering, and high-performance cloud microservices.
           </p>
-          <p id="tpl-intro-p2" class="tpl-intro-text" style="margin-top: 0.85rem;">
-            These can be set up with your own requirements in a short time to accommodate exactly what you want to create.
-          </p>
-
-          <div class="tpl-guarantees-inline">
-            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill1">Zero technical skills needed</span></div>
-            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill2">100% your own brand & domain</span></div>
-            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill3">Fast setup to your specs</span></div>
-            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill4">Hosting & tech support handled</span></div>
-          </div>
         </div>
 
-        <!-- Direct Inquiry Prompt / Action -->
-        <div class="tpl-inquire-action-box">
-          <div class="tpl-inquire-text">
-            <h5 id="tpl-inq-title">Inquire About Our 50+ Templates</h5>
-            <p id="tpl-inq-desc">Tell us a few words about what you want to create or the industry you are targeting. We will match your requirements with our private template repository and get back to you with exact options.</p>
-          </div>
-          <button class="btn-card-action btn-learn-more" id="btn-templates-enquire-now" style="padding: 0.85rem 1.6rem; font-size: 0.92rem;">
-            <span>✉️</span>
-            <span id="tpl-btn-enquire-text">Enquire About Templates</span>
-          </button>
+        <div class="footer-col">
+          <h5>Proprietary Apps</h5>
+          <ul>
+            <li><a href="apps/hubzoo.html">Hubzoo</a></li>
+            <li><a href="apps/upworkz.html">Upworkz</a></li>
+            <li><a href="apps/maxmotion.html">MaxMotion AI</a></li>
+            <li><a href="apps/subsentry.html">SubSentry</a></li>
+            <li><a href="apps/appsave.html">AppSave</a></li>
+            <li><a href="apps/mediabunny.html">MediaBunny</a></li>
+            <li><a href="apps/manus.html">Manus AI Studio</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Solutions</h5>
+          <ul>
+            <li><a href="custom-development.html">Custom AI Engineering</a></li>
+            <li><a href="portfolio.html">Whitelabel Portfolio</a></li>
+            <li><a href="articles/index.html">Articles & Insights</a></li>
+            <li><a href="/studio">Content Studio (Admin)</a></li>
+            <li><a href="/sitemap.xml">XML Sitemap</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Contact & System</h5>
+          <ul>
+            <li><a href="mailto:paljuritzen@gmail.com">paljuritzen@gmail.com</a></li>
+            <li><a href="/admin">Link Engine Admin</a></li>
+            <li><a href="https://github.com/aiappsy/link-engine">GitHub Repository</a></li>
+          </ul>
         </div>
       </div>
-    </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 AIAPPSY. Built on Google Cloud Run & Frontier AI Models.</span>
+        <div>
+          <a href="/admin">Link Manager</a> · 
+          <a href="/studio">Studio</a> · 
+          <a href="/sitemap.xml">Sitemap</a>
+        </div>
+      </div>
+    </footer>
+
   </div>
 
 </body>
