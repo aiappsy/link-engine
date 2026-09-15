@@ -1,455 +1,470 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIAPPSY Link Shortener & URL Manager</title>
+  <title>AIAPPSY — Turnkey AI SaaS Platforms & Custom AI Engineering</title>
+  <meta name="description" content="Discover and operate our suite of 7 production-grade AI SaaS applications, explore bespoke AI engineering services, and scale your business with AIAPPSY.">
+  <link rel="canonical" href="https://aiappsy.com/">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --card-bg: #151d30;
-      --border: #222f4c;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --accent: #10b981;
-      --danger: #ef4444;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2.5rem 1rem;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 780px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(99, 102, 241, 0.15);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #a5b4fc;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.3rem 0.8rem;
-      border-radius: 999px;
-      margin-bottom: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.5rem;
-    }
-
-    h1 span {
-      background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    header p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1.75rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      margin-bottom: 2rem;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    @media (max-width: 640px) {
-      .form-row { flex-direction: column; }
-    }
-
-    .input-group {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    input {
-      background: #0d1322;
-      border: 1px solid var(--border);
-      color: white;
-      padding: 0.85rem 1rem;
-      border-radius: 0.6rem;
-      font-size: 0.92rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input:focus {
-      border-color: var(--primary);
-    }
-
-    .slug-prefix-wrap {
-      display: flex;
-      align-items: center;
-      background: #0d1322;
-      border: 1px solid var(--border);
-      border-radius: 0.6rem;
-      overflow: hidden;
-    }
-
-    .slug-prefix-wrap span {
-      background: #182238;
-      color: var(--text-muted);
-      padding: 0.85rem 0.75rem;
-      font-size: 0.85rem;
-      font-family: 'JetBrains Mono', monospace;
-      border-right: 1px solid var(--border);
-    }
-
-    .slug-prefix-wrap input {
-      border: none;
-      border-radius: 0;
-      flex: 1;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    button.btn-primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.85rem 1.6rem;
-      border-radius: 0.6rem;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    button.btn-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-    }
-
-    .result-banner {
-      display: none;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 1rem 1.25rem;
-      border-radius: 0.6rem;
-      margin-top: 1.25rem;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .result-link {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
-      color: #34d399;
-      font-weight: 700;
-      word-break: break-all;
-    }
-
-    .btn-copy {
-      background: #10b981;
-      color: #0b0f19;
-      border: none;
-      padding: 0.5rem 0.9rem;
-      border-radius: 0.4rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .btn-copy:hover {
-      background: #059669;
-      color: white;
-    }
-
-    /* Links Table */
-    .table-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .table-header h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
-
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      padding: 0.75rem 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    td {
-      padding: 0.85rem 0.75rem;
-      border-bottom: 1px solid rgba(34, 47, 76, 0.5);
-      font-size: 0.88rem;
-    }
-
-    .slug-cell {
-      font-family: 'JetBrains Mono', monospace;
-      color: #818cf8;
-      font-weight: 700;
-    }
-
-    .slug-cell a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .slug-cell a:hover {
-      text-decoration: underline;
-    }
-
-    .dest-cell {
-      max-width: 260px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--text-muted);
-    }
-
-    .clicks-badge {
-      display: inline-block;
-      background: #1e293b;
-      color: #38bdf8;
-      font-family: 'JetBrains Mono', monospace;
-      padding: 0.2rem 0.55rem;
-      border-radius: 0.35rem;
-      font-size: 0.78rem;
-      font-weight: 700;
-    }
-
-    .btn-del {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0.2rem;
-      transition: color 0.2s;
-    }
-
-    .btn-del:hover {
-      color: var(--danger);
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <div class="container">
-    <header>
-      <div class="badge">⚡ Din Egen URL-Forkorter</div>
-      <h1><span>AIAPPSY</span> Link Engine</h1>
-      <p>Lag korte, pene lenker for alle dine Cloud Run- og AI Studio-apper.</p>
+  <div class="page-container">
+    
+    <!-- Top Brand Header -->
+    <header class="top-header">
+      <a href="/" class="brand-link">
+        <div class="brand-logo-badge">⚡</div>
+        <div class="brand-meta">
+          <h1>aiappsy<span>.com</span></h1>
+          <span>Turnkey AI SaaS Suite & Custom Engineering Hub</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <a href="custom-development.html" class="btn-header-templates" style="text-decoration: none;" title="Custom AI Engineering & Bespoke Builds">
+          <span>🛠️</span>
+          <span>Custom Dev</span>
+        </a>
+        <a href="articles/index.html" class="btn-header-templates" style="text-decoration: none;" title="AI Strategy Guides & Insights">
+          <span>📚</span>
+          <span>Articles</span>
+        </a>
+        <button class="btn-header-templates" id="btn-templates-tab" title="Templates / Maler (50+)">
+          <span>📁</span>
+          <span id="txt-header-templates">Templates</span>
+        </button>
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt til norsk / Switch to English">
+          <span class="lang-flag" id="lang-flag">🇳🇴</span>
+          <span class="lang-label" id="lang-label">Norsk</span>
+        </button>
+
+        <button class="btn-header-inquiry" id="btn-top-inquiry">
+          <span>💼</span>
+          <span id="txt-header-inquiry">Whitelabel Licensing Guide</span>
+        </button>
+      </div>
     </header>
 
-    <!-- Create Card -->
-    <div class="card">
-      <form id="shorten-form">
-        <div class="form-row">
-          <div class="input-group" style="flex: 2;">
-            <label for="target-url">Mål-adresse (Lang Cloud Run / nettside-URL)</label>
-            <input type="text" id="target-url" placeholder="https://saasapps-ai-studio-910579541086.us-west1.run.app" required>
-          </div>
+    <!-- CENTERED HERO SECTION (Selling Whitelabel SaaS Platforms) -->
+    <section class="hero-centered">
+      <div class="hero-pill-tag">
+        <span>🚀</span>
+        <span>Turnkey SaaS Business Portfolio</span>
+      </div>
 
-          <div class="input-group" style="flex: 1.2;">
-            <label for="custom-slug">Kortnavn / Slug (valgfritt)</label>
-            <div class="slug-prefix-wrap">
-              <span>/</span>
-              <input type="text" id="custom-slug" placeholder="apps">
+      <h2>
+        Own & Operate Your Own <span class="highlight">AI SaaS Business</span> This Weekend.
+      </h2>
+
+      <p class="hero-intro-text">
+        <strong>Zero technical ability, coding skills, or SaaS experience needed.</strong> We take care of everything behind the scenes—including high-speed cloud hosting, database management, 24/7 technical support, and continuous frontier AI model upgrades.
+      </p>
+
+      <!-- Zero-Tech & Always Included Value Banner -->
+      <div class="turnkey-promise-banner">
+        <div class="promise-highlight-badge">✨ WHAT'S ALWAYS INCLUDED IN EVERY LICENSE</div>
+        <div class="promise-grid">
+          <div class="promise-item">
+            <span class="promise-icon">🏷️</span>
+            <div>
+              <strong>100% Turnkey Whitelabel</strong>
+              <p>Your brand, your custom logo, and your color scheme.</p>
+            </div>
+          </div>
+          <div class="promise-item">
+            <span class="promise-icon">🌐</span>
+            <div>
+              <strong>Custom Domain & SSL</strong>
+              <p>Fully configured on your domain (e.g. app.yourbrand.com).</p>
+            </div>
+          </div>
+          <div class="promise-item">
+            <span class="promise-icon">⏱️</span>
+            <div>
+              <strong>Dedicated Custom Hours Included</strong>
+              <p>Tailored onboarding, branding adjustments & prompt tuning.</p>
+            </div>
+          </div>
+          <div class="promise-item">
+            <span class="promise-icon">🛡️</span>
+            <div>
+              <strong>Hands-Off Cloud & Tech Support</strong>
+              <p>We manage servers, databases, security patches & uptime.</p>
             </div>
           </div>
         </div>
-
-        <button type="submit" class="btn-primary">
-          <span>⚡</span>
-          <span>Opprett Kortlenke</span>
-        </button>
-      </form>
-
-      <div class="result-banner" id="result-box">
-        <div>
-          <span style="font-size: 0.75rem; color: #a7f3d0; text-transform: uppercase; font-weight: 700; display: block;">Din nye kortlenke er klar:</span>
-          <a href="#" target="_blank" class="result-link" id="result-link"></a>
+        <div class="promise-addon-footer">
+          <span>➕ Need bespoke features or custom ERP integrations later? Flexible add-ons are available at <strong>very reasonable, transparent prices</strong>.</span>
         </div>
-        <button class="btn-copy" id="btn-copy">Kopier Lenke</button>
       </div>
+
+      <!-- Trust Bar -->
+      <div class="trust-values-bar">
+        <div class="trust-item"><span class="icon">✓</span> Zero Technical Skill Needed</div>
+        <div class="trust-item"><span class="icon">✓</span> Whitelabel, Domain & Custom Hours Included</div>
+        <div class="trust-item"><span class="icon">✓</span> 80% to 95% Gross Margins</div>
+        <div class="trust-item"><span class="icon">✓</span> Fully Managed Hosting & Tech Support</div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <nav class="category-filter-bar" aria-label="Filter by Category">
+        <button class="filter-btn active" data-cat="all">All 7 Platforms</button>
+        <button class="filter-btn" data-cat="sales-crm">Sales & CRM</button>
+        <button class="filter-btn" data-cat="media-video">AI Video & Media</button>
+        <button class="filter-btn" data-cat="saas-finance">SaaS & FinTech</button>
+        <button class="filter-btn" data-cat="autonomous-agents">Autonomous Agents</button>
+        <button class="filter-btn filter-btn-templates" id="filter-btn-templates"><span>📁</span> <span id="txt-filter-templates">Templates (50+)</span></button>
+      </nav>
+    </section>
+
+    <!-- CENTERED CARDS STREAM (One centered card for each app) -->
+    <main class="centered-cards-stream" id="cards-container">
+      <!-- Dynamically populated with all 7 apps -->
+    </main>
+
+    <!-- BESPOKE CUSTOM AI ENGINEERING SHOWCASE SECTION -->
+    <section class="custom-dev-showcase-section" style="margin-top: 4rem; background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 3rem; box-shadow: var(--shadow-card);" aria-labelledby="custom-dev-heading">
+      <div style="text-align: center; max-width: 760px; margin: 0 auto 2.5rem auto;">
+        <div class="hero-pill-tag" style="margin-bottom: 1rem;">
+          <span>🛠️</span>
+          <span>Bespoke Engineering & Custom Builds</span>
+        </div>
+        <h2 id="custom-dev-heading" style="font-size: 2.1rem; font-weight: 900; color: var(--text-heading); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1rem;">
+          Need a Custom Solution? We Build Tailored AI Platforms From Scratch.
+        </h2>
+        <p style="font-size: 1.05rem; color: var(--text-body); line-height: 1.6;">
+          Beyond our 7 production platforms and 50+ templates, we engineer bespoke AI systems for agencies, enterprises, and founders. From multi-agent autonomous loops to generative video studios and deep ERP bridges.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
+        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🤖</div>
+          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Action Agents</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Headless browser controllers, automated DOM navigation, and self-healing task loops.</p>
+        </div>
+
+        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🎬</div>
+          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Generative Media</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Multi-model video pipelines (Wan 2.1, Kling, Minimax) with WebAssembly on-device processing.</p>
+        </div>
+
+        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">⚡</div>
+          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Full-Stack Apps</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">High-speed Next.js 15, TypeScript, Stripe/Vipps billing, and sub-second PWA load times.</p>
+        </div>
+
+        <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🔗</div>
+          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">ERP & API Bridges</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Two-way sync with Fiken, Tripletex, HubSpot, Salesforce, and enterprise SQL databases.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="custom-development.html" class="btn-primary" style="padding: 0.85rem 1.75rem; text-decoration: none; font-weight: 700;">
+          <span>Explore Custom AI Engineering Services →</span>
+        </a>
+        <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Project%20Scope" class="btn-secondary" style="padding: 0.85rem 1.5rem; text-decoration: none; font-weight: 600;">
+          <span>✉️ Book Project Scoping Call</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Crawlable Static SEO Footer Directory (Guarantees Googlebot indexes all standalone landing pages & articles) -->
+    <section class="seo-directory-section" aria-label="Software Directory & Specifications">
+      <div class="seo-directory-header">
+        <h3>Direct Platform Guides & Technical Specifications</h3>
+        <p>Explore dedicated search-indexed guides, technical specifications, and whitelabel documentation for each of our 7 production AI SaaS platforms:</p>
+      </div>
+      <div class="seo-directory-links">
+        <a href="apps/hubzoo.html"><strong>Hubzoo</strong> — AI Sales Agent & CRM for Contractors & SMBs</a>
+        <a href="apps/upworkz.html"><strong>Upworkz</strong> — Proposal Architect & Deal Closer for Freelancers</a>
+        <a href="apps/subsentry.html"><strong>SubSentry</strong> — Subscription Watchdog & 1-Click Cancellation Shield</a>
+        <a href="apps/maxmotion.html"><strong>MaxMotion AI</strong> — Multi-Model Generative Video Studio (Wan 2.1, Kling, Minimax)</a>
+        <a href="apps/appsave.html"><strong>AppSave</strong> — 'Honey' for SaaS, Cloud Hosting & AI Discounts</a>
+        <a href="apps/mediabunny.html"><strong>MediaBunny</strong> — In-Browser WASM Media Converter & EBU R128 Audio</a>
+        <a href="apps/manus.html"><strong>Manus AI Studio</strong> — Autonomous General-Purpose Action Agent</a>
+        <a href="custom-development.html"><strong>Custom AI Engineering</strong> — Bespoke Agents, Generative Media & ERP Bridges</a>
+      </div>
+
+      <div class="seo-directory-header" style="margin-top: 2rem;">
+        <h3>AI Insights, Playbooks & Strategic Guides</h3>
+        <p>In-depth technical breakdowns and conversion frameworks from our engineering team:</p>
+      </div>
+      <div class="seo-directory-links">
+        <a href="articles/the-220-character-rule-upwork-proposals.html"><strong>The 220-Character Rule</strong> — How to Hook Upwork Clients in Mobile Inbox Previews</a>
+        <a href="articles/contractor-speed-to-lead-automation.html"><strong>Speed-to-Lead Equation</strong> — Why Contractors Lose 60% of Deals to Slow Quotes</a>
+        <a href="articles/building-autonomous-ai-action-agents-2026.html"><strong>Autonomous Action Agents</strong> — Why Chatbots Are Obsolete & How to Build Execution Agents</a>
+        <a href="articles/index.html"><strong>All Articles & Guides</strong> — Browse the AIAppsy Knowledge Base</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: FULL-SCREEN DEEP DIVE (Users & Whitelabel Operators)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="modal-deepdive" aria-hidden="true">
+    <div class="modal-container" role="dialog" aria-modal="true">
+      
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-header-icon" id="md1-icon">⚡</div>
+          <div class="modal-header-title">
+            <h3 id="md1-title">App Name — Deep Dive</h3>
+            <p id="md1-url">https://app.ai.studio</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-launch-app" id="md1-direct-link" style="padding: 0.45rem 0.9rem; font-size: 0.8rem;">
+            <span>Open App</span>
+            <span>↗</span>
+          </a>
+          <button class="modal-close-btn" id="btn-close-md1" aria-label="Close modal">✕</button>
+        </div>
+      </div>
+
+      <!-- Internal Tabs -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="overview">🌟 Executive Overview</button>
+        <button class="modal-tab" data-tab="features">⚡ Core Superpowers</button>
+        <button class="modal-tab" data-tab="benefits">📈 User & Business ROI</button>
+        <button class="modal-tab" data-tab="whitelabel">💼 Whitelabel Operator Hub</button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        
+        <!-- Tab 1: Overview -->
+        <div class="modal-pane active" id="pane-overview">
+          <h4 class="pane-headline" id="md1-headline">Overview</h4>
+          <div class="story-lead-box" id="md1-story"></div>
+        </div>
+
+        <!-- Tab 2: Features -->
+        <div class="modal-pane" id="pane-features">
+          <h4 class="pane-headline">Core Functions & Automated Capabilities</h4>
+          <div class="detail-grid-2col" id="md1-features-grid"></div>
+        </div>
+
+        <!-- Tab 3: Benefits -->
+        <div class="modal-pane" id="pane-benefits">
+          <h4 class="pane-headline">Tangible User & Commercial Benefits</h4>
+          <div class="detail-grid-2col" id="md1-benefits-grid"></div>
+        </div>
+
+        <!-- Tab 4: Whitelabel -->
+        <div class="modal-pane" id="pane-whitelabel">
+          <h4 class="pane-headline">Whitelabel Operator & Monetization Potential</h4>
+          <div class="operator-pitch-card" id="md1-operator-pitch"></div>
+          
+          <h5 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">
+            Turnkey Ownership & Licensing Models (BizBox Framework)
+          </h5>
+          <div class="licensing-grid" id="md1-licensing-grid"></div>
+
+          <div class="operator-calc-row">
+            <div>
+              <h5 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Estimated Monthly Operator Revenue</h5>
+              <p style="font-size: 0.82rem; color: #64748b;" id="md1-revenue-text"></p>
+            </div>
+            <button class="btn-card-action btn-learn-more" id="btn-modal-inquire-trigger">Inquire About Licensing</button>
+          </div>
+        </div>
+
+      </div>
+
     </div>
+  </div>
 
-    <!-- Active Links Table -->
-    <div class="card">
-      <div class="table-header">
-        <h3>Aktive Kortlenker & Klikkstatistikk</h3>
+  <!-- ========================================================================
+       MODAL 2: TECH STACK, DURABILITY & CONTINUOUS EVOLUTION
+       ======================================================================== -->
+  <div class="modal-backdrop" id="modal-techstack" aria-hidden="true">
+    <div class="modal-container" role="dialog" aria-modal="true">
+      
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-header-icon" style="background: #e0f2fe; color: #0284c7;">⚡</div>
+          <div class="modal-header-title">
+            <h3 id="md2-title">App Name — Technical Architecture</h3>
+            <p>Durability, Cloud Infrastructure & Continuous Evolution</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-md2" aria-label="Close tech stack modal">✕</button>
       </div>
 
-      <div class="table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>Kortlenke</th>
-              <th>Mål-adresse</th>
-              <th>Klikk</th>
-              <th>Handling</th>
-            </tr>
-          </thead>
-          <tbody id="links-tbody">
-            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Laster lenker...</td></tr>
-          </tbody>
-        </table>
+      <!-- Body -->
+      <div class="modal-body">
+        <h4 class="pane-headline" id="md2-headline">Engineered for Extreme Reliability</h4>
+        <p style="font-size: 0.95rem; color: #475569; line-height: 1.6;" id="md2-summary"></p>
+
+        <!-- Stack Badges -->
+        <div class="tech-chips-list" id="md2-chips-list"></div>
+
+        <!-- 4 Pillars of Durability -->
+        <h5 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
+          Why This Platform Is Strong, Resilient & Durable
+        </h5>
+        <div class="tech-durability-grid" id="md2-durability-grid"></div>
+
+        <!-- Continuous Evolution -->
+        <div class="evolution-card">
+          <h5>⚡ Continuous Evolution Protocol: Staying Ahead of AI</h5>
+          <div id="md2-evolution-text"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: WHITELABEL OPERATOR INQUIRY DIALOG
+       ======================================================================== -->
+  <div class="modal-backdrop" id="modal-inquiry" aria-hidden="true">
+    <div class="modal-container" style="max-width: 540px;" role="dialog" aria-modal="true">
+      
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Whitelabel Licensing Request</h3>
+        <button class="modal-close-btn" id="btn-close-inquiry">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 1.5rem;">
+          Select your software of interest and desired licensing tier. We will provide staging access, exact margin calculations, and turnkey launch documentation.
+        </p>
+
+        <form id="inquiry-form">
+          <div class="form-group-item">
+            <label for="form-app-select">Target Platform</label>
+            <select id="form-app-select" class="form-field">
+              <option value="templates-inquiry" id="opt-templates-inquiry">📁 Templates (50+ Offline Library / Custom Build)</option>
+              <option value="hubzoo">Hubzoo (AI Sales Agent & CRM)</option>
+              <option value="maxmotion">MaxMotion AI (Multi-Model Video Studio)</option>
+              <option value="mediabunny">MediaBunny (AI Media & Audio Suite)</option>
+              <option value="subsentry">SubSentry (Subscription Watchdog & Shield)</option>
+              <option value="appsave">AppSave ('Honey' for SaaS & AI Discounts)</option>
+              <option value="upworkz">Upworkz (Proposal Architect & Deal Closer)</option>
+              <option value="manus">Manus AI Studio (Autonomous Action Agent)</option>
+            </select>
+          </div>
+
+          <div class="form-group-item">
+            <label for="form-tier-select">Licensing Model (BizBox Framework)</label>
+            <select id="form-tier-select" class="form-field">
+              <option value="turnkey">Tier 1: Non-Exclusive Turnkey Whitelabel (Keep 100% MRR)</option>
+              <option value="lease">Tier 2: Monthly Lease with 70% Purchase Equity Credit</option>
+              <option value="buyout">Tier 3: Master Buyout with Full Source Code IP Transfer</option>
+            </select>
+          </div>
+
+          <div class="form-group-item">
+            <label for="form-name">Your Name & Company</label>
+            <input type="text" id="form-name" class="form-field" placeholder="e.g. Marcus Thorne · Apex Media Group" required>
+          </div>
+
+          <div class="form-group-item">
+            <label for="form-email">Work Email</label>
+            <input type="email" id="form-email" class="form-field" placeholder="name@company.com" required>
+          </div>
+
+          <div class="form-group-item">
+            <label for="form-source">Where did you find us?</label>
+            <select id="form-source" class="form-field" required>
+              <option value="" disabled selected>Please select an option...</option>
+              <option value="Agenturer.no">Agenturer.no</option>
+              <option value="Google / Web Search">Google / Web Search</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Twitter / X">Twitter / X</option>
+              <option value="AI Studio / Google AI Showcase">AI Studio / Google AI Showcase</option>
+              <option value="Direct Referral / Recommendation">Direct Referral / Recommendation</option>
+              <option value="SaaS Directory / Product Hunt">SaaS Directory / Product Hunt</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group-item">
+            <label for="form-notes">Audience or Target Launch Goals</label>
+            <textarea id="form-notes" class="form-field" rows="3" placeholder="Tell us about your client base, existing agency traffic, or specific integrations..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-card-action btn-learn-more" style="width: 100%; padding: 0.85rem; font-size: 0.92rem; margin-top: 0.5rem;" id="btn-submit-inquiry">
+            <span>🚀</span>
+            <span>Request Whitelabel Prospectus</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="data_no.js"></script>
+  <script src="app.js"></script>
+  <script src="advisor.js"></script>
+
+  <!-- ========================================================================
+       MODAL: TEMPLATES (50+ Offline Templates Inquiry)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="modal-templates" aria-hidden="true">
+    <div class="modal-container modal-templates-container" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-header-icon" style="background: rgba(99, 102, 241, 0.12); color: #6366f1;">📁</div>
+          <div class="modal-header-title">
+            <h3 id="tpl-modal-title">Templates & Custom Solutions</h3>
+            <p id="tpl-modal-sub">Over 50 other architectures available upon inquiry</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-templates" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 2rem;">
+        <div class="templates-explanation-card">
+          <div class="templates-badge" id="tpl-badge">✨ 50+ OTHER TEMPLATES AVAILABLE</div>
+          <h4 id="tpl-headline" class="tpl-main-headline">
+            Can't find any apps of interest? We have more than 50 other templates ready to be tailored to you.
+          </h4>
+          <p id="tpl-intro-p1" class="tpl-intro-text">
+            If you cannot find any apps of interest among the ones currently displayed, we have <strong>more than 50 other templates that are not currently online</strong>.
+          </p>
+          <p id="tpl-intro-p2" class="tpl-intro-text" style="margin-top: 0.85rem;">
+            These can be set up with your own requirements in a short time to accommodate exactly what you want to create.
+          </p>
+
+          <div class="tpl-guarantees-inline">
+            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill1">Zero technical skills needed</span></div>
+            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill2">100% your own brand & domain</span></div>
+            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill3">Fast setup to your specs</span></div>
+            <div class="tpl-g-pill"><span>✓</span> <span id="tpl-pill4">Hosting & tech support handled</span></div>
+          </div>
+        </div>
+
+        <!-- Direct Inquiry Prompt / Action -->
+        <div class="tpl-inquire-action-box">
+          <div class="tpl-inquire-text">
+            <h5 id="tpl-inq-title">Inquire About Our 50+ Templates</h5>
+            <p id="tpl-inq-desc">Tell us a few words about what you want to create or the industry you are targeting. We will match your requirements with our private template repository and get back to you with exact options.</p>
+          </div>
+          <button class="btn-card-action btn-learn-more" id="btn-templates-enquire-now" style="padding: 0.85rem 1.6rem; font-size: 0.92rem;">
+            <span>✉️</span>
+            <span id="tpl-btn-enquire-text">Enquire About Templates</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script>
-    const form = document.getElementById('shorten-form');
-    const targetUrlInput = document.getElementById('target-url');
-    const customSlugInput = document.getElementById('custom-slug');
-    const resultBox = document.getElementById('result-box');
-    const resultLink = document.getElementById('result-link');
-    const btnCopy = document.getElementById('btn-copy');
-    const tbody = document.getElementById('links-tbody');
-
-    async function fetchLinks() {
-      try {
-        const res = await fetch('/api/links');
-        const data = await res.json();
-        if (data.success) {
-          renderTable(data.links);
-        }
-      } catch(err) {
-        console.error(err);
-      }
-    }
-
-    function renderTable(links) {
-      const keys = Object.keys(links);
-      if (keys.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen kortlenker opprettet ennå.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = keys.map(slug => {
-        const item = links[slug];
-        const fullShort = window.location.origin + '/' + slug;
-        return `
-          <tr>
-            <td class="slug-cell"><a href="${fullShort}" target="_blank">/${slug}</a></td>
-            <td class="dest-cell" title="${item.url}">${item.url}</td>
-            <td><span class="clicks-badge">${item.clicks || 0} klikk</span></td>
-            <td>
-              <button class="btn-del" onclick="deleteLink('${slug}')" title="Slett lenke">🗑️</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const url = targetUrlInput.value.trim();
-      const customSlug = customSlugInput.value.trim();
-
-      try {
-        const res = await fetch('/api/shorten', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, customSlug })
-        });
-        const data = await res.json();
-        if (data.success) {
-          resultLink.textContent = data.shortUrl;
-          resultLink.href = data.shortUrl;
-          resultBox.style.display = 'flex';
-          targetUrlInput.value = '';
-          customSlugInput.value = '';
-          fetchLinks();
-        } else {
-          alert('Feil: ' + (data.error || 'Kunne ikke opprette lenke'));
-        }
-      } catch(err) {
-        alert('Nettverksfeil: ' + err.message);
-      }
-    });
-
-    btnCopy.addEventListener('click', () => {
-      navigator.clipboard.writeText(resultLink.textContent);
-      btnCopy.textContent = 'Kopiert!';
-      setTimeout(() => btnCopy.textContent = 'Kopier Lenke', 2000);
-    });
-
-    async function deleteLink(slug) {
-      if (!confirm('Er du sikker på at du vil slette /' + slug + '?')) return;
-      try {
-        const res = await fetch('/api/links/' + slug, { method: 'DELETE' });
-        const data = await res.json();
-        if (data.success) fetchLinks();
-      } catch(err) {
-        alert('Kunne ikke slette lenke');
-      }
-    }
-
-    fetchLinks();
-  </script>
 </body>
 </html>

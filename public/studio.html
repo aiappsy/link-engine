@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIAppsy Content & SEO Studio | In-Browser Article Publisher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --studio-bg: #f8fafc;
+      --studio-panel: #ffffff;
+      --studio-border: #e2e8f0;
+      --studio-primary: #0284c7;
+      --studio-primary-hover: #0369a1;
+      --studio-accent: #10b981;
+    }
+    body {
+      background: var(--studio-bg);
+      color: var(--text-body);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .studio-navbar {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .studio-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .studio-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(2, 132, 199, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .studio-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-studio {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .btn-studio-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .btn-studio-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+    .btn-studio-publish {
+      background: #0284c7;
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .btn-studio-publish:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    /* Main Studio Layout: Split Workspace */
+    .studio-workspace {
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      flex: 1;
+      height: calc(100vh - 58px);
+      overflow: hidden;
+    }
+
+    /* Left Panel: Settings & Meta */
+    .studio-sidebar {
+      background: var(--studio-panel);
+      border-right: 1px solid var(--studio-border);
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .panel-heading {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .field-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .input-studio {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--studio-border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text-heading);
+      background: #ffffff;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .input-studio:focus {
+      border-color: var(--studio-primary);
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.12);
+    }
+    textarea.input-studio {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    /* App Funnel CTA Selector */
+    .app-select-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+    }
+    .app-select-card strong {
+      display: block;
+      color: var(--text-heading);
+      margin-bottom: 0.2rem;
+    }
+
+    /* Right Panel: The Writing Canvas */
+    .studio-editor-area {
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      overflow-y: auto;
+    }
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--studio-border);
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
+    }
+    .tool-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-body);
+      transition: all 0.12s;
+    }
+    .tool-btn:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-light);
+      color: var(--text-heading);
+    }
+    .tool-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--studio-border);
+      margin: 0 0.25rem;
+    }
+
+    /* Writing Canvas Contenteditable */
+    .writing-canvas-container {
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      box-sizing: border-box;
+      flex: 1;
+    }
+    .canvas-title-input {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: var(--text-heading);
+      border: none;
+      outline: none;
+      width: 100%;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      font-family: inherit;
+      background: transparent;
+    }
+    .canvas-title-input::placeholder {
+      color: var(--text-light);
+    }
+    .canvas-body {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-body);
+      outline: none;
+      min-height: 450px;
+    }
+    .canvas-body p {
+      margin-bottom: 1.25rem;
+    }
+    .canvas-body h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin: 2rem 0 0.75rem 0;
+      letter-spacing: -0.01em;
+    }
+    .canvas-body h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .canvas-body blockquote {
+      border-left: 4px solid var(--studio-primary);
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-subtle);
+      border-radius: 0 6px 6px 0;
+      margin: 1.5rem 0;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-heading);
+    }
+    .canvas-body ul, .canvas-body ol {
+      margin: 0 0 1.25rem 1.5rem;
+    }
+    .canvas-body li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Embedded CTA Preview Inside Canvas */
+    .canvas-cta-preview {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      margin: 2.5rem 0;
+      text-align: center;
+      user-select: none;
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+    }
+    .canvas-cta-preview h4 {
+      color: #ffffff;
+      font-size: 1.35rem;
+      margin-bottom: 0.5rem;
+    }
+    .canvas-cta-preview p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Modal for Alert & Notifications */
+    .studio-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 1000;
+      border-left: 4px solid #10b981;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <nav class="studio-navbar">
+    <a href="https://aiappsy.com" class="studio-brand">
+      <span>⚡ AIAppsy</span>
+      <span class="studio-badge">Content Studio</span>
+    </a>
+
+    <div class="studio-actions">
+      <button class="btn-studio btn-studio-secondary" id="btn-load-template" title="Load Preset Article Outline">
+        <span>📋</span>
+        <span>Presets</span>
+      </button>
+      <button class="btn-studio btn-studio-secondary" id="btn-save-draft" title="Save draft to browser storage">
+        <span>💾</span>
+        <span>Save Draft</span>
+      </button>
+      <button class="btn-studio btn-studio-secondary" id="btn-export-html" title="Download standalone HTML file">
+        <span>📥</span>
+        <span>Export HTML</span>
+      </button>
+      <button class="btn-studio btn-studio-publish" id="btn-publish-live" title="Compile and Publish to Live Articles">
+        <span>🚀</span>
+        <span>Publish to Site</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Split Studio Workspace -->
+  <div class="studio-workspace">
+
+    <!-- LEFT SIDEBAR: METADATA & SEO CONFIGURATION -->
+    <aside class="studio-sidebar">
+      <div class="panel-heading">
+        <span>SEO & Distribution</span>
+        <span id="txt-word-count" style="font-size: 0.75rem; color: var(--studio-primary); font-weight: 700;">0 words</span>
+      </div>
+
+      <!-- URL Slug -->
+      <div class="field-group">
+        <label class="field-label" for="meta-slug">
+          <span>URL Slug</span>
+          <span class="field-hint">articles/[slug].html</span>
+        </label>
+        <input type="text" id="meta-slug" class="input-studio" placeholder="e.g. how-to-scale-upwork-proposals">
+      </div>
+
+      <!-- Category / Topic Tag -->
+      <div class="field-group">
+        <label class="field-label" for="meta-category">
+          <span>Category / Topic</span>
+        </label>
+        <select id="meta-category" class="input-studio">
+          <option value="Freelance Strategy & AI">Freelance Strategy & AI (Upworkz)</option>
+          <option value="SMB Sales & Operations">SMB Sales & Operations (Hubzoo)</option>
+          <option value="SaaS & Financial Protection">SaaS & Financial Protection (SubSentry)</option>
+          <option value="Generative Video & Media">Generative Video & Media (MaxMotion)</option>
+          <option value="E-Commerce & SaaS Deals">E-Commerce & SaaS Deals (AppSave)</option>
+          <option value="In-Browser Media Engineering">In-Browser Media Engineering (MediaBunny)</option>
+          <option value="Agentic Architecture & Automation">Agentic Architecture (Manus)</option>
+          <option value="Custom AI Engineering">Custom AI Engineering (Studio)</option>
+        </select>
+      </div>
+
+      <!-- Primary Target App Funnel -->
+      <div class="field-group">
+        <label class="field-label" for="meta-app-funnel">
+          <span>Primary Product Funnel</span>
+          <span class="field-hint">Auto-injects conversion banner</span>
+        </label>
+        <select id="meta-app-funnel" class="input-studio">
+          <option value="upworkz">Upworkz (Proposal Architect)</option>
+          <option value="hubzoo">Hubzoo (Sales Agent & CRM)</option>
+          <option value="subsentry">SubSentry (Subscription Shield)</option>
+          <option value="maxmotion">MaxMotion AI (Video Studio)</option>
+          <option value="appsave">AppSave (SaaS Coupon Extension)</option>
+          <option value="mediabunny">MediaBunny (WASM Media Suite)</option>
+          <option value="manus">Manus AI Studio (Action Agent)</option>
+          <option value="custom_dev">Custom AI Development Studio</option>
+        </select>
+      </div>
+
+      <!-- Target Keywords -->
+      <div class="field-group">
+        <label class="field-label" for="meta-keywords">
+          <span>Target Search Keywords</span>
+          <span class="field-hint">Comma separated</span>
+        </label>
+        <input type="text" id="meta-keywords" class="input-studio" placeholder="e.g. upwork proposals, win client contracts, ai sales">
+      </div>
+
+      <!-- Meta Description -->
+      <div class="field-group">
+        <label class="field-label" for="meta-desc">
+          <span>Google Meta Description</span>
+          <span id="char-counter" class="field-hint">0 / 160 chars</span>
+        </label>
+        <textarea id="meta-desc" class="input-studio" placeholder="Crisp 150-160 character summary that searchers click in Google SERPs..."></textarea>
+      </div>
+
+      <!-- Target App Preview Pill -->
+      <div class="app-select-card" id="app-preview-card">
+        <strong id="preview-app-title">Funnel Target: Upworkz</strong>
+        <span id="preview-app-desc" style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; display: block;">
+          Automate high-converting proposals with first-sentence mobile hooks.
+        </span>
+      </div>
+
+      <!-- FAQ Builder -->
+      <div class="panel-heading" style="margin-top: 1rem;">
+        <span>Google FAQ Schema (PAA)</span>
+        <button class="tool-btn" id="btn-add-faq" style="font-size: 0.75rem; color: var(--studio-primary);">+ Add FAQ</button>
+      </div>
+      <div id="faq-list-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <!-- Dynamic FAQs rendered here -->
+      </div>
+
+    </aside>
+
+    <!-- RIGHT MAIN: THE WRITING CANVAS -->
+    <main class="studio-editor-area">
+
+      <!-- Editor Formatting Toolbar -->
+      <div class="editor-toolbar">
+        <button class="tool-btn" data-cmd="formatBlock" data-val="h2">H2</button>
+        <button class="tool-btn" data-cmd="formatBlock" data-val="h3">H3</button>
+        <button class="tool-btn" data-cmd="formatBlock" data-val="p">Paragraph</button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" data-cmd="bold"><strong>B</strong></button>
+        <button class="tool-btn" data-cmd="italic"><em>I</em></button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" data-cmd="insertUnorderedList">• List</button>
+        <button class="tool-btn" data-cmd="insertOrderedList">1. List</button>
+        <button class="tool-btn" data-cmd="formatBlock" data-val="blockquote">“ Quote</button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" id="btn-insert-callout">✨ Callout</button>
+        <button class="tool-btn" id="btn-insert-link">🔗 Link</button>
+        <div class="tool-divider"></div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: auto;" id="read-time-pill">⏱️ 3 min read</span>
+      </div>
+
+      <!-- Writing Canvas Container -->
+      <div class="writing-canvas-container">
+        <!-- Article Title -->
+        <input type="text" id="article-title" class="canvas-title-input" placeholder="Enter High-Impact Article Title..." value="How to Turn Incoming Leads into Signed Contracts in Under 60 Seconds">
+
+        <!-- Article Body Canvas -->
+        <div class="canvas-body" id="article-canvas" contenteditable="true">
+          <p class="lead" style="font-size: 1.18rem; font-weight: 500; color: var(--text-heading);">
+            Most service businesses and consultants lose deals not because their pricing is too high or their quality is too low, but because they simply take too long to reply.
+          </p>
+          <h2>The Broken Speed-to-Lead Equation</h2>
+          <p>
+            When a prospective client fills out an inquiry form or sends a WhatsApp message, they are in an active buying state. If you reply four days later with a PDF attachment, that client has almost certainly hired your competitor.
+          </p>
+          <blockquote>
+            "Field studies across small business sales show that 70% of contracts are awarded to the first professional estimate delivered."
+          </blockquote>
+          <h2>How Automation Solves the Admin Bottleneck</h2>
+          <p>
+            Instead of spending your evenings manually entering numbers into spreadsheets, modern AI workflows allow you to select line items directly on your smartphone and generate customer-ready proposals in under a minute.
+          </p>
+        </div>
+
+        <!-- Embedded Funnel Preview -->
+        <div class="canvas-cta-preview" id="canvas-funnel-box">
+          <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #38bdf8; font-weight: 700;">★ Embedded High-Converting CTA Box (Auto-Injected)</span>
+          <h4 id="funnel-box-title">Explore Hubzoo: 60-Second Quotes From Your Phone</h4>
+          <p id="funnel-box-desc">Built for contractors, craftsmen, and busy SMBs. Ingest leads, draft customer-ready proposals in 60s, and automate follow-ups.</p>
+          <a href="#" class="btn-studio btn-studio-publish" style="text-decoration: none; padding: 0.6rem 1.25rem;">
+            <span id="funnel-box-btn">Explore Hubzoo Specifications →</span>
+          </a>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="studio-toast" id="studio-toast">
+    <span id="toast-icon">✓</span>
+    <span id="toast-message">Article Published Successfully!</span>
+  </div>
+
+  <script>
+    // App Configs for Dynamic Funnels
+    const APP_CONFIGS = {
+      upworkz: {
+        name: "Upworkz",
+        title: "Automate High-Converting Upwork Proposals in 45 Seconds",
+        desc: "Upworkz deconstructs client job postings, audits scope gotchas, and crafts winning 220-character hooks that bypass mobile inbox truncation.",
+        link: "../apps/upworkz.html",
+        btnText: "Explore Upworkz Full Guide & Specs →"
+      },
+      hubzoo: {
+        name: "Hubzoo",
+        title: "60-Second Mobile Quotes & Automated Multi-Channel Follow-Up",
+        desc: "Built for contractors, craftsmen, and busy SMBs. Send professional estimates from your phone in 60 seconds with native 1-click sync to Fiken and Tripletex.",
+        link: "../apps/hubzoo.html",
+        btnText: "Explore Hubzoo Specifications & Video Demo →"
+      },
+      subsentry: {
+        name: "SubSentry",
+        title: "Expose SaaS Dark Patterns & Cancel Unwanted Subscriptions",
+        desc: "Stop recurring credit card bloat. SubSentry flags deceptive checkout traps, provides 1-click cancellation playbooks, and suggests cost-effective alternatives.",
+        link: "../apps/subsentry.html",
+        btnText: "Explore SubSentry Shield →"
+      },
+      maxmotion: {
+        name: "MaxMotion AI",
+        title: "The Multi-Model AI Video Studio (Wan 2.1, Kling & Minimax)",
+        desc: "Orchestrate the industry's premier video models in a unified timeline canvas with permanent Google Cloud Storage that never expires.",
+        link: "../apps/maxmotion.html",
+        btnText: "Explore MaxMotion AI Studio →"
+      },
+      appsave: {
+        name: "AppSave",
+        title: "The 'Honey' for SaaS, Cloud Hosting & AI Subscriptions",
+        desc: "A lightweight Chrome extension (Manifest V3) that tests verified promo codes on checkout pages to save 15% to 40% on software.",
+        link: "../apps/appsave.html",
+        btnText: "Explore AppSave Directory →"
+      },
+      mediabunny: {
+        name: "MediaBunny",
+        title: "In-Browser WebAssembly Media Processing & Audio Normalizer",
+        desc: "AI background removal, broadcast-standard EBU R128 audio normalization, and 75% CRF video compression on-device with zero data uploads.",
+        link: "../apps/mediabunny.html",
+        btnText: "Explore MediaBunny Tools →"
+      },
+      manus: {
+        name: "Manus AI Studio",
+        title: "Autonomous General-Purpose Action Agent",
+        desc: "Beyond chat: Manus browses the web, writes code, scaffolds full-stack applications, and solves complex business workflows unattended.",
+        link: "../apps/manus.html",
+        btnText: "Explore Manus AI Studio →"
+      },
+      custom_dev: {
+        name: "Custom AI Engineering",
+        title: "Need Bespoke AI Software Engineered For Your Business?",
+        desc: "We build custom autonomous action agents, generative media pipelines, and enterprise ERP bridges. Working MVPs delivered in 7 to 14 days.",
+        link: "../custom-development.html",
+        btnText: "Explore Custom AI Engineering Services →"
+      }
+    };
+
+    // DOM References
+    const articleTitle = document.getElementById('article-title');
+    const articleCanvas = document.getElementById('article-canvas');
+    const metaSlug = document.getElementById('meta-slug');
+    const metaCategory = document.getElementById('meta-category');
+    const metaAppFunnel = document.getElementById('meta-app-funnel');
+    const metaKeywords = document.getElementById('meta-keywords');
+    const metaDesc = document.getElementById('meta-desc');
+    const charCounter = document.getElementById('char-counter');
+    const txtWordCount = document.getElementById('txt-word-count');
+    const readTimePill = document.getElementById('read-time-pill');
+    const appPreviewCard = document.getElementById('app-preview-card');
+    const previewAppTitle = document.getElementById('preview-app-title');
+    const previewAppDesc = document.getElementById('preview-app-desc');
+    const funnelBoxTitle = document.getElementById('funnel-box-title');
+    const funnelBoxDesc = document.getElementById('funnel-box-desc');
+    const funnelBoxBtn = document.getElementById('funnel-box-btn');
+    const studioToast = document.getElementById('studio-toast');
+    const toastMessage = document.getElementById('toast-message');
+
+    // Auto-generate Slug from Title
+    function slugify(text) {
+      return text.toString().toLowerCase().trim()
+        .replace(/[\s\W-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    articleTitle.addEventListener('input', () => {
+      if (!metaSlug.dataset.manual) {
+        metaSlug.value = slugify(articleTitle.value);
+      }
+      updateStats();
+    });
+
+    metaSlug.addEventListener('input', () => {
+      metaSlug.dataset.manual = "true";
+    });
+
+    // Character Counter for Meta Description
+    metaDesc.addEventListener('input', () => {
+      const len = metaDesc.value.length;
+      charCounter.textContent = `${len} / 160 chars`;
+      if (len > 160) {
+        charCounter.style.color = '#ef4444';
+      } else if (len >= 130) {
+        charCounter.style.color = '#10b981';
+      } else {
+        charCounter.style.color = 'var(--text-muted)';
+      }
+    });
+
+    // Update Funnel Preview Card
+    metaAppFunnel.addEventListener('change', updateFunnelPreview);
+
+    function updateFunnelPreview() {
+      const appKey = metaAppFunnel.value;
+      const conf = APP_CONFIGS[appKey] || APP_CONFIGS['custom_dev'];
+      previewAppTitle.textContent = `Funnel Target: ${conf.name}`;
+      previewAppDesc.textContent = conf.desc;
+      funnelBoxTitle.textContent = conf.title;
+      funnelBoxDesc.textContent = conf.desc;
+      funnelBoxBtn.textContent = conf.btnText;
+    }
+
+    // Calculate Word Count & Reading Time
+    function updateStats() {
+      const text = articleCanvas.innerText || "";
+      const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      txtWordCount.textContent = `${words} words`;
+      const readMinutes = Math.max(1, Math.ceil(words / 200));
+      readTimePill.textContent = `⏱️ ${readMinutes} min read`;
+    }
+    articleCanvas.addEventListener('input', updateStats);
+
+    // Toolbar Commands
+    document.querySelectorAll('.tool-btn[data-cmd]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cmd = btn.getAttribute('data-cmd');
+        const val = btn.getAttribute('data-val') || null;
+        document.execCommand(cmd, false, val);
+        articleCanvas.focus();
+        updateStats();
+      });
+    });
+
+    // Insert Callout Box
+    document.getElementById('btn-insert-callout').addEventListener('click', () => {
+      const calloutHtml = `<blockquote>"Insert an authoritative takeaway or client metric here..."</blockquote><p><br></p>`;
+      document.execCommand('insertHTML', false, calloutHtml);
+      articleCanvas.focus();
+    });
+
+    // Insert Link
+    document.getElementById('btn-insert-link').addEventListener('click', () => {
+      const url = prompt('Enter the destination URL:');
+      if (url) {
+        document.execCommand('createLink', false, url);
+      }
+    });
+
+    // Toast Alert
+    function showToast(msg, isError = false) {
+      toastMessage.textContent = msg;
+      studioToast.style.borderLeftColor = isError ? '#ef4444' : '#10b981';
+      studioToast.style.display = 'flex';
+      setTimeout(() => {
+        studioToast.style.display = 'none';
+      }, 4000);
+    }
+
+    // Auto-Save Draft in LocalStorage
+    function saveDraft() {
+      const draft = {
+        title: articleTitle.value,
+        slug: metaSlug.value,
+        category: metaCategory.value,
+        targetApp: metaAppFunnel.value,
+        keywords: metaKeywords.value,
+        metaDesc: metaDesc.value,
+        contentHtml: articleCanvas.innerHTML
+      };
+      localStorage.setItem('aiappsy_article_draft', JSON.stringify(draft));
+      showToast('Draft saved to browser storage!');
+    }
+    document.getElementById('btn-save-draft').addEventListener('click', saveDraft);
+
+    // Auto-load Draft if exists
+    function loadSavedDraft() {
+      const saved = localStorage.getItem('aiappsy_article_draft');
+      if (saved) {
+        try {
+          const draft = JSON.parse(saved);
+          if (draft.title) articleTitle.value = draft.title;
+          if (draft.slug) metaSlug.value = draft.slug;
+          if (draft.category) metaCategory.value = draft.category;
+          if (draft.targetApp) metaAppFunnel.value = draft.targetApp;
+          if (draft.keywords) metaKeywords.value = draft.keywords;
+          if (draft.metaDesc) {
+            metaDesc.value = draft.metaDesc;
+            metaDesc.dispatchEvent(new Event('input'));
+          }
+          if (draft.contentHtml) articleCanvas.innerHTML = draft.contentHtml;
+        } catch (e) {}
+      }
+      updateFunnelPreview();
+      updateStats();
+    }
+
+    // Presets
+    document.getElementById('btn-load-template').addEventListener('click', () => {
+      const choice = prompt("Select Preset Outline:\n1: Problem-Solution Playbook\n2: Step-by-Step How-To Guide\n3: Technical Audit / Teardown\nEnter number (1-3):");
+      if (choice === "1") {
+        articleTitle.value = "Why Most Agencies Lose 50% of Leads (And How AI Fixes It)";
+        metaSlug.value = "why-agencies-lose-leads-speed-to-lead";
+        metaCategory.value = "SMB Sales & Operations";
+        metaAppFunnel.value = "hubzoo";
+        metaKeywords.value = "lead response time, automated follow up, agency sales";
+        metaDesc.value = "Discover why slow quote delivery costs agencies thousands every month and how automated mobile quotation tools recover lost pipeline.";
+        articleCanvas.innerHTML = `
+          <p class="lead">Every agency owner knows the feeling: an inquiry arrives on Monday, you get around to preparing a quote on Thursday, and the prospect has vanished.</p>
+          <h2>The Speed-to-Lead Equation</h2>
+          <p>Data across B2B sales proves that responding within the first 60 minutes yields an 8x conversion lift compared to next-day follow-ups.</p>
+          <blockquote>"Speed is the ultimate differentiator when services are commoditized."</blockquote>
+          <h2>Automating Proposals On The Go</h2>
+          <p>Here is how modern operators streamline lead ingestion, estimate generation, and multi-channel follow-up without adding administrative headcount.</p>
+        `;
+      } else if (choice === "2") {
+        articleTitle.value = "How to Write Upwork Proposals That Land $100+/hr Contracts";
+        metaSlug.value = "how-to-write-upwork-proposals-100-hr";
+        metaCategory.value = "Freelance Strategy & AI";
+        metaAppFunnel.value = "upworkz";
+        metaKeywords.value = "Upwork proposal tips, freelance rate, win Upwork jobs";
+        metaDesc.value = "A step-by-step masterclass on crafting proposals that bypass Upwork's mobile truncation and position you as an authoritative consultant.";
+        articleCanvas.innerHTML = `
+          <p class="lead">If your Upwork proposals open with generic pleasantries, you are getting filtered out before the client even taps open your proposal.</p>
+          <h2>Step 1: The 220-Character Mobile Hook</h2>
+          <p>Over 70% of hiring managers read bids on mobile phones. Learn how to diagnose the client's bottleneck in the very first sentence.</p>
+          <h2>Step 2: The 3-Phase Work Breakdown</h2>
+          <p>Clients don't buy hours—they buy predictable milestone outcomes. Frame your pitch around clear delivery phases.</p>
+        `;
+      }
+      updateFunnelPreview();
+      updateStats();
+      showToast('Preset loaded into editor!');
+    });
+
+    // Export Standalone HTML
+    document.getElementById('btn-export-html').addEventListener('click', () => {
+      const title = articleTitle.value || "Untitled Article";
+      const slug = metaSlug.value || slugify(title);
+      const conf = APP_CONFIGS[metaAppFunnel.value] || APP_CONFIGS['custom_dev'];
+      
+      const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${title} | AIAppsy Insights</title>
+  <meta name="description" content="${metaDesc.value}">
+  <link rel="canonical" href="https://aiappsy.com/articles/${slug}.html">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div style="max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem;">
+    <h1>${title}</h1>
+    <div style="margin: 2rem 0; line-height: 1.8;">
+      ${articleCanvas.innerHTML}
+    </div>
+    <div style="background: #0f172a; color: #fff; padding: 2rem; border-radius: 12px; text-align: center;">
+      <h3>${conf.title}</h3>
+      <p style="color: #94a3b8;">${conf.desc}</p>
+      <a href="${conf.link}" style="background: #0284c7; color: #fff; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 6px; font-weight: 700;">${conf.btnText}</a>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([fullHtml], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${slug}.html`;
+      a.click();
+      showToast(`Exported ${slug}.html!`);
+    });
+
+    // 1-Click Publish to Live Site (Connects to studio_server.js)
+    document.getElementById('btn-publish-live').addEventListener('click', async () => {
+      const title = articleTitle.value.trim();
+      const slug = (metaSlug.value || slugify(title)).trim();
+      const contentHtml = articleCanvas.innerHTML;
+
+      if (!title || !slug || !contentHtml) {
+        alert('Please provide a title, slug, and article body content before publishing.');
+        return;
+      }
+
+      const payload = {
+        title,
+        slug,
+        category: metaCategory.value,
+        targetApp: metaAppFunnel.value,
+        keywords: metaKeywords.value,
+        metaDesc: metaDesc.value || title,
+        contentHtml,
+        readTime: readTimePill.textContent.replace('⏱️ ', ''),
+        publishDate: new Date().toISOString().split('T')[0]
+      };
+
+      try {
+        const response = await fetch('/api/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          const resData = await response.json();
+          showToast(`✓ Published: ${resData.slug}.html (Sitemap updated & Google/Bing pinged!)`);
+          setTimeout(() => {
+            window.open(resData.url, '_blank');
+          }, 1400);
+        } else {
+          // In static file mode without node server running
+          showToast('Publishing via local export (Server not detected, exporting HTML)...');
+          document.getElementById('btn-export-html').click();
+        }
+      } catch (err) {
+        // Fallback if accessed via file:// or non-node server
+        showToast('Generated & Exporting HTML directly...');
+        document.getElementById('btn-export-html').click();
+      }
+    });
+
+    // Initial Setup
+    loadSavedDraft();
+  </script>
+
+</body>
+</html>
