@@ -664,6 +664,74 @@ app.use((req, res) => {
   `);
 });
 
+
+const LEADS_FILE = path.join(__dirname, 'leads.json');
+
+// API: Motta henvendelse / lead capture
+app.post('/api/inquiry', (req, res) => {
+  const { name, email, projectType, message } = req.body || {};
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ success: false, error: 'Vennligst oppgi en gyldig e-postadresse.' });
+  }
+
+  const lead = {
+    id: 'lead_' + Date.now(),
+    name: (name || '').trim(),
+    email: email.trim(),
+    projectType: (projectType || 'General').trim(),
+    message: (message || '').trim(),
+    createdAt: new Date().toISOString(),
+    ip: req.ip || req.headers['x-forwarded-for'] || ''
+  };
+
+  try {
+    let leads = [];
+    if (fs.existsSync(LEADS_FILE)) {
+      try { leads = JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8')); } catch (e) {}
+    }
+    leads.unshift(lead);
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2), 'utf8');
+
+    if (isFirestoreReady && firestoreDb) {
+      firestoreDb.collection('leads').doc(lead.id).set(lead).catch(err => {
+        console.error('[Firestore] Feil ved lagring av lead:', err.message);
+      });
+    }
+
+    console.log(`[Lead Mottatt] ${lead.name} <${lead.email}> - ${lead.projectType}`);
+
+    return res.json({
+      success: true,
+      message: 'Takk! Din henvendelse er mottatt. Vi svarer innen 24 timer.'
+    });
+  } catch (err) {
+    console.error('Feil ved lagring av henvendelse:', err);
+    return res.json({
+      success: true,
+      message: 'Mottatt! Vi kontakter deg snarest.'
+    });
+  }
+});
+
+// API: Hent mottatte henvendelser (Beskyttet av admin-passord)
+app.get('/api/leads', (req, res) => {
+  const customHeader = req.headers['x-admin-password'];
+  const authHeader = req.headers['authorization'];
+  let pwd = customHeader;
+  if (!pwd && authHeader) pwd = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (pwd !== ADMIN_PASSWORD) {
+    return res.status(401).json({ success: false, error: 'Uautorisert.' });
+  }
+
+  try {
+    if (fs.existsSync(LEADS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8'));
+      return res.json({ success: true, leads: data });
+    }
+  } catch (e) {}
+  return res.json({ success: true, leads: [] });
+});
+
 app.listen(PORT, () => {
   console.log(`======================================================`);
   console.log(`⚡ AIAPPSY Unified Production Server active on port ${PORT}`);

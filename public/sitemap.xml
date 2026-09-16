@@ -1,92 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Main Showcase Hub -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://aiappsy.com/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/" />
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Custom AI Development Services -->
   <url>
     <loc>https://aiappsy.com/custom-development.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/custom-development.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/custom-development.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/custom-development.html" />
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
-  <!-- Knowledge & Articles Hub -->
+  <url>
+    <loc>https://aiappsy.com/portfolio.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/portfolio.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/portfolio.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/portfolio.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
   <url>
     <loc>https://aiappsy.com/articles/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/" />
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
-  <!-- Cornerstone SEO Articles -->
-  <url>
-    <loc>https://aiappsy.com/articles/the-220-character-rule-upwork-proposals.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://aiappsy.com/articles/contractor-speed-to-lead-automation.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://aiappsy.com/articles/building-autonomous-ai-action-agents-2026.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-    <url>
-    <loc>https://aiappsy.com/articles/how-to-prevent-duplicate-saas-billing.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <!-- Dedicated Product Landing Pages -->
   <url>
     <loc>https://aiappsy.com/apps/hubzoo.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/hubzoo.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/hubzoo.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/hubzoo.html" />
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://aiappsy.com/apps/maxmotion.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://aiappsy.com/apps/mediabunny.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://aiappsy.com/apps/subsentry.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://aiappsy.com/apps/appsave.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://aiappsy.com/apps/upworkz.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/upworkz.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/upworkz.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/upworkz.html" />
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/apps/subsentry.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/subsentry.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/subsentry.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/subsentry.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/apps/maxmotion.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/maxmotion.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/maxmotion.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/maxmotion.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/apps/appsave.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/appsave.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/appsave.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/appsave.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/apps/mediabunny.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/mediabunny.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/mediabunny.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/mediabunny.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://aiappsy.com/apps/manus.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/apps/manus.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/apps/manus.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/apps/manus.html" />
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/wan-2-1-vs-kling-vs-minimax-ai-video-comparison.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/wan-2-1-vs-kling-vs-minimax-ai-video-comparison.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/wan-2-1-vs-kling-vs-minimax-ai-video-comparison.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/wan-2-1-vs-kling-vs-minimax-ai-video-comparison.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/enterprise-saas-waste-audit-recurring-billing.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/enterprise-saas-waste-audit-recurring-billing.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/enterprise-saas-waste-audit-recurring-billing.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/enterprise-saas-waste-audit-recurring-billing.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/why-chatbots-fail-autonomous-action-agents-2026.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/why-chatbots-fail-autonomous-action-agents-2026.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/why-chatbots-fail-autonomous-action-agents-2026.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/why-chatbots-fail-autonomous-action-agents-2026.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/the-220-character-rule-upwork-proposals.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/the-220-character-rule-upwork-proposals.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/the-220-character-rule-upwork-proposals.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/the-220-character-rule-upwork-proposals.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/contractor-speed-to-lead-automation.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/contractor-speed-to-lead-automation.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/contractor-speed-to-lead-automation.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/contractor-speed-to-lead-automation.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/building-autonomous-ai-action-agents-2026.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/building-autonomous-ai-action-agents-2026.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/building-autonomous-ai-action-agents-2026.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/building-autonomous-ai-action-agents-2026.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/articles/how-to-prevent-duplicate-saas-billing.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/how-to-prevent-duplicate-saas-billing.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/how-to-prevent-duplicate-saas-billing.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/how-to-prevent-duplicate-saas-billing.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/privacy.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/privacy.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/terms.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/terms.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/terms.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/gdpr.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/gdpr.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/gdpr.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/gdpr.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://aiappsy.com/disclaimer.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/disclaimer.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/disclaimer.html?lang=no" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aiappsy.com/disclaimer.html" />
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>

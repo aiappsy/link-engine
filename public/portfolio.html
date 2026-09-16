@@ -6,11 +6,46 @@
   <title>AIAPPSY — Turnkey AI SaaS Platforms & Custom AI Engineering</title>
   <meta name="description" content="Discover and operate our suite of 7 production-grade AI SaaS applications, explore bespoke AI engineering services, and scale your business with AIAPPSY.">
   <link rel="canonical" href="https://aiappsy.com/">
+  <!-- Alternate Language Hreflang Tags for Google SEO -->
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/portfolio.html">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/portfolio.html?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/portfolio.html">
   <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <!-- Favicon & Social Share Cards -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aiappsy.com/og-image.png">
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <style>
+    /* Bilingual Toggle Rules */
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+  </style>
 </head>
 <body>
 
@@ -29,11 +64,11 @@
       <div class="header-actions">
         <a href="custom-development.html" class="btn-header-templates" style="text-decoration: none;" title="Custom AI Engineering & Bespoke Builds">
           <span>🛠️</span>
-          <span>Custom Dev</span>
+          <span class="lang-en">Custom Dev</span><span class="lang-no">Skreddersøm</span>
         </a>
         <a href="articles/index.html" class="btn-header-templates" style="text-decoration: none;" title="AI Strategy Guides & Insights">
           <span>📚</span>
-          <span>Articles</span>
+          <span class="lang-en">Articles</span><span class="lang-no">Artikler</span>
         </a>
         <button class="btn-header-templates" id="btn-templates-tab" title="Templates / Maler (50+)">
           <span>📁</span>
@@ -93,34 +128,47 @@
         <!-- Pillar 1: Turnkey Platforms -->
         <a href="#apps-showcase" class="pillar-card">
           <div class="pillar-icon">⚡</div>
-          <h3>7 Flagship AI Platforms</h3>
-          <p>Production-grade software for sales closing, generative video, prompt engineering, media processing, and autonomous agents.</p>
-          <span class="pillar-link">Browse Platforms ↓</span>
+          <h3 class="lang-en">7 Flagship AI Platforms</h3>
+          <h3 class="lang-no">7 Operative AI-plattformer</h3>
+          <p class="lang-en">Production-grade software for sales closing, generative video, prompt engineering, media processing, and autonomous agents.</p>
+          <p class="lang-no">Driftssikre apper for lynraske salgstilbud, generativ video, avansert mediehåndtering og selvgående agenter.</p>
+          <span class="pillar-link lang-en">Browse Platforms ↓</span>
+          <span class="pillar-link lang-no">Se alle apper ↓</span>
         </a>
 
         <!-- Pillar 2: Custom AI Engineering -->
         <a href="custom-development.html" class="pillar-card pillar-card-featured">
-          <div class="pillar-badge">Bespoke Builds</div>
+          <div class="pillar-badge lang-en">Bespoke Builds</div>
+          <div class="pillar-badge lang-no">Skreddersøm</div>
           <div class="pillar-icon">🛠️</div>
-          <h3>Custom AI & Agent Engineering</h3>
-          <p>We build tailored AI web applications, autonomous action agents, generative multimodal pipelines, and ERP integrations in 7–14 days.</p>
-          <span class="pillar-link">Explore Custom Dev →</span>
+          <h3 class="lang-en">Custom AI & Agent Engineering</h3>
+          <h3 class="lang-no">Skreddersydd AI-utvikling</h3>
+          <p class="lang-en">We build tailored AI web applications, autonomous action agents, generative multimodal pipelines, and ERP integrations in 7–14 days.</p>
+          <p class="lang-no">Vi utvikler skreddersydde webapplikasjoner, autonome handlingsagenter og integrasjoner mot norske fagsystemer på 7–14 dager.</p>
+          <span class="pillar-link lang-en">Explore Custom Dev →</span>
+          <span class="pillar-link lang-no">Les om skreddersøm →</span>
         </a>
 
         <!-- Pillar 3: Turnkey Whitelabeling -->
         <a href="#whitelabel-section" class="pillar-card">
           <div class="pillar-icon">🏷️</div>
-          <h3>Turnkey SaaS Whitelabeling</h3>
-          <p>Own & operate any of our platforms under your own brand and custom domain with zero technical, coding, or maintenance hassle.</p>
-          <span class="pillar-link">View Licensing Plans ↓</span>
+          <h3 class="lang-en">Turnkey SaaS Whitelabeling</h3>
+          <h3 class="lang-no">Nøkkelferdig White-label</h3>
+          <p class="lang-en">Own & operate any of our platforms under your own brand and custom domain with zero technical, coding, or maintenance hassle.</p>
+          <p class="lang-no">Eier og driv våre plattformer under ditt eget merkenavn og domene, helt uten teknisk vedlikehold eller koding.</p>
+          <span class="pillar-link lang-en">View Licensing Plans ↓</span>
+          <span class="pillar-link lang-no">Se lisensmodeller ↓</span>
         </a>
 
         <!-- Pillar 4: AI Insights & Blueprints -->
         <a href="articles/index.html" class="pillar-card">
           <div class="pillar-icon">📚</div>
-          <h3>AI Insights & SEO Blueprints</h3>
-          <p>Deep-dive research, speed-to-lead automation playbooks, and prompt engineering architecture for high-converting workflows.</p>
-          <span class="pillar-link">Read Latest Articles →</span>
+          <h3 class="lang-en">AI Insights & SEO Blueprints</h3>
+          <h3 class="lang-no">Innsikt & Arkitektur</h3>
+          <p class="lang-en">Deep-dive research, speed-to-lead automation playbooks, and prompt engineering architecture for high-converting workflows.</p>
+          <p class="lang-no">Fagartikler, strategier for responstid og tekniske arkitekturveiledninger fra vårt utviklermiljø.</p>
+          <span class="pillar-link lang-en">Read Latest Articles →</span>
+          <span class="pillar-link lang-no">Les fagartikler →</span>
         </a>
       </div>
     </section>
@@ -144,11 +192,26 @@
 
       <!-- Category Filter Pills -->
       <nav class="category-filter-bar" aria-label="Filter by Category">
-        <button class="filter-btn active" data-cat="all">All 7 Platforms</button>
-        <button class="filter-btn" data-cat="sales-crm">Sales & CRM</button>
-        <button class="filter-btn" data-cat="media-video">AI Video & Media</button>
-        <button class="filter-btn" data-cat="saas-finance">SaaS & FinTech</button>
-        <button class="filter-btn" data-cat="autonomous-agents">Autonomous Agents</button>
+        <button class="filter-btn active" data-cat="all">
+          <span class="lang-en">All 7 Platforms</span>
+          <span class="lang-no">Alle 7 apper</span>
+        </button>
+        <button class="filter-btn" data-cat="sales-crm">
+          <span class="lang-en">Sales & CRM</span>
+          <span class="lang-no">Salg & CRM</span>
+        </button>
+        <button class="filter-btn" data-cat="media-video">
+          <span class="lang-en">AI Video & Media</span>
+          <span class="lang-no">Video & Media</span>
+        </button>
+        <button class="filter-btn" data-cat="saas-finance">
+          <span class="lang-en">SaaS & FinTech</span>
+          <span class="lang-no">Økonomi & FinTech</span>
+        </button>
+        <button class="filter-btn" data-cat="autonomous-agents">
+          <span class="lang-en">Autonomous Agents</span>
+          <span class="lang-no">Autonome Agenter</span>
+        </button>
         <button class="filter-btn filter-btn-templates" id="filter-btn-templates"><span>📁</span> <span id="txt-filter-templates">Templates (50+)</span></button>
       </nav>
     </section>
@@ -226,48 +289,66 @@
       <div style="text-align: center; max-width: 760px; margin: 0 auto 2.5rem auto;">
         <div class="hero-pill-tag" style="margin-bottom: 1rem;">
           <span>🛠️</span>
-          <span>Bespoke Engineering & Custom Builds</span>
+          <span class="lang-en">Bespoke Engineering & Custom Builds</span>
+          <span class="lang-no">Spesialutvikling & Skreddersøm</span>
         </div>
-        <h2 id="custom-dev-heading" style="font-size: 2.1rem; font-weight: 900; color: var(--text-heading); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1rem;">
+        <h2 id="custom-dev-heading" class="lang-en" style="font-size: 2.1rem; font-weight: 900; color: var(--text-heading); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1rem;">
           Need a Custom Solution? We Build Tailored AI Platforms From Scratch.
         </h2>
-        <p style="font-size: 1.05rem; color: var(--text-body); line-height: 1.6;">
+        <h2 id="custom-dev-heading-no" class="lang-no" style="font-size: 2.1rem; font-weight: 900; color: var(--text-heading); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1rem;">
+          Behov for en skreddersydd løsning? Vi bygger unike AI-plattformer fra bunnen.
+        </h2>
+        <p class="lang-en" style="font-size: 1.05rem; color: var(--text-body); line-height: 1.6;">
           Beyond our 7 production platforms and 50+ templates, we engineer bespoke AI systems for agencies, enterprises, and founders. From multi-agent autonomous loops to generative video studios and deep ERP bridges.
+        </p>
+        <p class="lang-no" style="font-size: 1.05rem; color: var(--text-body); line-height: 1.6;">
+          I tillegg til våre 7 operative apper og 50+ maler, utvikler vi spesialtilpassede AI-systemer for bedrifter og byråer. Fra selvgående handlingsagenter til generative mediastudier og dype integrasjoner mot norske regnskapssystemer.
         </p>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
         <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
           <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🤖</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Action Agents</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Headless browser controllers, automated DOM navigation, and self-healing task loops.</p>
+          <h4 class="lang-en" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Action Agents</h4>
+          <h4 class="lang-no" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Handlingsagenter</h4>
+          <p class="lang-en" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Headless browser controllers, automated DOM navigation, and self-healing task loops.</p>
+          <p class="lang-no" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Virtuelle nettleseragenter, automatisert skjemautfylling og selvkjørende prosesser.</p>
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
           <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🎬</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Generative Media</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Multi-model video pipelines (Wan 2.1, Kling, Minimax) with WebAssembly on-device processing.</p>
+          <h4 class="lang-en" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Generative Media</h4>
+          <h4 class="lang-no" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Generativ Media</h4>
+          <p class="lang-en" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Multi-model video pipelines (Wan 2.1, Kling, Minimax) with WebAssembly on-device processing.</p>
+          <p class="lang-no" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Multimodale videoprosesser (Wan 2.1, Kling, MiniMax) og lokal WebAssembly-konvertering.</p>
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
           <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">⚡</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Full-Stack Apps</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">High-speed Next.js 15, TypeScript, Stripe/Vipps billing, and sub-second PWA load times.</p>
+          <h4 class="lang-en" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Full-Stack Apps</h4>
+          <h4 class="lang-no" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Moderne Webapper</h4>
+          <p class="lang-en" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">High-speed Next.js 15, TypeScript, Stripe/Vipps billing, and sub-second PWA load times.</p>
+          <p class="lang-no" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Lynrask Next.js 15, TypeScript, integrert Vipps/Stripe og lynraske lastetider på mobil.</p>
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.4rem;">
           <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🔗</div>
-          <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">ERP & API Bridges</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Two-way sync with Fiken, Tripletex, HubSpot, Salesforce, and enterprise SQL databases.</p>
+          <h4 class="lang-en" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">ERP & API Bridges</h4>
+          <h4 class="lang-no" style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.4rem;">Regnskapsbroer</h4>
+          <p class="lang-en" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Two-way sync with Fiken, Tripletex, HubSpot, Salesforce, and enterprise SQL databases.</p>
+          <p class="lang-no" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Toveis synkronisering mot Fiken, Tripletex, HubSpot og sikre databaser.</p>
         </div>
       </div>
 
       <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
         <a href="custom-development.html" class="btn-primary" style="padding: 0.85rem 1.75rem; text-decoration: none; font-weight: 700;">
-          <span>Explore Custom AI Engineering Services →</span>
+          <span class="lang-en">Explore Custom AI Engineering Services →</span>
+          <span class="lang-no">Les mer om skreddersydd utvikling →</span>
         </a>
-        <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Project%20Scope" class="btn-secondary" style="padding: 0.85rem 1.5rem; text-decoration: none; font-weight: 600;">
-          <span>✉️ Book Project Scoping Call</span>
+        <a href="custom-development.html#contact" class="btn-secondary" style="padding: 0.85rem 1.5rem; text-decoration: none; font-weight: 600;">
+          <span>✉️</span>
+          <span class="lang-en">Book Project Scoping Call</span>
+          <span class="lang-no">Start et teknisk forprosjekt</span>
         </a>
       </div>
     </section>
@@ -279,49 +360,73 @@
       <div style="text-align: center; max-width: 760px; margin: 0 auto;">
         <div class="hero-pill-tag" style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.4); color: #a5b4fc; margin-bottom: 1rem;">
           <span>📚</span>
-          <span>Engineering Blueprints & Insights</span>
+          <span class="lang-en">Engineering Blueprints & Insights</span>
+          <span class="lang-no">Kunnskap & Strategier</span>
         </div>
-        <h2 id="insights-heading" style="font-size: 2.1rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 0.75rem;">
+        <h2 id="insights-heading" class="lang-en" style="font-size: 2.1rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 0.75rem;">
           Battle-Tested AI Strategies, Frameworks & Guides
         </h2>
-        <p style="color: #94a3b8; font-size: 1rem; line-height: 1.6;">
+        <h2 id="insights-heading-no" class="lang-no" style="font-size: 2.1rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 0.75rem;">
+          Utprøvde AI-strategier, veiledninger og arkitektur
+        </h2>
+        <p class="lang-en" style="color: #94a3b8; font-size: 1rem; line-height: 1.6;">
           In-depth technical breakdowns and conversion frameworks from our engineering team to help you optimize conversion, automate sales, and build autonomous agents.
+        </p>
+        <p class="lang-no" style="color: #94a3b8; font-size: 1rem; line-height: 1.6;">
+          Konkrete analyser og rammeverk fra vårt utviklermiljø for å hjelpe deg å automatisere salg, effektivisere drift og bygge autonome agenter.
         </p>
       </div>
 
       <div class="homepage-articles-grid">
         <a href="articles/the-220-character-rule-upwork-proposals.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Upwork Conversion</span>
-          <h4>The 220-Character Rule: How to Hook Clients in Mobile Previews</h4>
-          <p>Why 90% of freelance proposals get ignored before being opened, and how to craft the first two lines that guarantee client clicks.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-en" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Upwork Conversion</span>
+          <span class="lang-no" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Salg & Tilbud</span>
+          <h4 class="lang-en">The 220-Character Rule: How to Hook Clients in Mobile Previews</h4>
+          <h4 class="lang-no">220-tegns regelen: Slik fanger du kunden i mobilforhåndsvisningen</h4>
+          <p class="lang-en">Why 90% of freelance proposals get ignored before being opened, and how to craft the first two lines that guarantee client clicks.</p>
+          <p class="lang-no">Hvorfor 90 % av søknader ignoreres før de åpnes, og hvordan skrive åpningslinjer som sikrer intervju.</p>
+          <span class="lang-en" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-no" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Les guiden →</span>
         </a>
 
         <a href="articles/contractor-speed-to-lead-automation.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Contractor Automation</span>
-          <h4>The Speed-to-Lead Equation: Why Contractors Lose 60% of Deals</h4>
-          <p>How 60-second mobile quote delivery and automated multi-touch follow-ups transform trade businesses and double close rates.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-en" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Contractor Automation</span>
+          <span class="lang-no" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Håndverker & SMB</span>
+          <h4 class="lang-en">The Speed-to-Lead Equation: Why Contractors Lose 60% of Deals</h4>
+          <h4 class="lang-no">Responstid: Hvorfor håndverkere taper 60 % av oppdragene</h4>
+          <p class="lang-en">How 60-second mobile quote delivery and automated multi-touch follow-ups transform trade businesses and double close rates.</p>
+          <p class="lang-no">Hvordan 60-sekunders mobiltilbud og automatisk oppfølging dobler tilslagsraten på befaringer.</p>
+          <span class="lang-en" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-no" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Les guiden →</span>
         </a>
 
         <a href="articles/building-autonomous-ai-action-agents-2026.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Autonomous Systems</span>
-          <h4>Building Autonomous Action Agents: Beyond Passive Chatbots</h4>
-          <p>The architectural blueprint for browser automation, state machines, and self-healing action loops that complete work unattended.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-en" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Autonomous Systems</span>
+          <span class="lang-no" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Autonome Systemer</span>
+          <h4 class="lang-en">Building Autonomous Action Agents: Beyond Passive Chatbots</h4>
+          <h4 class="lang-no">Autonome handlingsagenter: Fra prat til faktisk arbeid</h4>
+          <p class="lang-en">The architectural blueprint for browser automation, state machines, and self-healing action loops that complete work unattended.</p>
+          <p class="lang-no">Den tekniske oppskriften på nettleserautomatisering og selvkjørende prosesser som fullfører oppgaver uten tilsyn.</p>
+          <span class="lang-en" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-no" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Les guiden →</span>
         </a>
 
         <a href="articles/how-to-prevent-duplicate-saas-billing.html" class="homepage-article-card">
-          <span style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">SaaS FinTech</span>
-          <h4>How to Expose Hidden Dark Patterns & Prevent Duplicate SaaS Billing</h4>
-          <p>Practical audit checklists to uncover phantom subscriptions, recurring billing leaks, and deceptive checkout opt-ins.</p>
-          <span style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-en" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">SaaS FinTech</span>
+          <span class="lang-no" style="font-size: 0.75rem; color: #818cf8; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Kostnadskontroll</span>
+          <h4 class="lang-en">How to Expose Hidden Dark Patterns & Prevent Duplicate SaaS Billing</h4>
+          <h4 class="lang-no">Slik unngår bedriften unødvendig dobbeltfakturering av programvare</h4>
+          <p class="lang-en">Practical audit checklists to uncover phantom subscriptions, recurring billing leaks, and deceptive checkout opt-ins.</p>
+          <p class="lang-no">Konkret sjekkliste for å avdekke spøkelseslisenser, glemte korttrekk og skjulte prisøkninger.</p>
+          <span class="lang-en" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Read Guide →</span>
+          <span class="lang-no" style="color: #a5b4fc; font-size: 0.85rem; font-weight: 700;">Les guiden →</span>
         </a>
       </div>
 
       <div style="text-align: center; margin-top: 2.5rem;">
         <a href="articles/index.html" class="btn-hero-secondary" style="border-color: #475569;">
-          <span>Explore All Articles in Knowledge Hub →</span>
+          <span class="lang-en">Explore All Articles in Knowledge Hub →</span>
+          <span class="lang-no">Se alle artikler i kunnskapsbasen →</span>
         </a>
       </div>
     </section>

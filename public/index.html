@@ -6,6 +6,10 @@
   <title>AIAPPSY — Frontier AI Applications, Custom Engineering & Product Studio</title>
   <meta name="description" content="AIAPPSY is a premier AI software studio and engineering consultancy. We design and deploy proprietary SaaS platforms, build bespoke autonomous AI action agents, and deliver custom full-stack solutions.">
   <link rel="canonical" href="https://aiappsy.com/">
+  <!-- Alternate Language Hreflang Tags for Google SEO -->
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/">
   <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
   <meta name="robots" content="index, follow">
 
@@ -19,6 +23,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Instant language check to prevent layout shift -->
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
 
   <style>
     :root {
@@ -36,6 +61,10 @@
       --accent-green: #10b981;
     }
 
+    /* Bilingual Toggle Rules */
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -46,7 +75,6 @@
       overflow-x: hidden;
     }
 
-    /* Ambient Background Glow */
     .ambient-glow {
       position: absolute;
       top: 0;
@@ -120,7 +148,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
     .nav-link {
@@ -131,6 +159,30 @@
       transition: color 0.15s;
     }
     .nav-link:hover { color: #ffffff; }
+
+    /* Language Switcher in Navigation */
+    .lang-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .lang-switch-btn:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
 
     .btn-nav-cta {
       background: #1e293b;
@@ -254,69 +306,66 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
-      padding: 1.75rem 2rem;
-      background: rgba(19, 27, 46, 0.5);
+      background: rgba(15, 22, 41, 0.6);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      text-align: center;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      backdrop-filter: blur(8px);
       margin-bottom: 5.5rem;
-      backdrop-filter: blur(10px);
     }
+
+    .metric-item {
+      text-align: center;
+      border-right: 1px solid rgba(30, 41, 66, 0.7);
+    }
+    .metric-item:last-child { border-right: none; }
 
     .metric-item strong {
       display: block;
-      font-size: 1.7rem;
+      font-size: 2.1rem;
       font-weight: 900;
       color: #ffffff;
-      margin-bottom: 0.2rem;
+      letter-spacing: -0.02em;
     }
     .metric-item span {
       font-size: 0.82rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       font-weight: 600;
     }
 
-    @media (max-width: 768px) {
-      .hero h2 { font-size: 2.3rem; }
-      .metrics-bar { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-      nav.site-nav { flex-direction: column; gap: 1rem; }
-    }
-
-    /* Section Headings */
+    /* Core Pillars */
     .section-header {
       text-align: center;
-      max-width: 740px;
-      margin: 0 auto 3.5rem auto;
+      max-width: 680px;
+      margin: 0 auto 3.5rem;
     }
-    .section-header .section-tag {
-      display: inline-block;
-      font-size: 0.75rem;
+    .section-tag {
+      color: var(--primary-light);
+      font-size: 0.78rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
+      letter-spacing: 0.08em;
+      display: block;
       margin-bottom: 0.6rem;
     }
     .section-header h3 {
-      font-size: 2.4rem;
-      font-weight: 800;
+      font-size: 2.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
       color: #ffffff;
-      letter-spacing: -0.025em;
       margin-bottom: 0.85rem;
     }
     .section-header p {
       color: var(--text-muted);
       font-size: 1.05rem;
-      line-height: 1.6;
     }
 
-    /* 3 Pillars Cards Grid */
     .pillars-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+      gap: 2rem;
       margin-bottom: 6rem;
     }
 
@@ -324,104 +373,88 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 2.25rem 2rem;
+      padding: 2.25rem;
+      transition: all 0.25s;
       position: relative;
-      transition: all 0.25s ease;
       display: flex;
       flex-direction: column;
     }
     .pillar-box:hover {
-      transform: translateY(-4px);
-      border-color: var(--border-glow);
       background: var(--card-hover);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      border-color: var(--border-glow);
+      transform: translateY(-4px);
     }
     .pillar-box-featured {
-      border-color: rgba(99, 102, 241, 0.5);
-      background: linear-gradient(180deg, #131a33 0%, #0f1629 100%);
+      border-color: rgba(99, 102, 241, 0.6);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
     }
-
     .pillar-tag {
       position: absolute;
       top: 1.25rem;
       right: 1.25rem;
-      background: rgba(99, 102, 241, 0.2);
-      color: #a5b4fc;
       font-size: 0.7rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      padding: 0.2rem 0.65rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 999px;
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary-light);
     }
-
     .pillar-icon-large {
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       margin-bottom: 1.25rem;
     }
-
     .pillar-box h4 {
       font-size: 1.35rem;
       font-weight: 800;
       color: #ffffff;
       margin-bottom: 0.75rem;
-      line-height: 1.3;
     }
-
     .pillar-box p {
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       line-height: 1.6;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
       flex-grow: 1;
     }
-
-    .pillar-box a.pillar-cta {
+    .pillar-cta {
       color: var(--primary-light);
-      text-decoration: none;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      transition: gap 0.15s;
+      transition: color 0.15s;
     }
-    .pillar-box:hover a.pillar-cta {
-      gap: 0.65rem;
-      color: #ffffff;
-    }
+    .pillar-cta:hover { color: #ffffff; }
 
-    @media (max-width: 960px) {
-      .pillars-grid { grid-template-columns: 1fr; }
-    }
-
-    /* 7 Apps Showcase Grid */
+    /* Flagship Apps Section */
     .apps-section {
-      padding: 4rem 0 6rem;
-      border-top: 1px solid rgba(30, 41, 66, 0.6);
+      padding: 2rem 0 5rem;
     }
 
     .apps-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
+      gap: 1.75rem;
+      margin-bottom: 3.5rem;
     }
 
     .app-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.75rem;
-      transition: all 0.25s ease;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      position: relative;
+      transition: all 0.25s;
     }
     .app-card:hover {
-      border-color: rgba(99, 102, 241, 0.4);
+      border-color: rgba(99, 102, 241, 0.45);
+      background: var(--card-hover);
       transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     }
 
     .app-card-top {
@@ -478,14 +511,12 @@
     .app-card-actions {
       display: flex;
       gap: 0.75rem;
-      align-items: center;
-      margin-top: auto;
     }
 
     .btn-app-guide {
       flex: 1;
-      background: #18223d;
-      border: 1px solid #253358;
+      background: #19233c;
+      border: 1px solid #28375e;
       color: #ffffff;
       padding: 0.6rem;
       border-radius: 8px;
@@ -538,6 +569,8 @@
     @media (max-width: 900px) {
       .custom-dev-grid { grid-template-columns: 1fr; }
       .custom-dev-spotlight { padding: 2.25rem; }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+      .pillars-grid { grid-template-columns: 1fr; }
     }
 
     .custom-dev-text h3 {
@@ -558,24 +591,23 @@
     .capabilities-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 0.85rem;
       margin-bottom: 2rem;
     }
 
     .cap-item {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      font-size: 0.9rem;
-      color: #e2e8f0;
+      gap: 0.5rem;
+      font-size: 0.92rem;
       font-weight: 600;
+      color: #e2e8f0;
     }
-    .cap-icon { color: var(--accent-green); font-size: 1.1rem; }
+    .cap-icon { color: var(--accent-green); font-weight: 800; }
 
-    /* Articles / Insights Grid */
+    /* Articles / Insights */
     .articles-section {
-      padding: 4rem 0 6rem;
-      border-top: 1px solid rgba(30, 41, 66, 0.6);
+      margin-bottom: 6rem;
     }
 
     .articles-grid {
@@ -589,63 +621,60 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 1.6rem;
+      padding: 1.75rem;
       text-decoration: none;
       color: inherit;
+      transition: all 0.2s;
       display: flex;
       flex-direction: column;
-      transition: all 0.2s;
     }
     .article-item:hover {
-      transform: translateY(-3px);
-      border-color: #818cf8;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      background: var(--card-hover);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
     }
     .article-tag-label {
       font-size: 0.72rem;
+      font-weight: 800;
       color: var(--primary-light);
-      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.05em;
       margin-bottom: 0.5rem;
     }
     .article-item h4 {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #ffffff;
       line-height: 1.35;
       margin-bottom: 0.6rem;
     }
     .article-item p {
-      color: var(--text-muted);
       font-size: 0.85rem;
+      color: var(--text-muted);
       line-height: 1.5;
       margin-bottom: 1.25rem;
       flex-grow: 1;
     }
-    .article-item span.read-more {
-      color: #a5b4fc;
+    .read-more {
       font-size: 0.82rem;
       font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
+      color: var(--primary-light);
     }
 
-    /* Consultation / Contact Section */
+    /* Contact Box */
     .contact-box {
-      background: #0f1629;
-      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #10162b 0%, #171d36 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
       border-radius: 20px;
-      padding: 3.5rem;
+      padding: 4rem 2rem;
       text-align: center;
-      max-width: 840px;
-      margin: 0 auto 6rem auto;
+      margin-bottom: 6rem;
     }
     .contact-box h3 {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       font-weight: 900;
       color: #ffffff;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
     .contact-box p {
       color: var(--text-muted);
@@ -705,6 +734,13 @@
     .footer-bottom a { color: var(--text-muted); text-decoration: none; }
     .footer-bottom a:hover { color: #ffffff; }
   </style>
+  <!-- Favicon & Social Share Cards -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aiappsy.com/og-image.png">
 </head>
 <body>
 
@@ -718,18 +754,39 @@
         <div class="brand-icon">⚡</div>
         <div class="brand-text">
           <h1>aiappsy<span>.com</span></h1>
-          <p>Frontier AI Product Studio</p>
+          <p class="lang-en">Frontier AI Product Studio</p>
+          <p class="lang-no">Norsk AI-produktstudio</p>
         </div>
       </a>
 
       <div class="nav-links">
-        <a href="#apps" class="nav-link">Our Apps</a>
-        <a href="custom-development.html" class="nav-link">Custom Engineering</a>
-        <a href="portfolio.html" class="nav-link">Whitelabel Portfolio</a>
-        <a href="articles/index.html" class="nav-link">Articles</a>
+        <a href="#apps" class="nav-link">
+          <span class="lang-en">Our Apps</span>
+          <span class="lang-no">Våre AI-apper</span>
+        </a>
+        <a href="custom-development.html" class="nav-link">
+          <span class="lang-en">Custom Engineering</span>
+          <span class="lang-no">Skreddersøm</span>
+        </a>
+        <a href="portfolio.html" class="nav-link">
+          <span class="lang-en">Whitelabel Portfolio</span>
+          <span class="lang-no">White-label portefølje</span>
+        </a>
+        <a href="articles/index.html" class="nav-link">
+          <span class="lang-en">Articles</span>
+          <span class="lang-no">Innsikt & Guider</span>
+        </a>
+
+        <!-- Top Navigation Language Switcher -->
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+
         <a href="#contact" class="btn-nav-cta">
           <span>✉️</span>
-          <span>Contact Studio</span>
+          <span class="lang-en">Contact Studio</span>
+          <span class="lang-no">Kontakt oss</span>
         </a>
       </div>
     </nav>
@@ -738,29 +795,39 @@
     <header class="hero">
       <div class="badge-pill">
         <span>⚡</span>
-        <span>Proprietary AI Platforms & Bespoke Engineering</span>
+        <span class="lang-en">Proprietary AI Platforms & Bespoke Engineering</span>
+        <span class="lang-no">Egenutviklede AI-plattformer & Skreddersøm</span>
       </div>
 
-      <h2>
+      <h2 class="lang-en">
         Engineering the Future of <span class="gradient-text">Autonomous AI Software</span> & Production SaaS.
       </h2>
+      <h2 class="lang-no">
+        Vi bygger fremtidens <span class="gradient-text">autonome AI-programvare</span> og produksjonsklare SaaS-løsninger.
+      </h2>
 
-      <p class="lead">
+      <p class="lead lang-en">
         <strong>AIAPPSY</strong> is an independent AI product studio and engineering consultancy. We conceive and build high-impact proprietary SaaS applications, engineer bespoke autonomous AI agents for clients, and license turnkey enterprise software.
+      </p>
+      <p class="lead lang-no">
+        <strong>AIAPPSY</strong> er et uavhengig AI-produktstudio og teknologimiljø. Vi utvikler fremtidsrettede SaaS-plattformer, bygger skreddersydde autonome handlingsagenter for bedrifter, og lisensierer ut nøkkelferdig programvare som genererer reell avkastning fra dag én.
       </p>
 
       <div class="hero-ctas">
         <a href="custom-development.html" class="btn-primary-hero">
           <span>🛠️</span>
-          <span>Commission Custom AI Dev</span>
+          <span class="lang-en">Commission Custom AI Dev</span>
+          <span class="lang-no">Bestill skreddersydd AI-utvikling</span>
         </a>
         <a href="#apps" class="btn-secondary-hero">
           <span>🚀</span>
-          <span>Explore Our 7 SaaS Apps</span>
+          <span class="lang-en">Explore Our 7 SaaS Apps</span>
+          <span class="lang-no">Utforsk våre 7 AI-apper</span>
         </a>
         <a href="portfolio.html" class="btn-secondary-hero">
           <span>🏷️</span>
-          <span>Whitelabel Catalog</span>
+          <span class="lang-en">Whitelabel Catalog</span>
+          <span class="lang-no">White-label katalog</span>
         </a>
       </div>
     </header>
@@ -769,54 +836,77 @@
     <div class="metrics-bar">
       <div class="metric-item">
         <strong>7</strong>
-        <span>Live SaaS Platforms</span>
+        <span class="lang-en">Live SaaS Platforms</span>
+        <span class="lang-no">Aktive SaaS-plattformer</span>
       </div>
       <div class="metric-item">
         <strong>7–14 Days</strong>
-        <span>Custom MVP Delivery</span>
+        <span class="lang-en">Custom MVP Delivery</span>
+        <span class="lang-no">Kjørbar MVP på 7–14 dager</span>
       </div>
       <div class="metric-item">
         <strong>100%</strong>
-        <span>Automated Cloud Run</span>
+        <span class="lang-en">Automated Cloud Run</span>
+        <span class="lang-no">Automatisert Cloud Run</span>
       </div>
       <div class="metric-item">
         <strong>Frontier AI</strong>
-        <span>Multi-Model Architecture</span>
+        <span class="lang-en">Multi-Model Architecture</span>
+        <span class="lang-no">Modelluavhengig arkitektur</span>
       </div>
     </div>
 
     <!-- Section 1: The 3 Core Pillars -->
     <section>
       <div class="section-header">
-        <span class="section-tag">WHAT WE DO</span>
-        <h3>Three Ways to Build & Scale with AIAPPSY</h3>
-        <p>Whether you need custom software engineered from scratch, want to use our production platforms, or desire your own whitelabeled software business.</p>
+        <span class="section-tag lang-en">WHAT WE DO</span>
+        <span class="section-tag lang-no">HVA VI GJØR</span>
+        <h3 class="lang-en">Three Ways to Build & Scale with AIAPPSY</h3>
+        <h3 class="lang-no">Tre måter å skape verdi på med AIAPPSY</h3>
+        <p class="lang-en">Whether you need custom software engineered from scratch, want to use our production platforms, or desire your own whitelabeled software business.</p>
+        <p class="lang-no">Enten du trenger skreddersydd programvare bygget fra bunnen, ønsker å ta i bruk våre ferdige apper, eller vil starte din egen SaaS-virksomhet med white-label.</p>
       </div>
 
       <div class="pillars-grid">
         <!-- Pillar 1: Custom Dev -->
         <div class="pillar-box pillar-box-featured">
-          <span class="pillar-tag">Client Services</span>
+          <span class="pillar-tag lang-en">Client Services</span>
+          <span class="pillar-tag lang-no">Skreddersøm</span>
           <div class="pillar-icon-large">🛠️</div>
-          <h4>Bespoke AI Engineering</h4>
-          <p>We build tailored autonomous action agents, generative media workflows, modern Next.js web applications, and enterprise ERP integrations from ground up.</p>
-          <a href="custom-development.html" class="pillar-cta">Explore Custom AI Services →</a>
+          <h4 class="lang-en">Bespoke AI Engineering</h4>
+          <h4 class="lang-no">Spesialutvikling & AI-agenter</h4>
+          <p class="lang-en">We build tailored autonomous action agents, generative media workflows, modern Next.js web applications, and enterprise ERP integrations from ground up.</p>
+          <p class="lang-no">Vi bygger skreddersydde autonome handlingsagenter, generative medieprosesser, moderne webapper og dype integrasjoner mot norske fagsystemer (Fiken, Tripletex, Vipps).</p>
+          <a href="custom-development.html" class="pillar-cta">
+            <span class="lang-en">Explore Custom AI Services →</span>
+            <span class="lang-no">Se skreddersøm og betingelser →</span>
+          </a>
         </div>
 
         <!-- Pillar 2: Proprietary Apps -->
         <div class="pillar-box">
           <div class="pillar-icon-large">🚀</div>
-          <h4>Our 7 Flagship SaaS Apps</h4>
-          <p>Our proprietary suite of production tools spanning sales proposal acceleration, multi-model video generation, mobile trade quoting, and autonomous agents.</p>
-          <a href="#apps" class="pillar-cta">Browse 7 Applications ↓</a>
+          <h4 class="lang-en">Our 7 Flagship SaaS Apps</h4>
+          <h4 class="lang-no">Våre 7 egenutviklede apper</h4>
+          <p class="lang-en">Our proprietary suite of production tools spanning sales proposal acceleration, multi-model video generation, mobile trade quoting, and autonomous agents.</p>
+          <p class="lang-no">Vår egen portefølje av spesialiserte apper: Fra lynraske mobiltilbud og anbudsoptimalisering til AI-videoproduksjon og autonome nettleseragenter.</p>
+          <a href="#apps" class="pillar-cta">
+            <span class="lang-en">Browse 7 Applications ↓</span>
+            <span class="lang-no">Utforsk alle 7 apper ↓</span>
+          </a>
         </div>
 
         <!-- Pillar 3: Whitelabel -->
         <div class="pillar-box">
           <div class="pillar-icon-large">🏷️</div>
-          <h4>Turnkey SaaS Whitelabeling</h4>
-          <p>License, rebrand, and operate any of our platforms under your own company domain with 100% managed cloud hosting and zero technical maintenance.</p>
-          <a href="portfolio.html" class="pillar-cta">View Whitelabel Marketplace →</a>
+          <h4 class="lang-en">Turnkey SaaS Whitelabeling</h4>
+          <h4 class="lang-no">Nøkkelferdig White-label</h4>
+          <p class="lang-en">License, rebrand, and operate any of our platforms under your own company domain with 100% managed cloud hosting and zero technical maintenance.</p>
+          <p class="lang-no">Lanser hvilken som helst av plattformene under ditt eget varemerke og domene – med 100 % driftet skyinfrastruktur og null vedlikeholdsbekymringer.</p>
+          <a href="portfolio.html" class="pillar-cta">
+            <span class="lang-en">View Whitelabel Marketplace →</span>
+            <span class="lang-no">Gå til White-label katalogen →</span>
+          </a>
         </div>
       </div>
     </section>
@@ -824,9 +914,12 @@
     <!-- Section 2: Flagship 7 Apps Showcase -->
     <section class="apps-section" id="apps">
       <div class="section-header">
-        <span class="section-tag">PRODUCTION SOFTWARE</span>
-        <h3>Our 7 Flagship AI Applications</h3>
-        <p>Click any application to view dedicated architectural guides, specifications, and live demonstrations.</p>
+        <span class="section-tag lang-en">PRODUCTION SOFTWARE</span>
+        <span class="section-tag lang-no">VÅRE APPER</span>
+        <h3 class="lang-en">Our 7 Flagship AI Applications</h3>
+        <h3 class="lang-no">7 spesialiserte AI-plattformer i aktiv drift</h3>
+        <p class="lang-en">Click any application to view dedicated architectural guides, specifications, and live demonstrations.</p>
+        <p class="lang-no">Klikk på en av løsningene for å se tekniske spesifikasjoner, forretningskalkyler og demonstrasjoner.</p>
       </div>
 
       <div class="apps-grid">
@@ -835,13 +928,19 @@
         <div class="app-card">
           <div class="app-card-top">
             <div class="app-icon">👷</div>
-            <span class="app-badge">Sales & CRM</span>
+            <span class="app-badge lang-en">Sales & CRM</span>
+            <span class="app-badge lang-no">Salgsassistent & CRM</span>
           </div>
           <h4>Hubzoo</h4>
-          <div class="app-tagline">Mobile Quoting & Automated Lead Closer</div>
-          <p>Send professional client estimates in 60 seconds from your phone. Built-in multi-channel follow-ups and native 1-click accounting sync to Fiken and Tripletex.</p>
+          <div class="app-tagline lang-en">Mobile Quoting & Automated Lead Closer</div>
+          <div class="app-tagline lang-no">Mobiltilbud på 60 sek og automatisert oppfølging</div>
+          <p class="lang-en">Send professional client estimates in 60 seconds from your phone. Built-in multi-channel follow-ups and native 1-click accounting sync to Fiken and Tripletex.</p>
+          <p class="lang-no">Send profesjonelle tilbud rett fra mobilen mens du er på befaring. Systemet følger automatisk opp på e-post og SMS, og synkroniserer direkte mot Fiken og Tripletex.</p>
           <div class="app-card-actions">
-            <a href="apps/hubzoo.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/hubzoo.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://hubzoo.ai.studio" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -850,13 +949,19 @@
         <div class="app-card">
           <div class="app-card-top">
             <div class="app-icon">💼</div>
-            <span class="app-badge">Freelance & Sales</span>
+            <span class="app-badge lang-en">Freelance & Sales</span>
+            <span class="app-badge lang-no">Anbud & Salg</span>
           </div>
           <h4>Upworkz</h4>
-          <div class="app-tagline">Proposal Architect & Deal Closer</div>
-          <p>Deconstruct client postings in 45 seconds, audit scope gotchas, and craft winning 220-character hooks that bypass mobile client inbox truncation.</p>
+          <div class="app-tagline lang-en">Proposal Architect & Deal Closer</div>
+          <div class="app-tagline lang-no">Anbudsoptimalisering & 220-tegns forslag</div>
+          <p class="lang-en">Deconstruct client postings in 45 seconds, audit scope gotchas, and craft winning 220-character hooks that bypass mobile client inbox truncation.</p>
+          <p class="lang-no">Analyserer anbudsutlysninger på sekunder, avdekker fallgruver i oppdragsbeskrivelsen og genererer uimotståelige innsalg som sikrer flere oppdrag for byråer og konsulenter.</p>
           <div class="app-card-actions">
-            <a href="apps/upworkz.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/upworkz.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -865,13 +970,19 @@
         <div class="app-card">
           <div class="app-card-top">
             <div class="app-icon">🎬</div>
-            <span class="app-badge">AI Video Studio</span>
+            <span class="app-badge lang-en">AI Video Studio</span>
+            <span class="app-badge lang-no">AI-videoproduksjon</span>
           </div>
           <h4>MaxMotion AI</h4>
-          <div class="app-tagline">Multi-Model Generative Video Canvas</div>
-          <p>Orchestrate Wan 2.1, Kling, and Minimax in a single unified timeline. Persistent Google Cloud Storage that ensures created clips never expire.</p>
+          <div class="app-tagline lang-en">Multi-Model Generative Video Canvas</div>
+          <div class="app-tagline lang-no">Samlet videostudio (Wan 2.1, Kling & MiniMax)</div>
+          <p class="lang-en">Orchestrate Wan 2.1, Kling, and Minimax in a single unified timeline. Persistent Google Cloud Storage that ensures created clips never expire.</p>
+          <p class="lang-no">Skap imponerende markedsføringsvideoer ved å kombinere verdens ledende AI-videomodeller i én tidslinje. Sikker lagring i Google Cloud uten tidsbegrensning.</p>
           <div class="app-card-actions">
-            <a href="apps/maxmotion.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/maxmotion.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://maxmotion.ai.studio" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -880,13 +991,19 @@
         <div class="app-card">
           <div class="app-card-top">
             <div class="app-icon">🛡️</div>
-            <span class="app-badge">FinTech & Security</span>
+            <span class="app-badge lang-en">FinTech & Security</span>
+            <span class="app-badge lang-no">Økonomistyring & Sikkerhet</span>
           </div>
           <h4>SubSentry</h4>
-          <div class="app-tagline">SaaS Dark Pattern Buster & Shield</div>
-          <p>Identify hidden recurring card charges, expose deceptive checkout traps, and execute 1-click cancellations with pre-built dispute playbooks.</p>
+          <div class="app-tagline lang-en">SaaS Dark Pattern Buster & Shield</div>
+          <div class="app-tagline lang-no">Sanering av programvaresvinn og glemte lisenser</div>
+          <p class="lang-en">Identify hidden recurring card charges, expose deceptive checkout traps, and execute 1-click cancellations with pre-built dispute playbooks.</p>
+          <p class="lang-no">Avdekk skjulte abonnementskostnader, overflødige lisenser og automatiske korttrekk. Hjelper bedrifter med å kutte 20–35 % av månedlige IT-utgifter.</p>
           <div class="app-card-actions">
-            <a href="apps/subsentry.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/subsentry.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -895,13 +1012,19 @@
         <div class="app-card">
           <div class="app-card-top">
             <div class="app-icon">🏷️</div>
-            <span class="app-badge">Browser Extension</span>
+            <span class="app-badge lang-en">Browser Extension</span>
+            <span class="app-badge lang-no">Nettleserassistent</span>
           </div>
           <h4>AppSave</h4>
-          <div class="app-tagline">The 'Honey' for SaaS & Cloud Hosting</div>
-          <p>Lightweight Manifest V3 Chrome extension that auto-tests verified promo codes on checkout pages to save teams 15% to 40% on recurring software.</p>
+          <div class="app-tagline lang-en">The 'Honey' for SaaS & Cloud Hosting</div>
+          <div class="app-tagline lang-no">Automatisk rabattjakt for programvare og skyhosting</div>
+          <p class="lang-en">Lightweight Manifest V3 Chrome extension that auto-tests verified promo codes on checkout pages to save teams 15% to 40% on recurring software.</p>
+          <p class="lang-no">Lettbeint utvidelse for Chrome som automatisk tester verifiserte rabattkoder i kassen. Kutter kostnader på servere, SaaS-lisenser og domeneregistreringer.</p>
           <div class="app-card-actions">
-            <a href="apps/appsave.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/appsave.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -913,10 +1036,15 @@
             <span class="app-badge">WebAssembly</span>
           </div>
           <h4>MediaBunny</h4>
-          <div class="app-tagline">On-Device Media Converter & Audio Normalizer</div>
-          <p>Client-side AI background removal, broadcast-standard EBU R128 audio normalization, and 75% CRF video compression with zero server data uploads.</p>
+          <div class="app-tagline lang-en">On-Device Media Converter & Audio Normalizer</div>
+          <div class="app-tagline lang-no">Lokal mediekonvertering & lydnormalisering</div>
+          <p class="lang-en">Client-side AI background removal, broadcast-standard EBU R128 audio normalization, and 75% CRF video compression with zero server data uploads.</p>
+          <p class="lang-no">Fjerning av videobakgrunn, EBU R128 kringkastingslyd og 75 % filkomprimering – utført 100 % konfidensielt på brukerens enhet uten serveropplasting.</p>
           <div class="app-card-actions">
-            <a href="apps/mediabunny.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/mediabunny.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -925,13 +1053,19 @@
         <div class="app-card">
           <div class="app-card-top">
             <div class="app-icon">🤖</div>
-            <span class="app-badge">Action Agent</span>
+            <span class="app-badge lang-en">Action Agent</span>
+            <span class="app-badge lang-no">Autonom agent</span>
           </div>
           <h4>Manus AI Studio</h4>
-          <div class="app-tagline">Autonomous General-Purpose Action Agent</div>
-          <p>Moving beyond chat: Manus autonomously navigates websites, writes code, provisions infrastructure, and completes end-to-end knowledge work unattended.</p>
+          <div class="app-tagline lang-en">Autonomous General-Purpose Action Agent</div>
+          <div class="app-tagline lang-no">Autonome handlingsagenter for krevende oppgaver</div>
+          <p class="lang-en">Moving beyond chat: Manus autonomously navigates websites, writes code, provisions infrastructure, and completes end-to-end knowledge work unattended.</p>
+          <p class="lang-no">Mer enn bare chat: Autonome agenter som navigerer nettsider, samler inn data, koder og utfører komplette forretningsprosesser fra start til slutt.</p>
           <div class="app-card-actions">
-            <a href="apps/manus.html" class="btn-app-guide">Product Guide & Specs</a>
+            <a href="apps/manus.html" class="btn-app-guide">
+              <span class="lang-en">Product Guide & Specs</span>
+              <span class="lang-no">Les produktdetaljer</span>
+            </a>
             <a href="https://saasapps-ai-studio-910579541086.us-west1.run.app" target="_blank" class="btn-app-launch">Launch ↗</a>
           </div>
         </div>
@@ -940,7 +1074,8 @@
 
       <div style="text-align: center;">
         <a href="portfolio.html" class="btn-secondary-hero">
-          <span>📁 Explore Turnkey Whitelabel Marketplace & 50+ Templates →</span>
+          <span class="lang-en">📁 Explore Turnkey Whitelabel Marketplace & 50+ Templates →</span>
+          <span class="lang-no">📁 Se White-label markedsplassen og over 50 maler →</span>
         </a>
       </div>
     </section>
@@ -949,29 +1084,34 @@
     <section class="custom-dev-spotlight">
       <div class="custom-dev-grid">
         <div class="custom-dev-text">
-          <span style="color: var(--accent); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem;">BESPOKE AI ENGINEERING</span>
-          <h3>Need a Custom AI Platform Built For Your Company?</h3>
-          <p>We take companies from raw prompt concept to high-speed production software in 7 to 14 days. We specialize in complex autonomous agents, custom generative media pipelines, and deep API integrations.</p>
+          <span style="color: var(--accent); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem;" class="lang-en">BESPOKE AI ENGINEERING</span>
+          <span style="color: var(--accent); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem;" class="lang-no">SKREDDERSYDD AI-UTVIKLING</span>
+          <h3 class="lang-en">Need a Custom AI Platform Built For Your Company?</h3>
+          <h3 class="lang-no">Trenger din bedrift en skreddersydd AI-løsning?</h3>
+          <p class="lang-en">We take companies from raw prompt concept to high-speed production software in 7 to 14 days. We specialize in complex autonomous agents, custom generative media pipelines, and deep API integrations.</p>
+          <p class="lang-no">Vi tar deg fra idé til en robust, produksjonsklar programvare på 7 til 14 dager. Vi er spesialister på autonome agenter, automatisering av tunge arbeidsprosesser og integrasjoner mot økonomi- og CRM-systemer.</p>
           
           <div class="capabilities-list">
-            <div class="cap-item"><span class="cap-icon">✓</span> Autonomous Action Agents</div>
-            <div class="cap-item"><span class="cap-icon">✓</span> Multimodal Video & Media</div>
-            <div class="cap-item"><span class="cap-icon">✓</span> Next.js 15 & Cloud Run Apps</div>
-            <div class="cap-item"><span class="cap-icon">✓</span> ERP Sync (Fiken, Tripletex)</div>
+            <div class="cap-item"><span class="cap-icon">✓</span> <span class="lang-en">Autonomous Action Agents</span><span class="lang-no">Autonome handlingsagenter</span></div>
+            <div class="cap-item"><span class="cap-icon">✓</span> <span class="lang-en">Multimodal Video & Media</span><span class="lang-no">Multimodal video & media</span></div>
+            <div class="cap-item"><span class="cap-icon">✓</span> <span class="lang-en">Next.js 15 & Cloud Run Apps</span><span class="lang-no">Next.js 15 & Cloud Run mikrotjenester</span></div>
+            <div class="cap-item"><span class="cap-icon">✓</span> <span class="lang-en">ERP Sync (Fiken, Tripletex)</span><span class="lang-no">Fiken, Tripletex & Vipps API</span></div>
           </div>
 
           <a href="custom-development.html" class="btn-primary-hero">
-            <span>Explore Full Custom Dev Specs →</span>
+            <span class="lang-en">Explore Full Custom Dev Specs →</span>
+            <span class="lang-no">Les mer om skreddersøm og prosess →</span>
           </a>
         </div>
 
         <div style="background: #090e1d; border: 1px solid var(--border); border-radius: 14px; padding: 2rem;">
-          <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: #ffffff;">Our Engineering Standards:</h4>
+          <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: #ffffff;" class="lang-en">Our Engineering Standards:</h4>
+          <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: #ffffff;" class="lang-no">Våre utviklingsstandarder:</h4>
           <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.9rem; color: #94a3b8;">
-            <div><strong style="color: #ffffff;">⚡ Sub-Second Speeds:</strong> Zero-dependency node and WebAssembly routines for lightning load times.</div>
-            <div><strong style="color: #ffffff;">🔒 Enterprise Security:</strong> Cloud Run isolation, OAuth authentication, and encrypted credential handling.</div>
-            <div><strong style="color: #ffffff;">🧠 Model Agnostic:</strong> We wire the optimal models for the job: Claude 3.7 Sonnet, Gemini 2.0 Flash, GPT-4o, Wan 2.1, Minimax.</div>
-            <div><strong style="color: #ffffff;">📦 You Own the IP:</strong> 100% intellectual property transfer and full code ownership for custom builds.</div>
+            <div><strong style="color: #ffffff;">⚡ <span class="lang-en">Sub-Second Speeds:</span><span class="lang-no">Lynrask responstid:</span></strong> <span class="lang-en">Zero-dependency node and WebAssembly routines for lightning load times.</span><span class="lang-no">Rene mikrotjenester og WebAssembly for øyeblikkelige lastetider.</span></div>
+            <div><strong style="color: #ffffff;">🔒 <span class="lang-en">Enterprise Security:</span><span class="lang-no">Bedriftssikkerhet:</span></strong> <span class="lang-en">Cloud Run isolation, OAuth authentication, and encrypted credential handling.</span><span class="lang-no">Isolert Google Cloud Run infrastruktur, kryptert nøkkelhåndtering og full GDPR-etterlevelse.</span></div>
+            <div><strong style="color: #ffffff;">🧠 <span class="lang-en">Model Agnostic:</span><span class="lang-no">Modelluavhengig:</span></strong> <span class="lang-en">We wire the optimal models for the job: Claude 3.7 Sonnet, Gemini 2.0 Flash, GPT-4o, Wan 2.1, Minimax.</span><span class="lang-no">Vi integrerer den beste AI-modellen for oppgaven: Claude 3.7 Sonnet, Gemini 2.0 Flash, GPT-4o, Wan 2.1 eller spesialmodeller.</span></div>
+            <div><strong style="color: #ffffff;">📦 <span class="lang-en">You Own the IP:</span><span class="lang-no">100 % eierskap:</span></strong> <span class="lang-en">100% intellectual property transfer and full code ownership for custom builds.</span><span class="lang-no">All kildekode, opphavsrett og immaterielle verdier overføres til din bedrift.</span></div>
           </div>
         </div>
       </div>
@@ -980,62 +1120,185 @@
     <!-- Section 4: Engineering Insights & Articles -->
     <section class="articles-section">
       <div class="section-header">
-        <span class="section-tag">ENGINEERING BLUEPRINTS</span>
-        <h3>Insights, Frameworks & Playbooks</h3>
-        <p>Technical breakdowns and tactical conversion guides authored by our engineering team.</p>
+        <span class="section-tag lang-en">ENGINEERING BLUEPRINTS</span>
+        <span class="section-tag lang-no">FAGARTIKLER & STRATEGI</span>
+        <h3 class="lang-en">Insights, Frameworks & Playbooks</h3>
+        <h3 class="lang-no">Innsikt, arkitektur og veiledninger</h3>
+        <p class="lang-en">Technical breakdowns and tactical conversion guides authored by our engineering team.</p>
+        <p class="lang-no">Praktiske analyser og strategier forankret i reelle prosjekter og produksjonserfaring.</p>
       </div>
 
       <div class="articles-grid">
         <a href="articles/the-220-character-rule-upwork-proposals.html" class="article-item">
-          <span class="article-tag-label">Sales Conversion</span>
-          <h4>The 220-Character Rule: Hooking Upwork Clients</h4>
-          <p>Why 90% of freelance proposals are discarded in inbox previews and how to engineer hooks that guarantee clicks.</p>
-          <span class="read-more">Read Guide →</span>
+          <span class="article-tag-label lang-en">Sales Conversion</span>
+          <span class="article-tag-label lang-no">Salgsoptimalisering</span>
+          <h4 class="lang-en">The 220-Character Rule: Hooking Upwork Clients</h4>
+          <h4 class="lang-no">220-tegns regelen: Slik vinner du anbudskonkurranser</h4>
+          <p class="lang-en">Why 90% of freelance proposals are discarded in inbox previews and how to engineer hooks that guarantee clicks.</p>
+          <p class="lang-no">Hvorfor 90 % av tilbud avvises i innboksen, og hvordan du formulerer åpningslinjer som garanterer svar.</p>
+          <span class="read-more lang-en">Read Guide →</span>
+          <span class="read-more lang-no">Les artikkelen →</span>
         </a>
 
         <a href="articles/contractor-speed-to-lead-automation.html" class="article-item">
-          <span class="article-tag-label">Workflow Automation</span>
-          <h4>Speed-to-Lead: Why Contractors Lose 60% of Deals</h4>
-          <p>How 60-second mobile quoting and automated multi-channel sequences double close rates for tradesmen.</p>
-          <span class="read-more">Read Guide →</span>
+          <span class="article-tag-label lang-en">Workflow Automation</span>
+          <span class="article-tag-label lang-no">Prosessautomatisering</span>
+          <h4 class="lang-en">Speed-to-Lead: Why Contractors Lose 60% of Deals</h4>
+          <h4 class="lang-no">Rask respons: Hvorfor håndverkere taper 60 % av oppdragene</h4>
+          <p class="lang-en">How 60-second mobile quoting and automated multi-channel sequences double close rates for tradesmen.</p>
+          <p class="lang-no">Hvordan 60-sekunders mobiltilbud og automatisert oppfølging dobler tilslagsprosenten for håndverkere.</p>
+          <span class="read-more lang-en">Read Guide →</span>
+          <span class="read-more lang-no">Les artikkelen →</span>
         </a>
 
         <a href="articles/building-autonomous-ai-action-agents-2026.html" class="article-item">
-          <span class="article-tag-label">AI Architecture</span>
-          <h4>Building Autonomous Action Agents in 2026</h4>
-          <p>The state machine architecture behind headless browser navigation and self-healing action loops.</p>
-          <span class="read-more">Read Guide →</span>
+          <span class="article-tag-label lang-en">AI Architecture</span>
+          <span class="article-tag-label lang-no">AI-arkitektur</span>
+          <h4 class="lang-en">Building Autonomous Action Agents in 2026</h4>
+          <h4 class="lang-no">Slik bygger du autonome handlingsagenter i 2026</h4>
+          <p class="lang-en">The state machine architecture behind headless browser navigation and self-healing action loops.</p>
+          <p class="lang-no">Arkitekturen bak selvgående agenter som navigerer nettsider og henter inn data uten feil.</p>
+          <span class="read-more lang-en">Read Guide →</span>
+          <span class="read-more lang-no">Les artikkelen →</span>
         </a>
 
         <a href="articles/how-to-prevent-duplicate-saas-billing.html" class="article-item">
-          <span class="article-tag-label">FinTech & Security</span>
-          <h4>Preventing Duplicate SaaS Billing & Dark Patterns</h4>
-          <p>Tactical checklists to expose hidden checkout add-ons and eliminate recurring software card bloat.</p>
-          <span class="read-more">Read Guide →</span>
+          <span class="article-tag-label lang-en">FinTech & Security</span>
+          <span class="article-tag-label lang-no">Økonomistyring</span>
+          <h4 class="lang-en">Preventing Duplicate SaaS Billing & Dark Patterns</h4>
+          <h4 class="lang-no">Slik stopper du skjulte SaaS-korttrekk og lisenssvinn</h4>
+          <p class="lang-en">Tactical checklists to expose hidden checkout add-ons and eliminate recurring software card bloat.</p>
+          <p class="lang-no">Praktisk sjekkliste for å avdekke skjulte prisøkninger og glemte lisenser i bedriftens regnskap.</p>
+          <span class="read-more lang-en">Read Guide →</span>
+          <span class="read-more lang-no">Les artikkelen →</span>
         </a>
       </div>
 
       <div style="text-align: center;">
         <a href="articles/index.html" class="btn-secondary-hero">
-          <span>Browse All Articles in Knowledge Hub →</span>
+          <span class="lang-en">Browse All Articles in Knowledge Hub →</span>
+          <span class="lang-no">Se alle artikler i kunnskapsbasen →</span>
         </a>
       </div>
     </section>
 
     <!-- Section 5: Consultation / Contact Box -->
+    <div id="inquiry" style="position:relative; top:-20px;"></div>
     <section id="contact" class="contact-box">
-      <span class="badge-pill" style="margin-bottom: 1rem;">GET IN TOUCH</span>
-      <h3>Ready to Build or Scale Your AI Platform?</h3>
-      <p>Whether you're scoping custom development, interested in licensing one of our 7 platforms, or want to discuss enterprise AI workflows, let's connect.</p>
+      <span class="badge-pill" style="margin-bottom: 1rem;">
+        <span class="lang-en">GET IN TOUCH</span>
+        <span class="lang-no">TA KONTAKT</span>
+      </span>
+      <h3 class="lang-en">Ready to Build or Scale Your AI Platform?</h3>
+      <h3 class="lang-no">Klar for å bygge eller oppgradere din AI-satsing?</h3>
+      <p class="lang-en">Whether you're scoping custom development, interested in licensing one of our 7 platforms, or want to discuss enterprise AI workflows, let's connect.</p>
+      <p class="lang-no">Enten du vurderer et skreddersydd system, ønsker å lisensiere en av våre 7 eksisterende apper, eller vil utforske hvordan AI kan effektivisere driften – ta kontakt for en uforpliktende samtale.</p>
 
-      <div class="contact-options">
-        <a href="mailto:paljuritzen@gmail.com?subject=AIAPPSY%20Project%20Scope%20Inquiry" class="btn-primary-hero">
-          <span>✉️ Email Direct: paljuritzen@gmail.com</span>
-        </a>
-        <a href="custom-development.html" class="btn-secondary-hero">
-          <span>🛠️ View Custom Dev Services</span>
-        </a>
-      </div>
+      
+      <!-- Interactive Lead Capture Form -->
+      <form id="contact-form" class="interactive-contact-form" onsubmit="submitInquiryForm(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; text-align: left;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+              <span class="lang-en">Your Name</span>
+              <span class="lang-no">Ditt navn</span>
+            </label>
+            <input type="text" id="inq-name" required placeholder="f.eks. Ola Nordmann" style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+              <span class="lang-en">Work Email</span>
+              <span class="lang-no">Arbeids-e-post</span>
+            </label>
+            <input type="email" id="inq-email" required placeholder="ola@bedrift.no" style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem; text-align: left;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+            <span class="lang-en">Project Type / Interest</span>
+            <span class="lang-no">Hva gjelder henvendelsen?</span>
+          </label>
+          <select id="inq-type" style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem;">
+            <option value="Lisensiere en av 7 plattformer">🚀 Lisensiere en av våre 7 eksisterende plattformer</option>
+            <option value="Custom AI Engineering (Autonom Agent)">🛠️ Skreddersydd AI-utvikling & Autonome agenter</option>
+            <option value="White-label Partnerskap & 50+ maler">🏷️ White-label partnerskap & 50+ maler</option>
+            <option value="ERP / Fagsystem Integrasjon (Fiken/Tripletex)">📊 Integrasjon mot Fiken, Tripletex eller Vipps</option>
+            <option value="Annet / Generell forespørsel">💬 Annet / Uforpliktende samtale</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; text-align: left;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+            <span class="lang-en">Project Scope / Details (Optional)</span>
+            <span class="lang-no">Kort om prosjektet eller behovet (valgfritt)</span>
+          </label>
+          <textarea id="inq-msg" rows="3" placeholder="Fortell litt om hva du ønsker å oppnå, tidsramme eller spesielle krav..." style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <button type="submit" id="btn-inq-submit" class="btn-primary-hero" style="border: none; cursor: pointer;">
+            <span>🚀</span>
+            <span class="lang-en">Send Project Inquiry</span>
+            <span class="lang-no">Send uforpliktende forespørsel</span>
+          </button>
+          <a href="mailto:paljuritzen@gmail.com?subject=AIAPPSY%20Direkte%20Kontakt" class="btn-secondary-hero">
+            <span>✉️</span>
+            <span class="lang-en">Or Email Direct: paljuritzen@gmail.com</span>
+            <span class="lang-no">Eller e-post: paljuritzen@gmail.com</span>
+          </a>
+        </div>
+
+        <div id="inq-feedback" style="margin-top: 1rem; font-size: 0.95rem; font-weight: 700; display: none;"></div>
+      </form>
+
+      <script>
+        async function submitInquiryForm(e) {
+          e.preventDefault();
+          var btn = document.getElementById('btn-inq-submit');
+          var fb = document.getElementById('inq-feedback');
+          var name = document.getElementById('inq-name').value;
+          var email = document.getElementById('inq-email').value;
+          var ptype = document.getElementById('inq-type').value;
+          var msg = document.getElementById('inq-msg').value;
+          var isNo = (document.documentElement.lang === 'no') || (document.documentElement.classList && document.documentElement.classList.contains('lang-no'));
+
+          btn.disabled = true;
+          btn.style.opacity = '0.6';
+          fb.style.display = 'block';
+          fb.style.color = '#818cf8';
+          fb.textContent = isNo ? 'Sender henvendelse...' : 'Sending inquiry...';
+
+          try {
+            var res = await fetch('/api/inquiry', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: name, email: email, projectType: ptype, message: msg })
+            });
+            var data = await res.json();
+            if (data.success) {
+              fb.style.color = '#10b981';
+              var successMsg = isNo 
+                ? (data.message || 'Takk! Din henvendelse er mottatt. Vi svarer innen 24 timer.')
+                : 'Thank you! Your inquiry has been received. We will respond within 24 hours.';
+              fb.textContent = '✓ ' + successMsg;
+              document.getElementById('contact-form').reset();
+            } else {
+              throw new Error(data.error || 'Feil ved sending');
+            }
+          } catch(err) {
+            fb.style.color = '#f59e0b';
+            fb.textContent = isNo ? 'Tips: Åpner e-postprogrammet ditt som reserve...' : 'Note: Opening your email client as fallback...';
+            var mailSubject = encodeURIComponent('AIAPPSY Forespørsel: ' + ptype);
+            var mailBody = encodeURIComponent('Navn: ' + name + '\nE-post: ' + email + '\nType: ' + ptype + '\nMelding:\n' + msg);
+            window.location.href = 'mailto:paljuritzen@gmail.com?subject=' + mailSubject + '&body=' + mailBody;
+          } finally {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+          }
+        }
+      </script>
+
     </section>
 
     <!-- Footer -->
@@ -1046,13 +1309,17 @@
             <div style="width: 26px; height: 26px; background: #6366f1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">⚡</div>
             <strong style="color: #ffffff; font-size: 1.1rem;">AIAPPSY</strong>
           </div>
-          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; max-width: 280px;">
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; max-width: 280px;" class="lang-en">
             Frontier AI applications, bespoke action agent engineering, and high-performance cloud microservices.
+          </p>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; max-width: 280px;" class="lang-no">
+            Neste generasjons AI-applikasjoner, skreddersydde handlingsagenter og lynraske skymikrotjenester.
           </p>
         </div>
 
         <div class="footer-col">
-          <h5>Proprietary Apps</h5>
+          <h5 class="lang-en">Proprietary Apps</h5>
+          <h5 class="lang-no">Våre AI-apper</h5>
           <ul>
             <li><a href="apps/hubzoo.html">Hubzoo</a></li>
             <li><a href="apps/upworkz.html">Upworkz</a></li>
@@ -1065,28 +1332,52 @@
         </div>
 
         <div class="footer-col">
-          <h5>Solutions</h5>
+          <h5 class="lang-en">Solutions</h5>
+          <h5 class="lang-no">Tjenester & Løsninger</h5>
           <ul>
-            <li><a href="custom-development.html">Custom AI Engineering</a></li>
-            <li><a href="portfolio.html">Whitelabel Portfolio</a></li>
-            <li><a href="articles/index.html">Articles & Insights</a></li>
+            <li>
+              <a href="custom-development.html">
+                <span class="lang-en">Custom AI Engineering</span>
+                <span class="lang-no">Skreddersydd AI-utvikling</span>
+              </a>
+            </li>
+            <li>
+              <a href="portfolio.html">
+                <span class="lang-en">Whitelabel Portfolio</span>
+                <span class="lang-no">White-label portefølje</span>
+              </a>
+            </li>
+            <li>
+              <a href="articles/index.html">
+                <span class="lang-en">Articles & Insights</span>
+                <span class="lang-no">Artikler & Innsikt</span>
+              </a>
+            </li>
             <li><a href="/studio">Content Studio (Admin)</a></li>
             <li><a href="/sitemap.xml">XML Sitemap</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Contact & System</h5>
+          <h5 class="lang-en">Contact & System</h5>
+          <h5 class="lang-no">Kontakt & Drift</h5>
           <ul>
             <li><a href="mailto:paljuritzen@gmail.com">paljuritzen@gmail.com</a></li>
             <li><a href="/admin">Link Engine Admin</a></li>
-            <li><a href="https://github.com/aiappsy/link-engine">GitHub Repository</a></li>
+            <li><a href="https://github.com/aiappsy/linking">GitHub Repository</a></li>
           </ul>
         </div>
       </div>
 
+      <div class="footer-legal-bar" style="margin-top: 1rem; font-size: 0.8rem; color: #64748b;">
+          <a href="/privacy.html" style="color: #64748b; text-decoration: none; margin-right: 0.85rem;"><span class="lang-en">Privacy Policy</span><span class="lang-no">Personvern</span></a> · 
+          <a href="/terms.html" style="color: #64748b; text-decoration: none; margin-right: 0.85rem;"><span class="lang-en">Terms of Use</span><span class="lang-no">Brukervilkår</span></a> · 
+          <a href="/gdpr.html" style="color: #64748b; text-decoration: none; margin-right: 0.85rem;"><span class="lang-en">GDPR</span><span class="lang-no">GDPR</span></a> · 
+          <a href="/disclaimer.html" style="color: #64748b; text-decoration: none;"><span class="lang-en">AI Disclaimers</span><span class="lang-no">Ansvarsfraskrivelse</span></a>
+        </div>
       <div class="footer-bottom">
-        <span>© 2026 AIAPPSY. Built on Google Cloud Run & Frontier AI Models.</span>
+        <span class="lang-en">© 2026 AIAPPSY. Built on Google Cloud Run & Frontier AI Models.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Driftet på Google Cloud Run med ledende AI-modeller.</span>
         <div>
           <a href="/admin">Link Manager</a> · 
           <a href="/studio">Studio</a> · 
@@ -1097,5 +1388,7 @@
 
   </div>
 
+  <!-- Shared Bilingual Controller -->
+  <script src="/i18n.js"></script>
 </body>
 </html>

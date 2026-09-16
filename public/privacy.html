@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Privacy Policy & Data Protection | AIAPPSY</title>
+  <meta name="description" content="AIAPPSY Privacy Policy. Transparent data handling, zero third-party invasive trackers, and full compliance with GDPR and Norwegian Datatilsynet regulations.">
+  <link rel="canonical" href="https://aiappsy.com/privacy.html">
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/privacy.html">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/privacy.html?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/privacy.html">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
+  <style>
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+    body {
+      background: #070a12;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+    }
+    .legal-container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+    .legal-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: 3rem;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .brand-link span { color: #818cf8; }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-actions a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-actions a:hover { color: #ffffff; }
+
+    .lang-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .lang-switch-btn:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      color: #ffffff;
+    }
+
+    .legal-header {
+      margin-bottom: 3rem;
+    }
+    .legal-tag {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+    }
+    .legal-header h1 {
+      font-size: 2.75rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
+    .legal-header p.last-updated {
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .legal-content h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 0.5rem;
+    }
+    .legal-content h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-top: 1.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .legal-content p {
+      color: #cbd5e1;
+      font-size: 1.02rem;
+      margin-bottom: 1.35rem;
+    }
+    .legal-content ul, .legal-content ol {
+      color: #cbd5e1;
+      margin-bottom: 1.5rem;
+      padding-left: 1.75rem;
+    }
+    .legal-content li {
+      margin-bottom: 0.5rem;
+    }
+    .legal-content strong {
+      color: #ffffff;
+    }
+
+    .callout-box {
+      background: rgba(15, 22, 41, 0.75);
+      border: 1px solid #1e2942;
+      border-left: 4px solid #6366f1;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .callout-box p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .legal-footer {
+      margin-top: 5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #1e293b;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .legal-footer a {
+      color: #94a3b8;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+    .legal-footer a:hover { color: #ffffff; }
+  </style>
+</head>
+<body>
+  <div class="legal-container">
+    <nav class="legal-nav">
+      <a href="/" class="brand-link">
+        <div>⚡</div>
+        <div>aiappsy<span>.com</span></div>
+      </a>
+      <div class="nav-actions">
+        <a href="/">
+          <span class="lang-en">← Home</span>
+          <span class="lang-no">← Forside</span>
+        </a>
+        <a href="/custom-development.html">
+          <span class="lang-en">Custom Dev</span>
+          <span class="lang-no">Skreddersøm</span>
+        </a>
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+      </div>
+    </nav>
+
+    <header class="legal-header">
+      <span class="legal-tag">
+        <span class="lang-en">Transparency & Compliance</span>
+        <span class="lang-no">Åpenhet & Personvern</span>
+      </span>
+      <h1 class="lang-en">Privacy Policy</h1>
+      <h1 class="lang-no">Personvernerklæring</h1>
+      <p class="last-updated">
+        <span class="lang-en">Last updated: September 16, 2026 · Governed by Norwegian & EU Law (GDPR)</span>
+        <span class="lang-no">Sist oppdatert: 16. september 2026 · Underlagt norsk lov og GDPR</span>
+      </p>
+    </header>
+
+    <!-- English Content -->
+    <main class="legal-content lang-en">
+      <div class="callout-box">
+        <p><strong>Summary in plain English:</strong> We collect only what is strictly necessary to evaluate your project inquiries and run our services. We do not sell your data, do not run third-party advertising cookies, and ensure all infrastructure operates in secure, tenant-isolated cloud environments.</p>
+      </div>
+
+      <h2>1. Data Controller</h2>
+      <p>The data controller responsible for the processing of personal data on <strong>aiappsy.com</strong> is:</p>
+      <p>
+        <strong>AIAPPSY / Pål Juritzen</strong><br>
+        Oslo, Norway<br>
+        Direct Contact: <a href="mailto:paljuritzen@gmail.com" style="color: #818cf8;">paljuritzen@gmail.com</a>
+      </p>
+
+      <h2>2. What Information We Collect</h2>
+      <ul>
+        <li><strong>Project Inquiries:</strong> When you submit our contact form, we collect your name, email address, chosen project category, and project scope details.</li>
+        <li><strong>Server Access Logs:</strong> Standard HTTP server logs including IP address, browser user-agent, requested URL, and timestamps. These are maintained exclusively for cybersecurity, rate-limiting, and DDoS defense.</li>
+        <li><strong>Local Storage Preferences:</strong> We store your preferred interface language (English or Norwegian) in your browser's local storage. This does not track you across other websites.</li>
+      </ul>
+
+      <h2>3. Legal Basis for Processing</h2>
+      <p>We process your data under the following legal grounds specified in GDPR Article 6:</p>
+      <ul>
+        <li><strong>Contract Scoping (Art. 6(1)(b)):</strong> To respond to your project requests and provide technical architectural assessments.</li>
+        <li><strong>Legitimate Interest (Art. 6(1)(f)):</strong> To defend against unauthorized automated abuse, malicious traffic, and cyber attacks.</li>
+      </ul>
+
+      <h2>4. Data Sharing & Sub-Processors</h2>
+      <p>We never sell, rent, or trade your personal data. We utilize secure enterprise cloud infrastructure to operate this site:</p>
+      <ul>
+        <li><strong>Google Cloud Platform (Cloud Run & Firestore):</strong> High-security container hosting with automated isolation.</li>
+      </ul>
+
+      <h2>5. Your Rights Under GDPR</h2>
+      <p>As a data subject located in Norway, the EEA, or internationally, you have the right to:</p>
+      <ul>
+        <li>Request access to the personal data we hold about you (Article 15).</li>
+        <li>Request rectification of incorrect data (Article 16).</li>
+        <li>Request the immediate erasure of your personal data ("Right to be Forgotten", Article 17).</li>
+        <li>Lodge a complaint directly with the Norwegian Data Protection Authority (<strong>Datatilsynet</strong>) at <a href="https://www.datatilsynet.no" target="_blank" rel="noopener" style="color: #818cf8;">datatilsynet.no</a>.</li>
+      </ul>
+
+      <h2>6. Contact Regarding Privacy</h2>
+      <p>For any data access, rectification, or deletion requests, simply email us at <a href="mailto:paljuritzen@gmail.com" style="color: #818cf8;">paljuritzen@gmail.com</a>. We respond within 24–48 hours.</p>
+    </main>
+
+    <!-- Norwegian Content -->
+    <main class="legal-content lang-no">
+      <div class="callout-box">
+        <p><strong>Kort oppsummert:</strong> Vi samler kun inn opplysninger som er strengt nødvendige for å besvare dine prosjektforespørsler og drifte nettsiden sikkert. Vi selger aldri data videre, bruker ingen invaderende reklame-cookies, og all datalagring skjer i sikre, isolerte skymiljøer.</p>
+      </div>
+
+      <h2>1. Behandlingsansvarlig</h2>
+      <p>Behandlingsansvarlig for personopplysninger som samles inn via <strong>aiappsy.com</strong> er:</p>
+      <p>
+        <strong>AIAPPSY / Pål Juritzen</strong><br>
+        Oslo, Norge<br>
+        E-post: <a href="mailto:paljuritzen@gmail.com" style="color: #818cf8;">paljuritzen@gmail.com</a>
+      </p>
+
+      <h2>2. Hvilke opplysninger samler vi inn?</h2>
+      <ul>
+        <li><strong>Prosjektforespørsler:</strong> Når du fyller ut kontaktskjemaet vårt, samler vi inn ditt navn, din arbeids-e-post, prosjekttype og eventuelle prosjektdetaljer du oppgir.</li>
+        <li><strong>Serverlogger for sikkerhet:</strong> Standard tekniske serverlogger (IP-adresse, nettlesertype, forespurt URL og tidspunkt) for å beskytte mot dataangrep, botter og overbelastning.</li>
+        <li><strong>Lokal lagring (språkvalg):</strong> Vi lagrer ditt valgte språk (norsk eller engelsk) i nettleserens `localStorage` slik at nettsiden forblir på norsk ved neste besøk. Dette sporer deg ikke på andre nettsteder.</li>
+      </ul>
+
+      <h2>3. Behandlingsgrunnlag (GDPR)</h2>
+      <p>Behandlingen av opplysninger skjer med hjemmel i personvernforordningen (GDPR) artikkel 6:</p>
+      <ul>
+        <li><strong>Avtale/forprosjekt (Art. 6 nr. 1 b):</strong> For å kunne besvare henvendelsen din, utarbeide tilbud og spesifisere programvareprosjekter.</li>
+        <li><strong>Berettiget interesse (Art. 6 nr. 1 f):</strong> For å ivareta informasjonssikkerheten og forhindre misbruk av våre tjenester.</li>
+      </ul>
+
+      <h2>4. Databehandlere og tredjeparter</h2>
+      <p>Vi deler aldri personopplysninger med tredjeparter for markedsføringsformål. Vi benytter følgende sikre leverandører for teknisk drift:</p>
+      <ul>
+        <li><strong>Google Cloud Platform:</strong> Driftet på Google Cloud Run med isolerte containere og kryptert datalagring.</li>
+      </ul>
+
+      <h2>5. Dine rettigheter etter personopplysningsloven</h2>
+      <p>Du har full råderett over egne personopplysninger. Du kan når som helst kreve:</p>
+      <ul>
+        <li><strong>Innsyn</strong> i hvilke opplysninger vi har lagret om deg.</li>
+        <li><strong>Retting</strong> av feilaktige eller ufullstendige opplysninger.</li>
+        <li><strong>Sletting</strong> av dine opplysninger («retten til å bli glemt»).</li>
+        <li>Du har også rett til å klage til <strong>Datatilsynet</strong> (<a href="https://www.datatilsynet.no" target="_blank" rel="noopener" style="color: #818cf8;">datatilsynet.no</a>) dersom du mener vår behandling er i strid med regelverket.</li>
+      </ul>
+
+      <h2>6. Kontakt for personvernspørsmål</h2>
+      <p>For innsyn eller sletting, send en e-post til <a href="mailto:paljuritzen@gmail.com" style="color: #818cf8;">paljuritzen@gmail.com</a>. Vi behandler din forespørsel innen 24–48 timer.</p>
+    </main>
+
+    <footer class="legal-footer">
+      <div>
+        <span class="lang-en">© 2026 AIAPPSY. All rights reserved.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Alle rettigheter forbeholdt.</span>
+      </div>
+      <div>
+        <a href="/privacy.html"><span class="lang-en">Privacy Policy</span><span class="lang-no">Personvern</span></a>
+        <a href="/terms.html"><span class="lang-en">Terms of Use</span><span class="lang-no">Brukervilkår</span></a>
+        <a href="/gdpr.html"><span class="lang-en">GDPR</span><span class="lang-no">GDPR</span></a>
+        <a href="/disclaimer.html"><span class="lang-en">AI Disclaimers</span><span class="lang-no">Ansvarsfraskrivelse</span></a>
+      </div>
+    </footer>
+    <script src="/i18n.js"></script>
+  </div>
+</body>
+</html>

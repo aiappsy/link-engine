@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AI & Operational Disclaimers | AIAPPSY</title>
+  <meta name="description" content="AIAPPSY Disclaimers. Artificial intelligence model verification, accounting software estimates, and operational guidelines.">
+  <link rel="canonical" href="https://aiappsy.com/disclaimer.html">
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/disclaimer.html">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/disclaimer.html?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/disclaimer.html">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
+  <style>
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+    body {
+      background: #070a12;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+    }
+    .legal-container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+    .legal-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: 3rem;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .brand-link span { color: #818cf8; }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-actions a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-actions a:hover { color: #ffffff; }
+
+    .lang-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .lang-switch-btn:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      color: #ffffff;
+    }
+
+    .legal-header {
+      margin-bottom: 3rem;
+    }
+    .legal-tag {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+    }
+    .legal-header h1 {
+      font-size: 2.75rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
+    .legal-header p.last-updated {
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .legal-content h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 0.5rem;
+    }
+    .legal-content h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-top: 1.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .legal-content p {
+      color: #cbd5e1;
+      font-size: 1.02rem;
+      margin-bottom: 1.35rem;
+    }
+    .legal-content ul, .legal-content ol {
+      color: #cbd5e1;
+      margin-bottom: 1.5rem;
+      padding-left: 1.75rem;
+    }
+    .legal-content li {
+      margin-bottom: 0.5rem;
+    }
+    .legal-content strong {
+      color: #ffffff;
+    }
+
+    .callout-box {
+      background: rgba(15, 22, 41, 0.75);
+      border: 1px solid #1e2942;
+      border-left: 4px solid #6366f1;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .callout-box p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .legal-footer {
+      margin-top: 5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #1e293b;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .legal-footer a {
+      color: #94a3b8;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+    .legal-footer a:hover { color: #ffffff; }
+  </style>
+</head>
+<body>
+  <div class="legal-container">
+    <nav class="legal-nav">
+      <a href="/" class="brand-link">
+        <div>⚡</div>
+        <div>aiappsy<span>.com</span></div>
+      </a>
+      <div class="nav-actions">
+        <a href="/">
+          <span class="lang-en">← Home</span>
+          <span class="lang-no">← Forside</span>
+        </a>
+        <a href="/custom-development.html">
+          <span class="lang-en">Custom Dev</span>
+          <span class="lang-no">Skreddersøm</span>
+        </a>
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+      </div>
+    </nav>
+
+    <header class="legal-header">
+      <span class="legal-tag">
+        <span class="lang-en">Operational Disclaimers</span>
+        <span class="lang-no">Ansvarsfraskrivelse & Forbehold</span>
+      </span>
+      <h1 class="lang-en">AI & Commercial Disclaimers</h1>
+      <h1 class="lang-no">AI- og Ansvarsfraskrivelse</h1>
+      <p class="last-updated">
+        <span class="lang-en">Important considerations regarding AI model outputs and operational integrations</span>
+        <span class="lang-no">Viktige forbehold vedrørende bruk av kunstig intelligens og forretningsintegrasjoner</span>
+      </p>
+    </header>
+
+    <!-- English Content -->
+    <main class="legal-content lang-en">
+      <div class="callout-box">
+        <p><strong>Notice:</strong> Frontier artificial intelligence models operate on probabilistic reasoning. While our engineering architectures implement strict verification safeguards, human oversight remains essential for high-risk corporate and financial operations.</p>
+      </div>
+
+      <h2>1. Artificial Intelligence Generations & Verification</h2>
+      <p>Our applications utilize frontier large language models and multimodal diffusion systems (including Gemini 2.0, Claude 3.7, Wan 2.1, Kling, and MiniMax). While engineered for high accuracy, AI models can produce hallucinations, inaccuracies, or incomplete instructions. Users are advised to review and verify proposal scopes, technical code, and generative media before publishing or entering binding commitments.</p>
+
+      <h2>2. Accounting & Financial Calculations Disclaimer</h2>
+      <p>Applications such as <strong>Hubzoo</strong> (mobile contractor quoting) and <strong>SubSentry</strong> (SaaS spend auditing) provide automated estimations, proposal generation, and expense tracking. These tools are designed to streamline administrative workflows and do <strong>not</strong> constitute certified public accounting (CPA), legal, or tax advisory services. Final accounting syncs to Fiken or Tripletex should be verified in accordance with your company's standard bookkeeping practices.</p>
+
+      <h2>3. Autonomous Agent Human-in-the-Loop Safeguards</h2>
+      <p>Autonomous action agents built by AIAPPSY (including <strong>Manus AI Studio</strong>) are engineered with optional or mandatory <em>Human-in-the-Loop (HITL)</em> approval gates. AIAPPSY strongly recommends maintaining human confirmation checkpoints for irreversible actions such as fund transfers, contract signatures, or sensitive database deletions.</p>
+
+      <h2>4. Third-Party Foundation Model Uptime</h2>
+      <p>AIAPPSY microservices maintain high availability through Google Cloud Run. However, availability of third-party foundation model APIs (e.g. Anthropic, Google AI Studio, Kuaishou, MiniMax) is governed by their respective service level agreements. AIAPPSY incorporates automated fallback cascades to minimize interruption.</p>
+    </main>
+
+    <!-- Norwegian Content -->
+    <main class="legal-content lang-no">
+      <div class="callout-box">
+        <p><strong>Viktig informasjon:</strong> Kunstig intelligens baserer seg på statistiske sannsynlighetsmodeller. Selv om vi bygger inn strenge sikkerhetssjekker og feilhåndtering, krever kritiske forretnings- og økonomibeslutninger alltid menneskelig kontroll.</p>
+      </div>
+
+      <h2>1. AI-generert innhold og etterprøvbarhet</h2>
+      <p>Våre plattformer benytter ledende språkmodeller og generative videosystemer (som Gemini 2.0, Claude 3.7, Wan 2.1 og Kling). Selv om presisjonsnivået er høyt, kan modeller i enkelte tilfeller produsere unøyaktigheter («hallusinasjoner»). Brukeren har selv ansvar for å gjennomgå og godkjenne tilbudstekster, kode og markedsføringsmateriell før publisering eller bindende avtaleinngåelse.</p>
+
+      <h2>2. Regnskap og økonomiske kalkyler</h2>
+      <p>Løsninger som <strong>Hubzoo</strong> (mobiltilbud for håndverkere) og <strong>SubSentry</strong> (kostnadskontroll på programvare) er verktøy for å automatisere og forenkle hverdagen. De erstatter <strong>ikke</strong> statsautorisert regnskapsføring eller juridisk skatterådgivning. Automatisk overførte bilag til Fiken eller Tripletex må attesteres i tråd med bedriftens vanlige regnskapsrutiner.</p>
+
+      <h2>3. Menneskelig kontroll (Human-in-the-Loop) for agenter</h2>
+      <p>Våre autonome handlingsagenter (inkludert <strong>Manus AI Studio</strong>) leveres med mulighet for manuelle godkjenningspunkter. Vi anbefaler alltid at handlinger som involverer utbetalinger, kontraktsigneringer eller sletting av virksomhetskritiske data krever et aktivt klikk fra en ansvarlig person før de utføres.</p>
+
+      <h2>4. Oppetid på eksterne AI-modeller</h2>
+      <p>Vår egen skyinfrastruktur på Google Cloud Run er designet for maksimal oppetid. Tilgjengeligheten til de underliggende AI-modellene (fra f.eks. Google, Anthropic eller eksterne videoleverandører) reguleres imidlertid av disses respektive driftsavtaler. Vi bygger inn automatiske reserveløsninger for å redusere risikoen for avbrudd.</p>
+    </main>
+
+    <footer class="legal-footer">
+      <div>
+        <span class="lang-en">© 2026 AIAPPSY. All rights reserved.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Alle rettigheter forbeholdt.</span>
+      </div>
+      <div>
+        <a href="/privacy.html"><span class="lang-en">Privacy Policy</span><span class="lang-no">Personvern</span></a>
+        <a href="/terms.html"><span class="lang-en">Terms of Use</span><span class="lang-no">Brukervilkår</span></a>
+        <a href="/gdpr.html"><span class="lang-en">GDPR</span><span class="lang-no">GDPR</span></a>
+        <a href="/disclaimer.html"><span class="lang-en">AI Disclaimers</span><span class="lang-no">Ansvarsfraskrivelse</span></a>
+      </div>
+    </footer>
+    <script src="/i18n.js"></script>
+  </div>
+</body>
+</html>

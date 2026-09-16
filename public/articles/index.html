@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIAppsy Insights & Guides | Practical AI Engineering & SaaS Strategy</title>
+  <title>AIAPPSY Insights & Guides | Practical AI Engineering & Strategy</title>
   <meta name="description" content="In-depth technical guides, conversion breakdowns, and operational playbooks for AI SaaS operators, developers, and businesses.">
   <link rel="canonical" href="https://aiappsy.com/articles/">
+  <!-- Alternate Language Hreflang Tags for Google SEO -->
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/articles/">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/articles/?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/articles/">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AIAppsy Insights & Guides | Practical AI Engineering">
+  <meta property="og:title" content="AIAPPSY Insights & Guides | Practical AI Engineering">
   <meta property="og:description" content="In-depth technical guides, conversion breakdowns, and operational playbooks for AI SaaS operators and businesses.">
   <meta property="og:url" content="https://aiappsy.com/articles/">
 
@@ -19,7 +23,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
 
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
   <style>
+    /* Bilingual Toggle Rules */
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
     .insights-wrapper {
       max-width: 960px;
       margin: 0 auto;
@@ -102,6 +130,13 @@
       font-weight: 700;
     }
   </style>
+  <!-- Favicon & Social Share Cards -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aiappsy.com/og-image.png">
 </head>
 <body>
 
@@ -109,20 +144,29 @@
 
     <!-- Top Navigation -->
     <nav class="top-header" style="margin-bottom: 1.5rem;">
-      <a href="https://aiappsy.com" class="brand-link">
+      <a href="/" class="brand-link">
         <div class="brand-logo-badge">⚡</div>
         <div class="brand-meta">
-          <h1>saasapps<span>.ai.studio</span></h1>
-          <span>Knowledge Hub & Engineering Strategy</span>
+          <h1>aiappsy<span>.com</span></h1>
+          <span class="lang-en">Knowledge Hub & Engineering Strategy</span>
+          <span class="lang-no">Kunnskapsbase & AI-strategi</span>
         </div>
       </a>
       <div class="header-actions">
-        <a href="https://aiappsy.com" class="btn-secondary" style="text-decoration: none;">
-          <span>← All 7 Platforms</span>
+        <a href="/" class="btn-secondary" style="text-decoration: none;">
+          <span class="lang-en">← Home & 7 Apps</span>
+          <span class="lang-no">← Forside & 7 apper</span>
         </a>
         <a href="../custom-development.html" class="btn-primary" style="text-decoration: none;">
-          <span>Custom AI Dev ↗</span>
+          <span class="lang-en">Custom Dev ↗</span>
+          <span class="lang-no">Skreddersøm ↗</span>
         </a>
+
+        <!-- Top Navigation Language Switcher -->
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
       </div>
     </nav>
 
@@ -130,80 +174,145 @@
     <header class="insights-hero">
       <div class="hero-pill-tag">
         <span>📚</span>
-        <span>AIAppsy Knowledge & Strategy</span>
+        <span class="lang-en">AIAPPSY Knowledge & Strategy</span>
+        <span class="lang-no">AIAPPSY Kunnskap & Strategi</span>
       </div>
-      <h1>Insights, Playbooks & Architecture Guides</h1>
-      <p>
+      <h1 class="lang-en">Insights, Playbooks & Architecture Guides</h1>
+      <h1 class="lang-no">Analyser, strategier og tekniske veiledninger</h1>
+      <p class="lang-en">
         Battle-tested strategies on autonomous action agents, speed-to-lead sales automation, client acquisition, and modern AI application engineering.
+      </p>
+      <p class="lang-no">
+        Konkrete erfaringer og veiledninger om autonome handlingsagenter, rask tilbudsrespons, kostnadskontroll på programvare og neste generasjons AI-utvikling.
       </p>
     </header>
 
     <!-- Articles Stream -->
     <main class="articles-stream">
 
-      <!-- Article: how-to-prevent-duplicate-saas-billing -->
-      <a href="how-to-prevent-duplicate-saas-billing.html" class="article-stream-card">
+      <!-- Article 1: Wan 2.1 vs Kling vs Minimax -->
+      <a href="wan-2-1-vs-kling-vs-minimax-ai-video-comparison.html" class="article-stream-card">
         <div class="stream-tag-row">
-          <span>SaaS & Financial Protection</span>
+          <span class="lang-en">AI Video & Generative Media</span>
+          <span class="lang-no">AI-video & Multimodal media</span>
           <span>•</span>
-          <span>4 min read</span>
+          <span class="lang-en">7 min read</span>
+          <span class="lang-no">7 min lesetid</span>
         </div>
-        <h2>How to Prevent Duplicate SaaS Billing and Cut Hidden Spend</h2>
-        <p>Step-by-step guide to uncovering redundant cloud tools and eliminating duplicate SaaS subscriptions across distributed teams.</p>
+        <h2 class="lang-en">Wan 2.1 vs Kling vs Minimax: The 2026 Generative AI Video Shootout</h2>
+        <h2 class="lang-no">Wan 2.1 vs Kling vs MiniMax: Den store testen av AI-videomodeller i 2026</h2>
+        <p class="lang-en">A rigorous technical comparison of Wan 2.1, Kling, and Minimax video generation models. Benchmarking temporal consistency, camera dynamics, and unified creative workflows.</p>
+        <p class="lang-no">En grundig teknisk sammenligning av Wan 2.1, Kling og MiniMax. Vi tester bevegelseskvalitet, fotorealisme og hvordan modellene samles i en sømløs arbeidsflyt med MaxMotion AI.</p>
         <div class="stream-card-footer">
-          <span>Focus: SubSentry</span>
-          <span class="read-arrow">Read Article →</span>
+          <span class="lang-en">Focus: MaxMotion AI Studio</span>
+          <span class="lang-no">Løsning: MaxMotion AI Studio</span>
+          <span class="read-arrow lang-en">Read Article →</span>
+          <span class="read-arrow lang-no">Les artikkelen →</span>
         </div>
       </a>
 
-      <!-- Article 1: Upwork Proposals -->
+      <!-- Article 2: Enterprise SaaS Waste Audit -->
+      <a href="enterprise-saas-waste-audit-recurring-billing.html" class="article-stream-card">
+        <div class="stream-tag-row">
+          <span class="lang-en">SaaS FinTech & Cost Control</span>
+          <span class="lang-no">Økonomistyring & Kostnadskontroll</span>
+          <span>•</span>
+          <span class="lang-en">6 min read</span>
+          <span class="lang-no">6 min lesetid</span>
+        </div>
+        <h2 class="lang-en">The Enterprise SaaS Waste Audit: How Companies Leak 28% of Recurring Software Spend</h2>
+        <h2 class="lang-no">Den store SaaS-revisjonen: Slik taper bedrifter 28 % av programvarebudsjettet på glemte lisenser</h2>
+        <p class="lang-en">A battle-tested audit playbook to uncover phantom SaaS seats, duplicate software licenses, and deceptive auto-renewal dark patterns. How to claw back up to 28% in annual software overhead.</p>
+        <p class="lang-no">En praktisk veiledning for å avdekke ubrukte lisenser, glemte prøveperioder og automatiske korttrekk. Slik kutter ledelsen opptil 28 % av årlige IT-kostnader.</p>
+        <div class="stream-card-footer">
+          <span class="lang-en">Focus: SubSentry</span>
+          <span class="lang-no">Løsning: SubSentry</span>
+          <span class="read-arrow lang-en">Read Article →</span>
+          <span class="read-arrow lang-no">Les artikkelen →</span>
+        </div>
+      </a>
+
+      <!-- Article 3: Why Chatbots Fail -->
+      <a href="why-chatbots-fail-autonomous-action-agents-2026.html" class="article-stream-card">
+        <div class="stream-tag-row">
+          <span class="lang-en">Autonomous Systems & Engineering</span>
+          <span class="lang-no">Autonome systemer & Utvikling</span>
+          <span>•</span>
+          <span class="lang-en">8 min read</span>
+          <span class="lang-no">8 min lesetid</span>
+        </div>
+        <h2 class="lang-en">Why Chatbots Don't Move the Needle: The Rise of Autonomous AI Action Agents</h2>
+        <h2 class="lang-no">Hvorfor chatroboter feiler: Derfor er autonome handlingsagenter fremtiden for bedrifter i 2026</h2>
+        <p class="lang-en">Why passive conversational chatbots deliver diminishing business returns, and how autonomous action agents with browser DOM control and ERP bridges represent the true enterprise AI leap.</p>
+        <p class="lang-no">Hvorfor passive chatroboter sjelden skaper reelle forretningsresultater, og hvordan selvgående handlingsagenter som faktisk utfører oppgaver i fagsystemene representerer det virkelige AI-gjennombruddet.</p>
+        <div class="stream-card-footer">
+          <span class="lang-en">Focus: Custom AI Engineering</span>
+          <span class="lang-no">Løsning: Skreddersydd AI-utvikling</span>
+          <span class="read-arrow lang-en">Read Article →</span>
+          <span class="read-arrow lang-no">Les artikkelen →</span>
+        </div>
+      </a>
+
+      <!-- Article 4: Slik bygger du white-label SaaS -->
+      <a href="slik-bygger-du-white-label-saas-2026.html" class="article-stream-card">
+        <div class="stream-tag-row">
+          <span class="lang-en">Business & White-label</span>
+          <span class="lang-no">Forretningsmodell & White-label</span>
+          <span>•</span>
+          <span class="lang-en">5 min read</span>
+          <span class="lang-no">5 min lesetid</span>
+        </div>
+        <h2 class="lang-en">How to Build and Launch a White-Label SaaS Business in 2026</h2>
+        <h2 class="lang-no">Slik bygger du en lønnsom white-label SaaS-virksomhet i 2026</h2>
+        <p class="lang-en">Complete guide on licensing existing software architectures to establish a recurring subscription business with zero code maintenance.</p>
+        <p class="lang-no">Komplett guide til hvordan du kan lisensiere ferdige AI-programvarer under eget varemerke og bygge faste månedlige inntekter uten å kode selv.</p>
+        <div class="stream-card-footer">
+          <span class="lang-en">Focus: Turnkey Licensing</span>
+          <span class="lang-no">Løsning: White-label lisensiering</span>
+          <span class="read-arrow lang-en">Read Article →</span>
+          <span class="read-arrow lang-no">Les artikkelen →</span>
+        </div>
+      </a>
+
+      <!-- Article 5: 220-Character Upwork Rule -->
       <a href="the-220-character-rule-upwork-proposals.html" class="article-stream-card">
         <div class="stream-tag-row">
-          <span>Freelance Strategy & AI</span>
+          <span class="lang-en">Sales & Freelance Strategy</span>
+          <span class="lang-no">Salgsstrategi & Tilbud</span>
           <span>•</span>
-          <span>6 min read</span>
+          <span class="lang-en">6 min read</span>
+          <span class="lang-no">6 min lesetid</span>
         </div>
-        <h2>The 220-Character Rule: How to Hook Upwork Clients in Mobile Inbox Previews</h2>
-        <p>
-          Over 70% of Upwork clients review proposals on mobile devices where only 220 characters appear before truncation. Discover how high-earning consultants craft first-sentence hooks that win $100+/hr contracts.
-        </p>
+        <h2 class="lang-en">The 220-Character Rule: How to Hook Upwork Clients in Mobile Inbox Previews</h2>
+        <h2 class="lang-no">220-tegns regelen: Slik vinner du anbudskonkurranser i mobilinnboksen</h2>
+        <p class="lang-en">Over 70% of clients review proposals on mobile devices where only 220 characters appear before truncation. Learn how to engineer hooks that guarantee clicks.</p>
+        <p class="lang-no">Over 70 % av oppdragsgivere sjekker tilbud på mobilen, hvor kun 220 tegn vises i forhåndsvisningen. Lær hvordan du formulerer åpningslinjer som sikrer intervju.</p>
         <div class="stream-card-footer">
-          <span>Focus: Upworkz Proposal Architecture</span>
-          <span class="read-arrow">Read Article →</span>
+          <span class="lang-en">Focus: Upworkz</span>
+          <span class="lang-no">Løsning: Upworkz</span>
+          <span class="read-arrow lang-en">Read Article →</span>
+          <span class="read-arrow lang-no">Les artikkelen →</span>
         </div>
       </a>
 
-      <!-- Article 2: Contractor Speed to Lead -->
+      <!-- Article 6: Speed-to-lead -->
       <a href="contractor-speed-to-lead-automation.html" class="article-stream-card">
         <div class="stream-tag-row">
-          <span>SMB Sales & Operations</span>
+          <span class="lang-en">SMB Operations</span>
+          <span class="lang-no">Drift & Oppfølging</span>
           <span>•</span>
-          <span>5 min read</span>
+          <span class="lang-en">5 min read</span>
+          <span class="lang-no">5 min lesetid</span>
         </div>
-        <h2>The Speed-to-Lead Equation: Why Contractors Lose 60% of Deals to Slow Quotes</h2>
-        <p>
-          Between 65% and 78% of contractor and consulting jobs are awarded to the first professional estimate delivered. Learn how to draft quotes in under 60 seconds on site and automate multi-channel follow-up.
-        </p>
+        <h2 class="lang-en">The Speed-to-Lead Equation: Why Contractors Lose 60% of Deals to Slow Quotes</h2>
+        <h2 class="lang-no">Responstid: Hvorfor håndverkere taper 60 % av oppdragene til konkurrenten</h2>
+        <p class="lang-en">Between 65% and 78% of contractor jobs go to the first professional estimate delivered. How to send quotes in under 60 seconds directly on site.</p>
+        <p class="lang-no">Mellom 65 % og 78 % av oppdrag går til den som leverer det første seriøse tilbudet. Slik sender du tilbud på under 60 sekunder mens du er på befaring.</p>
         <div class="stream-card-footer">
-          <span>Focus: Hubzoo Autonomous CRM</span>
-          <span class="read-arrow">Read Article →</span>
-        </div>
-      </a>
-
-      <!-- Article 3: Action Agents -->
-      <a href="building-autonomous-ai-action-agents-2026.html" class="article-stream-card">
-        <div class="stream-tag-row">
-          <span>Agentic Architecture</span>
-          <span>•</span>
-          <span>7 min read</span>
-        </div>
-        <h2>Building Autonomous AI Action Agents in 2026: Why Chatbots Are Obsolete</h2>
-        <p>
-          The era of passive chat interfaces is over. Explore how autonomous action agents leverage headless browsers, code execution sandboxes, and self-healing loops to complete complex business objectives unattended.
-        </p>
-        <div class="stream-card-footer">
-          <span>Focus: Manus AI Studio & Custom Engineering</span>
-          <span class="read-arrow">Read Article →</span>
+          <span class="lang-en">Focus: Hubzoo</span>
+          <span class="lang-no">Løsning: Hubzoo</span>
+          <span class="read-arrow lang-en">Read Article →</span>
+          <span class="read-arrow lang-no">Les artikkelen →</span>
         </div>
       </a>
 
@@ -212,20 +321,23 @@
     <!-- Footer -->
     <footer class="landing-footer">
       <p style="margin-bottom: 0.75rem;">
-        <strong>saasapps.ai.studio</strong> — Turnkey AI SaaS Marketplace & Engineering Studio.
+        <strong>aiappsy.com</strong> — <span class="lang-en">Frontier AI SaaS Marketplace & Engineering Studio</span><span class="lang-no">Norsk AI-produktstudio og spesialutvikling</span>
       </p>
       <p>
-        <a href="https://aiappsy.com">All Platforms</a> · 
-        <a href="../custom-development.html">Custom AI Engineering</a> · 
-        <a href="index.html">Articles & Insights</a> · 
-        <a href="mailto:paljuritzen@gmail.com">Contact</a>
+        <a href="/" class="lang-en">All Platforms</a><a href="/" class="lang-no">Våre 7 apper</a> · 
+        <a href="../custom-development.html" class="lang-en">Custom AI Engineering</a><a href="../custom-development.html" class="lang-no">Skreddersøm</a> · 
+        <a href="index.html" class="lang-en">Articles & Insights</a><a href="index.html" class="lang-no">Artikler</a> · 
+        <a href="../custom-development.html#contact" class="lang-en">Contact</a><a href="../custom-development.html#contact" class="lang-no">Kontakt</a>
       </p>
       <p style="margin-top: 1.25rem; font-size: 0.78rem; color: var(--text-light);">
-        © 2026 AIAppsy. Engineered on Google Cloud Run & Frontier AI Models.
+        <span class="lang-en">© 2026 AIAPPSY. Engineered on Google Cloud Run & Frontier AI Models.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Driftet på Google Cloud Run med ledende AI-modeller.</span>
       </p>
     </footer>
 
   </div>
 
+  <!-- Bilingual Controller -->
+  <script src="/i18n.js"></script>
 </body>
 </html>

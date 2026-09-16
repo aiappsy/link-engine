@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom AI Development & Engineering Services | Autonomous Agents, Generative AI & SaaS Apps</title>
+  <title>Custom AI Development & Engineering Services | AIAPPSY</title>
   <meta name="description" content="Bespoke AI engineering studio. We build autonomous AI action agents, multi-model generative media studios, full-stack AI web applications, and enterprise ERP integrations.">
   <meta name="keywords" content="custom AI development, AI agent development agency, generative AI app development, bespoke AI software, hire AI developers, autonomous agent engineering, LLM integration services">
   <link rel="canonical" href="https://aiappsy.com/custom-development.html">
+  <!-- Alternate Language Hreflang Tags for Google SEO -->
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/custom-development.html">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/custom-development.html?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/custom-development.html">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Custom AI Development & Engineering Services | AIAppsy Studio">
+  <meta property="og:title" content="Custom AI Development & Engineering Services | AIAPPSY Studio">
   <meta property="og:description" content="Bespoke AI development studio. We build autonomous AI action agents, multi-model generative media studios, and enterprise web applications.">
   <meta property="og:url" content="https://aiappsy.com/custom-development.html">
-  <meta property="og:site_name" content="AIAppsy Studio">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Custom AI Development & Engineering Services | AIAppsy Studio">
-  <meta name="twitter:description" content="Turn frontier AI research into production-grade, revenue-generating software for your business.">
+  <meta property="og:site_name" content="AIAPPSY Studio">
 
   <!-- Fonts & Shared Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,99 +25,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 
-  <!-- JSON-LD Structured Data (ProfessionalService & FAQPage) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "AIAppsy Custom AI Engineering Studio",
-    "url": "https://aiappsy.com/custom-development.html",
-    "description": "Bespoke AI engineering and software development. We build autonomous AI action agents, generative media studios, and enterprise web applications.",
-    "serviceType": [
-      "Custom AI Development",
-      "Autonomous Agent Engineering",
-      "Generative Video & Media Pipelines",
-      "Full-Stack AI Application Development",
-      "Enterprise ERP & LLM Integrations"
-    ],
-    "areaServed": "Global",
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "AI Development Services",
-      "itemListElement": [
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Autonomous AI Action Agent Engineering",
-            "description": "Multi-agent workflows, browser automation, and self-healing task execution engines."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Generative Media & Video Studios",
-            "description": "Custom pipelines connecting Wan 2.1, Kling, Minimax, and WebAssembly media processing."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Custom Full-Stack AI SaaS Development",
-            "description": "Next.js 15, FastAPI, and Cloud Run production SaaS platforms ready for commercial launch."
-          }
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
         }
-      ]
-    }
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What custom AI development services do you provide?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "We build end-to-end custom AI software including autonomous action agents (with web browsing and tool execution), multi-model generative video and media engines, modern full-stack web and mobile apps, and custom enterprise bridges connecting LLMs to ERP systems like Fiken, Tripletex, HubSpot, and Salesforce."
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
         }
-      },
-      {
-        "@type": "Question",
-        "name": "How fast can you build and deploy a custom AI platform?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Because we have a library of over 50 battle-tested production templates and modular architecture blocks, we can deliver working, testable MVPs in as little as 7 to 14 days, rather than the 3 to 6 months required by traditional dev agencies."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Who owns the intellectual property (IP) and source code of custom builds?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You do. All custom development projects include a 100% full intellectual property and source code copyright transfer upon project completion. You can host on your own cloud or let us manage hosting with zero ongoing royalties."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can you integrate AI into our existing business software or databases?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. We regularly build isolated API bridges and vector pipelines that connect modern AI models directly to legacy PostgreSQL, MySQL, REST APIs, and accounting platforms with strict AES-256 encryption and zero client data leakage."
-        }
-      }
-    ]
-  }
+      } catch(e) {}
+    })();
   </script>
 
   <style>
+    /* Bilingual Toggle Rules */
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
     .custom-dev-container {
-      max-width: 1080px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 0 1.5rem;
     }
@@ -127,13 +60,15 @@
       padding: 3rem 0 4rem 0;
     }
     .custom-hero h1 {
-      font-size: 2.85rem;
+      font-size: 3rem;
       font-weight: 900;
       color: var(--text-heading);
       letter-spacing: -0.03em;
-      line-height: 1.2;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
       max-width: 880px;
-      margin: 0 auto 1.25rem auto;
+      margin-left: auto;
+      margin-right: auto;
     }
     .custom-hero p.lead {
       font-size: 1.2rem;
@@ -221,46 +156,48 @@
     .pillar-card p {
       font-size: 0.92rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.55;
       margin-bottom: 1.25rem;
     }
     .pillar-specs-list {
       list-style: none;
       padding: 0;
       margin: 0;
-      font-size: 0.85rem;
-      color: var(--text-body);
+      border-top: 1px solid var(--border-light);
+      padding-top: 1rem;
     }
     .pillar-specs-list li {
+      font-size: 0.85rem;
+      color: var(--text-body);
       margin-bottom: 0.5rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    .pillar-specs-list li span.check {
+    .pillar-specs-list .check {
       color: #10b981;
       font-weight: 800;
     }
-    /* Process Flow */
     .process-timeline {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 4.5rem;
+      margin-bottom: 4rem;
     }
     .process-step-card {
       background: #ffffff;
       border: 1px solid var(--border-light);
       border-radius: var(--radius-md);
-      padding: 1.5rem;
-      position: relative;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-subtle);
     }
     .step-number {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 800;
+      text-transform: uppercase;
       color: var(--primary);
       background: var(--primary-subtle);
-      padding: 0.2rem 0.6rem;
+      padding: 0.2rem 0.5rem;
       border-radius: 4px;
       display: inline-block;
       margin-bottom: 0.75rem;
@@ -272,28 +209,27 @@
       margin-bottom: 0.5rem;
     }
     .process-step-card p {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
-    /* Proof Banner */
     .proof-banner {
       background: #0f172a;
       color: #ffffff;
       border-radius: var(--radius-lg);
       padding: 2.5rem;
-      margin-bottom: 4.5rem;
+      margin-bottom: 4rem;
     }
     .proof-banner h2 {
-      font-size: 1.85rem;
       color: #ffffff;
+      font-size: 1.75rem;
       margin-bottom: 0.75rem;
     }
     .proof-banner p {
       color: #94a3b8;
-      max-width: 720px;
+      font-size: 0.95rem;
       margin-bottom: 1.5rem;
-      line-height: 1.6;
+      max-width: 750px;
     }
     .proof-apps-mini {
       display: grid;
@@ -318,7 +254,6 @@
       border-color: #38bdf8;
       color: #ffffff;
     }
-    /* Inquiry Box */
     .inquiry-cta-box {
       background: linear-gradient(135deg, #1e293b, #0f172a);
       color: #ffffff;
@@ -341,6 +276,13 @@
       line-height: 1.6;
     }
   </style>
+  <!-- Favicon & Social Share Cards -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aiappsy.com/og-image.png">
 </head>
 <body>
 
@@ -348,22 +290,34 @@
 
     <!-- Top Navigation -->
     <nav class="top-header" style="margin-bottom: 2rem;">
-      <a href="https://aiappsy.com" class="brand-link">
+      <a href="/" class="brand-link">
         <div class="brand-logo-badge">⚡</div>
         <div class="brand-meta">
-          <h1>saasapps<span>.ai.studio</span></h1>
-          <span>Turnkey SaaS Marketplace & Custom AI Engineering</span>
+          <h1>aiappsy<span>.com</span></h1>
+          <span class="lang-en">Bespoke AI Engineering & Enterprise Studio</span>
+          <span class="lang-no">Skreddersydd AI-utvikling & Bedriftsløsninger</span>
         </div>
       </a>
       <div class="header-actions">
-        <a href="https://aiappsy.com" class="btn-secondary" style="text-decoration: none;">
-          <span>← All 7 Platforms</span>
+        <a href="/" class="btn-secondary" style="text-decoration: none;">
+          <span class="lang-en">← Home & 7 Apps</span>
+          <span class="lang-no">← Forside & Våre apper</span>
         </a>
         <a href="articles/index.html" class="btn-secondary" style="text-decoration: none;">
-          <span>📚 Insights & Guides</span>
+          <span class="lang-en">📚 Insights</span>
+          <span class="lang-no">📚 Artikler & Innsikt</span>
         </a>
-        <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Development%20Inquiry" class="btn-primary" style="text-decoration: none;">
-          <span>✉️ Discuss a Project</span>
+
+        <!-- Top Navigation Language Switcher -->
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+
+        <a href="#contact" class="btn-primary" style="text-decoration: none;">
+          <span>✉️</span>
+          <span class="lang-en">Discuss Project</span>
+          <span class="lang-no">Kontakt oss</span>
         </a>
       </div>
     </nav>
@@ -372,55 +326,69 @@
     <header class="custom-hero">
       <div class="hero-pill-tag">
         <span>🛠️</span>
-        <span>Bespoke AI Software Engineering</span>
+        <span class="lang-en">Bespoke AI Software Engineering</span>
+        <span class="lang-no">Skreddersydd AI-utvikling</span>
       </div>
 
-      <h1>From Frontier AI Models to Reliable, Revenue-Generating Software</h1>
+      <h1 class="lang-en">From Frontier AI Models to Reliable, Revenue-Generating Software</h1>
+      <h1 class="lang-no">Fra ledende AI-modeller til driftssikker, verdiskapende programvare</h1>
 
-      <p class="lead">
+      <p class="lead lang-en">
         We architect and build tailored AI solutions for ambitious businesses, marketing agencies, and founders. From multi-agent autonomous loops to generative video studios and deep ERP integrations.
+      </p>
+      <p class="lead lang-no">
+        Vi utvikler skreddersydde AI-løsninger for ambisiøse bedrifter, konsulentselskaper og byråer. Fra autonome handlingsagenter som overtar manuelle prosesser, til generative mediastudier og integrasjoner mot økonomisystemer.
       </p>
 
       <div class="hero-btn-group">
-        <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Project%20Scope" class="btn-main-cta">
-          <span>🚀 Book Project Scoping</span>
+        <a href="#contact" class="btn-main-cta">
+          <span>🚀</span>
+          <span class="lang-en">Book Project Scoping</span>
+          <span class="lang-no">Start et teknisk forprosjekt</span>
           <span>↗</span>
         </a>
         <a href="#pillars" class="btn-outline-cta">
-          <span>Explore Capabilities ↓</span>
+          <span class="lang-en">Explore Capabilities ↓</span>
+          <span class="lang-no">Se hva vi bygger ↓</span>
         </a>
       </div>
 
       <div class="trust-values-bar" style="margin-top: 1rem;">
-        <div class="trust-item"><span class="icon">✓</span> 100% Full IP & Source Code Transfer</div>
-        <div class="trust-item"><span class="icon">✓</span> Working Prototypes in 7–14 Days</div>
-        <div class="trust-item"><span class="icon">✓</span> 50+ Production Architectural Blocks</div>
-        <div class="trust-item"><span class="icon">✓</span> Enterprise GDPR & AES-256 Isolation</div>
+        <div class="trust-item"><span class="icon">✓</span> <span class="lang-en">100% Full IP & Source Code Transfer</span><span class="lang-no">100 % overføring av rettigheter og kildekode</span></div>
+        <div class="trust-item"><span class="icon">✓</span> <span class="lang-en">Working Prototypes in 7–14 Days</span><span class="lang-no">Kjørbar MVP levert på 7–14 dager</span></div>
+        <div class="trust-item"><span class="icon">✓</span> <span class="lang-en">50+ Production Architectural Blocks</span><span class="lang-no">Over 50 testede produksjonsmoduler</span></div>
+        <div class="trust-item"><span class="icon">✓</span> <span class="lang-en">Enterprise GDPR & Cloud Run Isolation</span><span class="lang-no">Isolert skyinfrastruktur & full GDPR-etterlevelse</span></div>
       </div>
     </header>
 
     <!-- SECTION: LIVE PROOF -->
     <section class="proof-banner">
-      <h2>Proven Track Record: 7 Production AI SaaS Platforms Built in House</h2>
-      <p>
+      <h2 class="lang-en">Proven Track Record: 7 Production AI SaaS Platforms Built in House</h2>
+      <h2 class="lang-no">Dokumentert erfaring: 7 aktive produksjonsplattformer bygget internt</h2>
+      <p class="lang-en">
         Unlike theoretical consulting agencies, our engineering is proven by live software operating in production every day. Review our public portfolio as direct proof of our architecture standards:
       </p>
+      <p class="lang-no">
+        I motsetning til teoretiske rådgivere er vår kompetanse dokumentert gjennom programvare som er i aktiv, daglig drift. Se våre egne apper som en direkte demonstrasjon av hva vi leverer:
+      </p>
       <div class="proof-apps-mini">
-        <a href="apps/hubzoo.html" class="proof-app-pill"><span>⚡ Hubzoo (Sales Agent)</span> <span>↗</span></a>
-        <a href="apps/upworkz.html" class="proof-app-pill"><span>📄 Upworkz (Proposal Closer)</span> <span>↗</span></a>
-        <a href="apps/subsentry.html" class="proof-app-pill"><span>🛡️ SubSentry (SaaS Watchdog)</span> <span>↗</span></a>
-        <a href="apps/maxmotion.html" class="proof-app-pill"><span>🎬 MaxMotion (AI Video Studio)</span> <span>↗</span></a>
-        <a href="apps/appsave.html" class="proof-app-pill"><span>🛒 AppSave (Coupon Engine)</span> <span>↗</span></a>
-        <a href="apps/mediabunny.html" class="proof-app-pill"><span>🎙️ MediaBunny (WASM Studio)</span> <span>↗</span></a>
-        <a href="apps/manus.html" class="proof-app-pill"><span>🤖 Manus (Action Agent)</span> <span>↗</span></a>
+        <a href="apps/hubzoo.html" class="proof-app-pill"><span>⚡ Hubzoo (Salgs-CRM)</span> <span>↗</span></a>
+        <a href="apps/upworkz.html" class="proof-app-pill"><span>📄 Upworkz (Anbudsassistent)</span> <span>↗</span></a>
+        <a href="apps/subsentry.html" class="proof-app-pill"><span>🛡️ SubSentry (Kostnadskontroll)</span> <span>↗</span></a>
+        <a href="apps/maxmotion.html" class="proof-app-pill"><span>🎬 MaxMotion (AI Video)</span> <span>↗</span></a>
+        <a href="apps/appsave.html" class="proof-app-pill"><span>🛒 AppSave (Rabattutvidelse)</span> <span>↗</span></a>
+        <a href="apps/mediabunny.html" class="proof-app-pill"><span>🎙️ MediaBunny (Lokal WASM)</span> <span>↗</span></a>
+        <a href="apps/manus.html" class="proof-app-pill"><span>🤖 Manus (Handlingsagent)</span> <span>↗</span></a>
       </div>
     </section>
 
     <!-- SECTION: 4 CORE CAPABILITY PILLARS -->
     <section id="pillars" style="margin-bottom: 4rem;">
       <div class="section-header-block">
-        <span class="section-tag">Core Specializations</span>
-        <h2>What We Build For Our Clients</h2>
+        <span class="section-tag lang-en">Core Specializations</span>
+        <span class="section-tag lang-no">Fagområder</span>
+        <h2 class="lang-en">What We Build For Our Clients</h2>
+        <h2 class="lang-no">Hva vi utvikler for våre oppdragsgivere</h2>
       </div>
 
       <div class="pillars-grid">
@@ -428,60 +396,76 @@
         <!-- Pillar 1: Autonomous Action Agents -->
         <article class="pillar-card">
           <div class="pillar-icon-badge" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">🤖</div>
-          <h3>Autonomous Action Agents & Scrapers</h3>
-          <p>
+          <h3 class="lang-en">Autonomous Action Agents & Scrapers</h3>
+          <h3 class="lang-no">Autonome handlingsagenter & Datainnhenting</h3>
+          <p class="lang-en">
             Move beyond passive chatbots. We engineer agents equipped with headless browsers, sandbox shell execution, and multi-step reasoning that browse websites, extract unstructured data, and complete workflows autonomously.
           </p>
+          <p class="lang-no">
+            Ta steget videre fra passive chatroboter. Vi bygger selvgående agenter med headless nettleser, sandkassekjøring og trinnvis resonnering som navigerer nettsider, henter data og fullfører prosesser fra A til Å.
+          </p>
           <ul class="pillar-specs-list">
-            <li><span class="check">✓</span> Autonomous browser automation & DOM interaction</li>
-            <li><span class="check">✓</span> Self-healing error loops & automated retries</li>
-            <li><span class="check">✓</span> Background cron task monitors & SMS/WhatsApp alerts</li>
-            <li><span class="check">✓</span> Sub-agent orchestration & validation handoffs</li>
+            <li><span class="check">✓</span> <span class="lang-en">Autonomous browser automation & DOM interaction</span><span class="lang-no">Full nettleserautomatisering & DOM-interaksjon</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Self-healing error loops & automated retries</span><span class="lang-no">Selvhelende feilhåndtering & automatiske gjentakelser</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Background cron task monitors & SMS/WhatsApp alerts</span><span class="lang-no">Bakgrunnsjobber med sanntidsvarsler på SMS/e-post</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Sub-agent orchestration & validation handoffs</span><span class="lang-no">Underagent-orkestrering & menneskelig godkjenning</span></li>
           </ul>
         </article>
 
         <!-- Pillar 2: Generative Video & Media -->
         <article class="pillar-card">
           <div class="pillar-icon-badge" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">🎬</div>
-          <h3>Generative Video, Audio & Media Pipelines</h3>
-          <p>
+          <h3 class="lang-en">Generative Video, Audio & Media Pipelines</h3>
+          <h3 class="lang-no">Multimodal video- og medieproduksjon</h3>
+          <p class="lang-en">
             Build high-throughput creative studios combining top-tier video models (Wan 2.1, Kling 1.5, Minimax Hailuo) and in-browser WebAssembly transformations with zero data leakage.
           </p>
+          <p class="lang-no">
+            Skreddersydde kreative produksjonsmiljøer som kombinerer de råeste videomodellene (Wan 2.1, Kling 1.5, MiniMax) med lokal WebAssembly-prosessering for lynrask generering uten datalekkasjer.
+          </p>
           <ul class="pillar-specs-list">
-            <li><span class="check">✓</span> Multi-model video orchestration (Wan, Kling, Minimax)</li>
-            <li><span class="check">✓</span> In-browser WebAssembly background removal & audio normalization</li>
-            <li><span class="check">✓</span> Permanent Google Cloud Storage asset mirroring</li>
-            <li><span class="check">✓</span> Credit token billing & Bring-Your-Own-Key (BYOK) setups</li>
+            <li><span class="check">✓</span> <span class="lang-en">Multi-model video orchestration (Wan, Kling, Minimax)</span><span class="lang-no">Samlet orkestrering av Wan 2.1, Kling og MiniMax</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">In-browser WebAssembly background removal & audio normalization</span><span class="lang-no">Lokal fjerning av bakgrunn & EBU R128 lydjustering</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Permanent Google Cloud Storage asset mirroring</span><span class="lang-no">Sikker lagring i Google Cloud uten utløpsdato</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Credit token billing & Bring-Your-Own-Key (BYOK) setups</span><span class="lang-no">Kredittsystemer og «Bring Your Own Key» (BYOK)</span></li>
           </ul>
         </article>
 
         <!-- Pillar 3: Production Web & Mobile Apps -->
         <article class="pillar-card">
           <div class="pillar-icon-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">⚡</div>
-          <h3>Modern Full-Stack AI Web & Mobile Apps</h3>
-          <p>
+          <h3 class="lang-en">Modern Full-Stack AI Web & Mobile Apps</h3>
+          <h3 class="lang-no">Moderne Full-Stack Web- & Mobilapplikasjoner</h3>
+          <p class="lang-en">
             High-performance applications built with Next.js 15 App Router, TypeScript, and Tailwind CSS. Ultra-fast, responsive, offline-ready PWAs designed for real-world field use.
           </p>
+          <p class="lang-no">
+            Høyytelses webapplikasjoner bygget med Next.js 15, TypeScript og moderne mikrotjenester. Responsive, lynraske og offline-kompatible PWA-løsninger skreddersydd for praktisk bruk.
+          </p>
           <ul class="pillar-specs-list">
-            <li><span class="check">✓</span> Next.js 15, Vite, React, and lightweight vanilla architectures</li>
-            <li><span class="check">✓</span> Instant load times (<800ms) with high Core Web Vitals</li>
-            <li><span class="check">✓</span> Stripe Connect, Vipps, and subscription monetization</li>
-            <li><span class="check">✓</span> Progressive Web Apps (PWA) with offline caching</li>
+            <li><span class="check">✓</span> <span class="lang-en">Next.js 15, Vite, React, and lightweight vanilla architectures</span><span class="lang-no">Next.js 15, React og optimaliserte mikrotjenester</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Instant load times (<800ms) with high Core Web Vitals</span><span class="lang-no">Umiddelbare lastetider (<800ms) og topp SEO-ytelse</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Stripe Connect, Vipps, and subscription monetization</span><span class="lang-no">Integrert betaling via Vipps, Stripe og BankID</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Progressive Web Apps (PWA) with offline caching</span><span class="lang-no">PWA-støtte med lokal lagring for feltarbeid</span></li>
           </ul>
         </article>
 
         <!-- Pillar 4: Enterprise ERP & API Bridges -->
         <article class="pillar-card">
           <div class="pillar-icon-badge" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">🔗</div>
-          <h3>Enterprise ERP & Custom API Bridges</h3>
-          <p>
+          <h3 class="lang-en">Enterprise ERP & Custom API Bridges</h3>
+          <h3 class="lang-no">Fagsystemintegrasjoner & Sikre API-broer</h3>
+          <p class="lang-en">
             Connect cutting-edge frontier AI models directly into your legacy accounting software, customer CRM, or internal SQL databases with rock-solid reliability.
           </p>
+          <p class="lang-no">
+            Koble ledende AI-modeller direkte til bedriftens eksisterende forretningssystemer, regnskapsprogramvare eller interne databaser – med kompromissløs sikkerhet og stabilitet.
+          </p>
           <ul class="pillar-specs-list">
-            <li><span class="check">✓</span> Native webhooks for Fiken, Tripletex, Fortnox & Xero</li>
-            <li><span class="check">✓</span> HubSpot, Salesforce, and custom CRM bidirectional sync</li>
-            <li><span class="check">✓</span> Vector database integration (Pinecone, Neon, pgvector)</li>
-            <li><span class="check">✓</span> GDPR-compliant tenant-isolated database schemas</li>
+            <li><span class="check">✓</span> <span class="lang-en">Native webhooks for Fiken, Tripletex, Fortnox & Xero</span><span class="lang-no">Sømløs toveis integrasjon mot Fiken og Tripletex</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">HubSpot, Salesforce, and custom CRM bidirectional sync</span><span class="lang-no">Toveis synkronisering mot HubSpot og Salesforce</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">Vector database integration (Pinecone, Neon, pgvector)</span><span class="lang-no">Vektordatabaser for intelligent bedriftssøk (RAG)</span></li>
+            <li><span class="check">✓</span> <span class="lang-en">GDPR-compliant tenant-isolated database schemas</span><span class="lang-no">100 % GDPR-etterlevelse og krypterte databaser</span></li>
           </ul>
         </article>
 
@@ -491,97 +475,219 @@
     <!-- SECTION: PROCESS TIMELINE -->
     <section style="margin-bottom: 4.5rem;">
       <div class="section-header-block">
-        <span class="section-tag">Rapid Delivery Protocol</span>
-        <h2>How We Engineer Your Software</h2>
+        <span class="section-tag lang-en">Rapid Delivery Protocol</span>
+        <span class="section-tag lang-no">Leveranseprosess</span>
+        <h2 class="lang-en">How We Engineer Your Software</h2>
+        <h2 class="lang-no">Slik bygger vi løsningen for deg</h2>
       </div>
 
       <div class="process-timeline">
         <div class="process-step-card">
-          <span class="step-number">Phase 1</span>
-          <h4>Scope & Architecture</h4>
-          <p>We analyze your business bottlenecks, select optimal AI models, and define schema boundaries to prevent hallucinations and latency.</p>
+          <span class="step-number lang-en">Phase 1</span>
+          <span class="step-number lang-no">Fase 1</span>
+          <h4 class="lang-en">Scope & Architecture</h4>
+          <h4 class="lang-no">Omfang & Arkitektur</h4>
+          <p class="lang-en">We analyze your business bottlenecks, select optimal AI models, and define schema boundaries to prevent hallucinations and latency.</p>
+          <p class="lang-no">Vi kartlegger forretningsprosessene, velger den mest egnede AI-modellen og fastsetter arkitekturen for å sikre lave driftskostnader og null ventetid.</p>
         </div>
 
         <div class="process-step-card">
-          <span class="step-number">Phase 2</span>
-          <h4>Working MVP in 7–14 Days</h4>
-          <p>We deploy a functional staging environment leveraging our tested modular blocks so you test real software immediately.</p>
+          <span class="step-number lang-en">Phase 2</span>
+          <span class="step-number lang-no">Fase 2</span>
+          <h4 class="lang-en">Working MVP in 7–14 Days</h4>
+          <h4 class="lang-no">Funksjonell MVP på 7–14 dager</h4>
+          <p class="lang-en">We deploy a functional staging environment leveraging our tested modular blocks so you test real software immediately.</p>
+          <p class="lang-no">Ved å bygge på våre gjennomtestede moduler ruller vi ut en fungerende testplattform innen to uker, slik at du kan prøve programvaren med en gang.</p>
         </div>
 
         <div class="process-step-card">
-          <span class="step-number">Phase 3</span>
-          <h4>Hardening & Integration</h4>
-          <p>We stress-test fallback queues, connect payment gateways (Stripe/Vipps), and build isolated webhooks to your bookkeeping or ERP.</p>
+          <span class="step-number lang-en">Phase 3</span>
+          <span class="step-number lang-no">Fase 3</span>
+          <h4 class="lang-en">Hardening & Integration</h4>
+          <h4 class="lang-no">Sikkerhet & Integrasjon</h4>
+          <p class="lang-en">We stress-test fallback queues, connect payment gateways (Stripe/Vipps), and build isolated webhooks to your bookkeeping or ERP.</p>
+          <p class="lang-no">Vi stresstester feilhåndteringen, kobler opp betalingsløsninger (Vipps/Stripe) og setter opp sikre koblinger mot regnskap og fagsystemer.</p>
         </div>
 
         <div class="process-step-card">
-          <span class="step-number">Phase 4</span>
-          <h4>Launch & IP Handover</h4>
-          <p>Full GitHub repository transfer, documentation handover, and ongoing zero-downtime cloud hosting management.</p>
+          <span class="step-number lang-en">Phase 4</span>
+          <span class="step-number lang-no">Fase 4</span>
+          <h4 class="lang-en">Launch & IP Handover</h4>
+          <h4 class="lang-no">Lansering & Rettigheter</h4>
+          <p class="lang-en">Full GitHub repository transfer, documentation handover, and ongoing zero-downtime cloud hosting management.</p>
+          <p class="lang-no">Full overføring av GitHub-kildekode, opphavsrett og teknisk dokumentasjon – samt avtale om stabil skydrift uten nedetid.</p>
         </div>
       </div>
     </section>
 
     <!-- SECTION: INQUIRY CTA -->
-    <section class="inquiry-cta-box">
-      <h2>Have a Specific Software Vision in Mind?</h2>
-      <p>
-        Whether you want to build a bespoke AI sales copilot, an automated scraping intelligence agent, or a generative media suite, we can scope and build your solution rapidly.
-      </p>
-      <a href="mailto:paljuritzen@gmail.com?subject=Custom%20AI%20Project%20Inquiry%20from%20AIAppsy" class="btn-main-cta" style="background: #0284c7; padding: 1rem 2.2rem; font-size: 1.05rem;">
-        <span>✉️ Email Your Project Requirements</span>
-        <span>→</span>
-      </a>
-      <p style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">
-        Direct responses within 24 hours with architectural feasibility and transparent price ranges.
-      </p>
+    <section class="inquiry-cta-box" id="contact">
+      <h2 class="lang-en">Have a Specific Software Vision in Mind?</h2>
+      <h2 class="lang-no">Har du en konkret idé eller et forretningsbehov?</h2>
+      <p class="lang-en">Whether you want to build a bespoke AI sales copilot, an automated scraping intelligence agent, or a generative media suite, let's connect.</p>
+      <p class="lang-no">Enten du vil bygge en automatisert salgsassistent, en intelligent datainnhentingsagent eller et skreddersydd videoverktøy: Vi gir deg rask teknisk vurdering og fast prisramme.</p>
+
+      <!-- Interactive Lead Capture Form -->
+      <form id="contact-form" class="interactive-contact-form" onsubmit="submitInquiryForm(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; text-align: left;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+              <span class="lang-en">Your Name</span>
+              <span class="lang-no">Ditt navn</span>
+            </label>
+            <input type="text" id="inq-name" required placeholder="f.eks. Ola Nordmann" style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+              <span class="lang-en">Work Email</span>
+              <span class="lang-no">Arbeids-e-post</span>
+            </label>
+            <input type="email" id="inq-email" required placeholder="ola@bedrift.no" style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem; text-align: left;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+            <span class="lang-en">Project Type / Interest</span>
+            <span class="lang-no">Hva gjelder henvendelsen?</span>
+          </label>
+          <select id="inq-type" style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem;">
+            <option value="Custom AI Engineering (Autonom Agent)">🛠️ Skreddersydd AI-utvikling & Autonome agenter</option>
+            <option value="Lisensiere en av 7 plattformer">🚀 Lisensiere en av våre 7 eksisterende plattformer</option>
+            <option value="White-label Partnerskap & 50+ maler">🏷️ White-label partnerskap & 50+ maler</option>
+            <option value="ERP / Fagsystem Integrasjon (Fiken/Tripletex)">📊 Integrasjon mot Fiken, Tripletex eller Vipps</option>
+            <option value="Annet / Generell forespørsel">💬 Annet / Uforpliktende samtale</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; text-align: left;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.4rem;">
+            <span class="lang-en">Project Scope / Details (Optional)</span>
+            <span class="lang-no">Kort om prosjektet eller behovet (valgfritt)</span>
+          </label>
+          <textarea id="inq-msg" rows="3" placeholder="Fortell litt om hva du ønsker å oppnå, tidsramme eller spesielle krav..." style="width: 100%; background: #0b101f; border: 1px solid #1e2942; border-radius: 8px; padding: 0.75rem 1rem; color: #ffffff; font-family: inherit; font-size: 0.92rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <button type="submit" id="btn-inq-submit" class="btn-primary-hero" style="border: none; cursor: pointer;">
+            <span>🚀</span>
+            <span class="lang-en">Send Project Inquiry</span>
+            <span class="lang-no">Send uforpliktende forespørsel</span>
+          </button>
+          <a href="mailto:paljuritzen@gmail.com?subject=AIAPPSY%20Direkte%20Kontakt" class="btn-secondary-hero">
+            <span>✉️</span>
+            <span class="lang-en">Or Email Direct: paljuritzen@gmail.com</span>
+            <span class="lang-no">Eller e-post: paljuritzen@gmail.com</span>
+          </a>
+        </div>
+
+        <div id="inq-feedback" style="margin-top: 1rem; font-size: 0.95rem; font-weight: 700; display: none;"></div>
+      </form>
+
+      <script>
+        async function submitInquiryForm(e) {
+          e.preventDefault();
+          var btn = document.getElementById('btn-inq-submit');
+          var fb = document.getElementById('inq-feedback');
+          var name = document.getElementById('inq-name').value;
+          var email = document.getElementById('inq-email').value;
+          var ptype = document.getElementById('inq-type').value;
+          var msg = document.getElementById('inq-msg').value;
+          var isNo = (document.documentElement.lang === 'no') || (document.documentElement.classList && document.documentElement.classList.contains('lang-no'));
+
+          btn.disabled = true;
+          btn.style.opacity = '0.6';
+          fb.style.display = 'block';
+          fb.style.color = '#818cf8';
+          fb.textContent = isNo ? 'Sender henvendelse...' : 'Sending inquiry...';
+
+          try {
+            var res = await fetch('/api/inquiry', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: name, email: email, projectType: ptype, message: msg })
+            });
+            var data = await res.json();
+            if (data.success) {
+              fb.style.color = '#10b981';
+              var successMsg = isNo 
+                ? (data.message || 'Takk! Din henvendelse er mottatt. Vi svarer innen 24 timer.')
+                : 'Thank you! Your inquiry has been received. We will respond within 24 hours.';
+              fb.textContent = '✓ ' + successMsg;
+              document.getElementById('contact-form').reset();
+            } else {
+              throw new Error(data.error || 'Feil ved sending');
+            }
+          } catch(err) {
+            fb.style.color = '#f59e0b';
+            fb.textContent = isNo ? 'Tips: Åpner e-postprogrammet ditt som reserve...' : 'Note: Opening your email client as fallback...';
+            var mailSubject = encodeURIComponent('AIAPPSY Forespørsel: ' + ptype);
+            var mailBody = encodeURIComponent('Navn: ' + name + '\nE-post: ' + email + '\nType: ' + ptype + '\nMelding:\n' + msg);
+            window.location.href = 'mailto:paljuritzen@gmail.com?subject=' + mailSubject + '&body=' + mailBody;
+          } finally {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+          }
+        }
+      </script>
+
     </section>
 
     <!-- SECTION: FREQUENTLY ASKED QUESTIONS -->
     <section class="landing-section">
       <div class="section-header-block">
-        <span class="section-tag">Clarity & Confidence</span>
-        <h2>Frequently Asked Questions</h2>
+        <span class="section-tag lang-en">Clarity & Confidence</span>
+        <span class="section-tag lang-no">Spørsmål & Svar</span>
+        <h2 class="lang-en">Frequently Asked Questions</h2>
+        <h2 class="lang-no">Ofte stilte spørsmål om skreddersøm</h2>
       </div>
 
       <div class="faqs-container">
         <details class="faq-item" open>
           <summary class="faq-question">
-            <span>What custom AI development services do you provide?</span>
+            <span class="lang-en">What custom AI development services do you provide?</span>
+            <span class="lang-no">Hva slags skreddersydde AI-tjenester leverer dere?</span>
             <span class="faq-toggle-icon">+</span>
           </summary>
           <div class="faq-answer">
-            <p>We engineer custom end-to-end AI applications including autonomous action agents (with web browsing and tool execution), multi-model generative video and media engines, modern full-stack web and mobile apps, and custom enterprise bridges connecting LLMs to ERP systems like Fiken, Tripletex, HubSpot, and Salesforce.</p>
+            <p class="lang-en">We engineer custom end-to-end AI applications including autonomous action agents (with web browsing and tool execution), multi-model generative video and media engines, modern full-stack web and mobile apps, and custom enterprise bridges connecting LLMs to ERP systems like Fiken, Tripletex, HubSpot, and Salesforce.</p>
+            <p class="lang-no">Vi utvikler komplette spesialløsninger: Fra selvgående handlingsagenter (som navigerer nettsteder og utfører oppgaver) og generative videoverktøy, til moderne webapper og direkte integrasjoner mot norske regnskapssystemer som Fiken og Tripletex.</p>
           </div>
         </details>
 
         <details class="faq-item">
           <summary class="faq-question">
-            <span>How fast can you build and deploy a custom AI platform?</span>
+            <span class="lang-en">How fast can you build and deploy a custom AI platform?</span>
+            <span class="lang-no">Hvor raskt kan dere levere en ferdig plattform?</span>
             <span class="faq-toggle-icon">+</span>
           </summary>
           <div class="faq-answer">
-            <p>Because we have a library of over 50 battle-tested production templates and modular architecture blocks, we can deliver working, testable MVPs in as little as 7 to 14 days, rather than the 3 to 6 months required by traditional dev agencies.</p>
+            <p class="lang-en">Because we have a library of over 50 battle-tested production templates and modular architecture blocks, we can deliver working, testable MVPs in as little as 7 to 14 days, rather than the 3 to 6 months required by traditional dev agencies.</p>
+            <p class="lang-no">Fordi vi bygger på en velprøvd modularitet med over 50 testede produksjonsblokker, kan vi levere en fungerende og testbar MVP på 7 til 14 dager – i motsetning til tradisjonelle konsulenthus som bruker 3 til 6 måneder.</p>
           </div>
         </details>
 
         <details class="faq-item">
           <summary class="faq-question">
-            <span>Who owns the intellectual property (IP) and source code?</span>
+            <span class="lang-en">Who owns the intellectual property (IP) and source code?</span>
+            <span class="lang-no">Hvem eier kildekoden og opphavsretten etterpå?</span>
             <span class="faq-toggle-icon">+</span>
           </summary>
           <div class="faq-answer">
-            <p>You do. All custom development projects include a 100% full intellectual property and source code copyright transfer upon project completion. You can host on your own cloud or let us manage hosting with zero ongoing royalties.</p>
+            <p class="lang-en">You do. All custom development projects include a 100% full intellectual property and source code copyright transfer upon project completion. You can host on your own cloud or let us manage hosting with zero ongoing royalties.</p>
+            <p class="lang-no">Det gjør din bedrift. Alle skreddersydde prosjekter overleveres med 100 % overføring av kildekode og opphavsrett. Du står fritt til å drifte systemet på din egen skykonto, eller la oss håndtere driften for deg.</p>
           </div>
         </details>
 
         <details class="faq-item">
           <summary class="faq-question">
-            <span>Can you integrate AI into our existing business software or databases?</span>
+            <span class="lang-en">Can you integrate AI into our existing business software or databases?</span>
+            <span class="lang-no">Kan dere koble AI mot våre eksisterende databaser eller fagsystemer?</span>
             <span class="faq-toggle-icon">+</span>
           </summary>
           <div class="faq-answer">
-            <p>Yes. We regularly build isolated API bridges and vector pipelines that connect modern AI models directly to legacy PostgreSQL, MySQL, REST APIs, and accounting platforms with strict AES-256 encryption and zero client data leakage.</p>
+            <p class="lang-en">Yes. We regularly build isolated API bridges and vector pipelines that connect modern AI models directly to legacy PostgreSQL, MySQL, REST APIs, and accounting platforms with strict AES-256 encryption and zero client data leakage.</p>
+            <p class="lang-no">Ja. Vi bygger sikre API-broer og vektorbaserte kunnskapsdatabaser (RAG) som kobler moderne AI direkte mot dine SQL-databaser, interne REST-grensesnitt og økonomisystemer – med streng kryptering og full konfidensialitet.</p>
           </div>
         </details>
       </div>
@@ -589,21 +695,34 @@
 
     <!-- Footer -->
     <footer class="landing-footer">
+<div class="footer-legal-bar" style="margin-top: 1rem; font-size: 0.8rem; color: #64748b;">
+          <a href="/privacy.html" style="color: #64748b; text-decoration: none; margin-right: 0.85rem;"><span class="lang-en">Privacy Policy</span><span class="lang-no">Personvern</span></a> · 
+          <a href="/terms.html" style="color: #64748b; text-decoration: none; margin-right: 0.85rem;"><span class="lang-en">Terms of Use</span><span class="lang-no">Brukervilkår</span></a> · 
+          <a href="/gdpr.html" style="color: #64748b; text-decoration: none; margin-right: 0.85rem;"><span class="lang-en">GDPR</span><span class="lang-no">GDPR</span></a> · 
+          <a href="/disclaimer.html" style="color: #64748b; text-decoration: none;"><span class="lang-en">AI Disclaimers</span><span class="lang-no">Ansvarsfraskrivelse</span></a>
+        </div>
       <p style="margin-bottom: 0.75rem;">
-        <strong>saasapps.ai.studio</strong> — Turnkey AI SaaS Marketplace & Custom AI Engineering Hub.
+        <strong>aiappsy.com</strong> — <span class="lang-en">Frontier AI Application Studio & Custom Engineering</span><span class="lang-no">Norsk AI-produktstudio og spesialutvikling</span>
       </p>
       <p>
-        <a href="https://aiappsy.com">All 7 Platforms</a> · 
-        <a href="custom-development.html">Custom AI Engineering</a> · 
-        <a href="articles/index.html">Insights & Guides</a> · 
-        <a href="mailto:paljuritzen@gmail.com">Contact Engineering</a>
+        <a href="/" class="lang-en">All 7 Platforms</a>
+        <a href="/" class="lang-no">Våre 7 apper</a> · 
+        <a href="custom-development.html" class="lang-en">Custom AI Engineering</a>
+        <a href="custom-development.html" class="lang-no">Skreddersøm</a> · 
+        <a href="articles/index.html" class="lang-en">Insights & Guides</a>
+        <a href="articles/index.html" class="lang-no">Fagartikler</a> · 
+        <a href="#contact" class="lang-en">Contact Engineering</a>
+        <a href="#contact" class="lang-no">Kontakt oss</a>
       </p>
       <p style="margin-top: 1.25rem; font-size: 0.78rem; color: var(--text-light);">
-        © 2026 AIAppsy. Engineered on Google Cloud Run & Frontier AI Models.
+        <span class="lang-en">© 2026 AIAPPSY. Engineered on Google Cloud Run & Frontier AI Models.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Driftet på Google Cloud Run med ledende AI-modeller.</span>
       </p>
     </footer>
 
   </div>
 
+  <!-- Bilingual Controller -->
+  <script src="/i18n.js"></script>
 </body>
 </html>

@@ -1,0 +1,62 @@
+# AIAPPSY
+
+> Frontier AI Application Studio & Bespoke Action Agent Engineering Consultancy.
+
+AIAPPSY conceives, builds, and deploys high-utility proprietary SaaS applications, engineers bespoke autonomous AI action agents for enterprise workflows, and licenses turnkey white-label software solutions. Headquartered with native Norwegian business ecosystem integrations (Fiken, Tripletex, Vipps, BankID) and global Google Cloud Run infrastructure.
+
+## Core Software Platforms
+
+- [Hubzoo](https://aiappsy.com/apps/hubzoo.html): Autonomous sales assistant and CRM for SMBs, contractors, and field consultants. Generates professional quotes in 60 seconds on mobile while on site, with automated multi-channel follow-up across WhatsApp, SMS, and Email. Native 2-way sync to Fiken and Tripletex accounting software.
+- [Upworkz](https://aiappsy.com/apps/upworkz.html): Proposal hook optimizer and job scoring engine using the 220-character rule to bypass mobile inbox truncation and win high-budget freelance and consulting contracts.
+- [SubSentry](https://aiappsy.com/apps/subsentry.html): Corporate SaaS waste audit, shadow IT detector, and duplicate billing watchdog. Audits bank feeds and SaaS invoices to uncover hidden price hikes and phantom seats, saving companies 15% to 35% on software bloat.
+- [MaxMotion AI](https://aiappsy.com/apps/maxmotion.html): Unified multi-model generative AI video canvas combining Wan 2.1, Kling 1.5, and MiniMax Hailuo with persistent Google Cloud Storage.
+- [AppSave](https://aiappsy.com/apps/appsave.html): Manifest V3 browser extension auto-testing verified promo codes on checkout pages to save teams 15% to 40% on recurring software and cloud hosting.
+- [MediaBunny](https://aiappsy.com/apps/mediabunny.html): On-device WebAssembly media converter, broadcast-standard EBU R128 audio normalizer, and 75% video compressor with zero server data upload.
+- [Manus AI Studio](https://aiappsy.com/apps/manus.html): Autonomous action agent equipped with headless browser navigation and self-healing task loops to complete end-to-end knowledge and scraping work unattended.
+
+## Custom Engineering Services
+
+- [Custom AI Development](https://aiappsy.com/custom-development.html): Bespoke software engineering taking companies from concept to production software in 7 to 14 days. 100% intellectual property and source code ownership transfer. Specializing in autonomous action agents, generative media pipelines, Next.js 15 apps, and ERP bridges (Fiken, Tripletex, Vipps, Salesforce, HubSpot).
+
+## Turnkey Whitelabel Marketplace
+
+- [Whitelabel Catalog](https://aiappsy.com/portfolio.html): Turnkey white-label SaaS licensing. Launch any of our 7 platforms or 50+ templates under your company domain and brand with 100% managed cloud infrastructure and zero code maintenance.
+
+## Technical Blueprints & Architecture Guides
+
+- [Wan 2.1 vs Kling vs MiniMax Comparison](https://aiappsy.com/articles/wan-2-1-vs-kling-vs-minimax-ai-video-comparison.html): Technical benchmark of 2026 generative AI video diffusion architectures.
+- [Enterprise SaaS Waste Audit Playbook](https://aiappsy.com/articles/enterprise-saas-waste-audit-recurring-billing.html): Practical financial guide to uncover phantom seats, hidden price hikes, and recurring billing leakage.
+- [Why Chatbots Fail: The Rise of Action Agents](https://aiappsy.com/articles/why-chatbots-fail-autonomous-action-agents-2026.html): Why passive conversational bots fail and how autonomous action agents with browser DOM control deliver real enterprise ROI.
+- [The 220-Character Rule](https://aiappsy.com/articles/the-220-character-rule-upwork-proposals.html): How to hook freelance clients in mobile inbox previews.
+- [Speed-to-Lead Automation](https://aiappsy.com/articles/contractor-speed-to-lead-automation.html): Why contractors lose 60% of deals to slow quotes and how 60-second mobile quoting doubles close rates.
+- [Building Autonomous Agents in 2026](https://aiappsy.com/articles/building-autonomous-ai-action-agents-2026.html): Headless browser state machines and self-healing action loops.
+- [Preventing Duplicate SaaS Billing](https://aiappsy.com/articles/how-to-prevent-duplicate-saas-billing.html): Practical financial checklist to eliminate recurring card bloat.
+
+## Contact & Organization Details
+
+- Website: https://aiappsy.com
+- Engineering Lead: Pål Juritzen
+- Contact Email: paljuritzen@gmail.com
+- Supported Languages: English (EN) & Norwegian (NO)
+- Cloud Infrastructure: Google Cloud Run (us-west1 / global CDN)
+- Model Integrations: Claude 3.7 Sonnet, Gemini 2.0 Flash, GPT-4o, Wan 2.1, Kling 1.5, MiniMax Hailuo
+
+## Detailed System Capabilities
+
+### 1. Autonomous Action Agents
+AIAPPSY action agents differ from traditional conversational LLMs by executing state-machine workflows:
+- Visual DOM element grounding via multimodal perception.
+- Resilient self-healing retry strategies upon page mutation.
+- Sandboxed bash/python execution for dynamic computation.
+- Human-in-the-Loop approval checkpoints for sensitive financial or contract triggers.
+
+### 2. Norwegian Business Integrations
+- Fiken API: Two-way webhook sync for sales leads, auto-creating customers and drafts.
+- Tripletex API: Automated orderline insertion and project registration.
+- Vipps & BankID: Seamless consumer and enterprise identity and payment checkout flows.
+- GDPR Compliance: Tenant-isolated databases with zero persistent storage of confidential customer data.
+
+### 3. Commercial Licensing Terms
+- Turnkey Whitelabel: Custom domain, SSL, automated hosting, ongoing model upgrades, 95%+ gross margins.
+- Rent-to-Own: 70% of monthly license fees credited toward full source code purchase.
+- Full IP Buyout: Complete GitHub repository transfer, documentation handover, and unconditional commercial rights.

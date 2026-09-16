@@ -1932,3 +1932,31 @@ body {
   margin-bottom: 1.25rem;
   flex-grow: 1;
 }
+
+
+/* Language Switching Rules */
+html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+.lang-switch-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  text-decoration: none;
+}
+.lang-switch-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: #818cf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}

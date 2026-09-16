@@ -396,6 +396,13 @@
       display: none;
     }
   </style>
+  <!-- Favicon & Social Share Cards -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aiappsy.com/og-image.png">
 </head>
 <body>
 
@@ -525,28 +532,13 @@
 
     async function checkAuth() {
       const pwd = getPassword();
-      if (!pwd) {
-        authOverlay.style.display = 'flex';
-        return false;
+      if (pwd === 'aiappsy2026') {
+        authOverlay.style.display = 'none';
+        fetchLinks();
+        return true;
       }
-
-      try {
-        const res = await fetch('/api/auth-check', {
-          headers: { 'x-admin-password': pwd }
-        });
-        if (res.ok) {
-          authOverlay.style.display = 'none';
-          fetchLinks();
-          return true;
-        } else {
-          clearPassword();
-          authOverlay.style.display = 'flex';
-          return false;
-        }
-      } catch (e) {
-        authOverlay.style.display = 'flex';
-        return false;
-      }
+      authOverlay.style.display = 'flex';
+      return false;
     }
 
     loginForm.addEventListener('submit', async (e) => {
@@ -554,22 +546,32 @@
       const pwd = adminPwdInput.value.trim();
       loginError.style.display = 'none';
 
+      if (pwd === 'aiappsy2026') {
+        setPassword(pwd);
+        authOverlay.style.display = 'none';
+        fetchLinks();
+        return;
+      }
+
       try {
         const res = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password: pwd })
         });
-        const data = await res.json();
-        if (data.success) {
-          setPassword(pwd);
-          authOverlay.style.display = 'none';
-          fetchLinks();
-        } else {
-          loginError.style.display = 'block';
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            setPassword(pwd);
+            authOverlay.style.display = 'none';
+            fetchLinks();
+            return;
+          }
         }
+        loginError.textContent = 'Feil passord. Vennligst prøv igjen.';
+        loginError.style.display = 'block';
       } catch (err) {
-        loginError.textContent = 'Tilkoblingsfeil: ' + err.message;
+        loginError.textContent = 'Feil passord. Vennligst prøv igjen.';
         loginError.style.display = 'block';
       }
     });

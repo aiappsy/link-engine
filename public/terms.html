@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Terms of Use & Licensing | AIAPPSY</title>
+  <meta name="description" content="AIAPPSY Terms of Use. Commercial software licensing, bespoke development intellectual property handover, and platform terms.">
+  <link rel="canonical" href="https://aiappsy.com/terms.html">
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/terms.html">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/terms.html?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/terms.html">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
+  <style>
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+    body {
+      background: #070a12;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+    }
+    .legal-container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+    .legal-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: 3rem;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .brand-link span { color: #818cf8; }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-actions a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-actions a:hover { color: #ffffff; }
+
+    .lang-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .lang-switch-btn:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      color: #ffffff;
+    }
+
+    .legal-header {
+      margin-bottom: 3rem;
+    }
+    .legal-tag {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+    }
+    .legal-header h1 {
+      font-size: 2.75rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
+    .legal-header p.last-updated {
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .legal-content h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 0.5rem;
+    }
+    .legal-content h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-top: 1.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .legal-content p {
+      color: #cbd5e1;
+      font-size: 1.02rem;
+      margin-bottom: 1.35rem;
+    }
+    .legal-content ul, .legal-content ol {
+      color: #cbd5e1;
+      margin-bottom: 1.5rem;
+      padding-left: 1.75rem;
+    }
+    .legal-content li {
+      margin-bottom: 0.5rem;
+    }
+    .legal-content strong {
+      color: #ffffff;
+    }
+
+    .callout-box {
+      background: rgba(15, 22, 41, 0.75);
+      border: 1px solid #1e2942;
+      border-left: 4px solid #6366f1;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .callout-box p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .legal-footer {
+      margin-top: 5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #1e293b;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .legal-footer a {
+      color: #94a3b8;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+    .legal-footer a:hover { color: #ffffff; }
+  </style>
+</head>
+<body>
+  <div class="legal-container">
+    <nav class="legal-nav">
+      <a href="/" class="brand-link">
+        <div>⚡</div>
+        <div>aiappsy<span>.com</span></div>
+      </a>
+      <div class="nav-actions">
+        <a href="/">
+          <span class="lang-en">← Home</span>
+          <span class="lang-no">← Forside</span>
+        </a>
+        <a href="/custom-development.html">
+          <span class="lang-en">Custom Dev</span>
+          <span class="lang-no">Skreddersøm</span>
+        </a>
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+      </div>
+    </nav>
+
+    <header class="legal-header">
+      <span class="legal-tag">
+        <span class="lang-en">Legal Agreement</span>
+        <span class="lang-no">Avtalevilkår</span>
+      </span>
+      <h1 class="lang-en">Terms of Use</h1>
+      <h1 class="lang-no">Brukervilkår</h1>
+      <p class="last-updated">
+        <span class="lang-en">Last updated: September 16, 2026 · Governed by Norwegian Law</span>
+        <span class="lang-no">Sist oppdatert: 16. september 2026 · Underlagt norsk lov</span>
+      </p>
+    </header>
+
+    <!-- English Content -->
+    <main class="legal-content lang-en">
+      <div class="callout-box">
+        <p><strong>Welcome to AIAPPSY.</strong> By browsing our website, commissioning bespoke engineering, or licensing our turnkey applications, you agree to the terms set forth below.</p>
+      </div>
+
+      <h2>1. Scope of Services</h2>
+      <p>AIAPPSY operates as a frontier AI software studio and engineering consultancy. We provide:</p>
+      <ul>
+        <li>Proprietary standalone SaaS applications (e.g. Hubzoo, Upworkz, SubSentry, MaxMotion AI, AppSave, MediaBunny, Manus).</li>
+        <li>Custom AI action agent development, generative pipelines, and ERP integrations.</li>
+        <li>Turnkey white-label software licensing for agencies, consultants, and enterprise operators.</li>
+      </ul>
+
+      <h2>2. Intellectual Property & Code Ownership</h2>
+      <ul>
+        <li><strong>Custom Development Builds:</strong> Upon full and final settlement of agreed project invoicing, 100% of all intellectual property, source code, and design assets developed specifically for the client are irrevocably transferred to the client.</li>
+        <li><strong>Whitelabel Licensing:</strong> Clients receive an exclusive or non-exclusive commercial license to market and operate the platform under their chosen brand and domain, while underlying core architectural libraries remain maintained by AIAPPSY.</li>
+        <li><strong>Proprietary Studio Assets:</strong> AIAPPSY logos, trademarks, and showcase materials are the property of AIAPPSY.</li>
+      </ul>
+
+      <h2>3. Permitted & Acceptable Use</h2>
+      <p>You agree not to use AIAPPSY software or custom agent routines to:</p>
+      <ul>
+        <li>Engage in unlawful scraping of protected systems in violation of applicable laws.</li>
+        <li>Transmit spam, malware, phishing campaigns, or deceptive automated communications.</li>
+        <li>Attempt reverse-engineering of managed backend infrastructure outside the scope of contracted licensing agreements.</li>
+      </ul>
+
+      <h2>4. Limitation of Liability</h2>
+      <p>AIAPPSY delivers high-reliability software engineered to production industry standards. However, to the maximum extent permitted under Norwegian law, AIAPPSY shall not be liable for indirect, incidental, or consequential damages resulting from downtime of third-party foundation model providers (e.g. Anthropic, Google, OpenAI) or client third-party API mutations.</p>
+
+      <h2>5. Governing Law & Dispute Resolution</h2>
+      <p>These terms shall be governed by and construed in accordance with the laws of <strong>Norway</strong>. Any dispute arising out of or in connection with these terms shall be subject to the exclusive jurisdiction of the <strong>Oslo District Court (Oslo tingrett)</strong>.</p>
+    </main>
+
+    <!-- Norwegian Content -->
+    <main class="legal-content lang-no">
+      <div class="callout-box">
+        <p><strong>Velkommen til AIAPPSY.</strong> Ved å benytte nettsiden, bestille skreddersydd programvare eller lisensiere våre nøkkelferdige apper, godtar du vilkårene beskrevet nedenfor.</p>
+      </div>
+
+      <h2>1. Tjenesteomfang</h2>
+      <p>AIAPPSY opererer som et spesialisert AI-produktstudio og teknologimiljø. Våre leveranser omfatter:</p>
+      <ul>
+        <li>Egenutviklede SaaS-plattformer (bl.a. Hubzoo, Upworkz, SubSentry, MaxMotion AI, AppSave, MediaBunny, Manus).</li>
+        <li>Skreddersøm av autonome handlingsagenter, generativ video og integrasjoner mot økonomisystemer (Fiken, Tripletex, Vipps).</li>
+        <li>Nøkkelferdig white-label lisensiering for byråer, konsulenter og operatører.</li>
+      </ul>
+
+      <h2>2. Immaterielle rettigheter & Opphavsrett</h2>
+      <ul>
+        <li><strong>Skreddersydde oppdrag:</strong> Ved full betaling av avtalt prosjektvederlag overføres 100 % av all opphavsrett, kildekode og immaterielle verdier til oppdragsgiver uten forbehold.</li>
+        <li><strong>White-label lisensiering:</strong> Lisenshaver får full kommersiell rett til å markedsføre og selge løsningen under eget varemerke og domene, mens AIAPPSY ivaretar sikker skydrift og modellvedlikehold i bakgrunnen.</li>
+        <li><strong>AIAPPSY varemerker:</strong> AIAPPSYs navn, logoer og originaldokumentasjon tilhører AIAPPSY.</li>
+      </ul>
+
+      <h2>3. Akseptabel bruk</h2>
+      <p>Brukere og oppdragsgivere forplikter seg til å ikke benytte løsningene til:</p>
+      <ul>
+        <li>Ulovlig datainnhenting eller brudd på gjeldende personvern- og opphavsrettslover.</li>
+        <li>Utsending av uønsket e-post (spam), phishing eller villedende automatiserte henvendelser.</li>
+        <li>Forsøk på uautorisert inntrenging eller sabotasje mot vår Cloud Run-infrastruktur.</li>
+      </ul>
+
+      <h2>4. Ansvarsbegrensning</h2>
+      <p>Vår programvare utvikles i tråd med beste praksis for produksjonsmiljøer. I den grad norsk lov tillater det, er AIAPPSY likevel ikke erstatningsansvarlig for indirekte tap, tapt fortjeneste eller konsekvenser av midlertidig nedetid hos eksterne AI-modell-leverandører (som Google, OpenAI eller Anthropic).</p>
+
+      <h2>5. Lovvalg og verneting</h2>
+      <p>Disse vilkårene er underlagt <strong>norsk rett</strong>. Eventuelle tvister som ikke lar seg løse i minnelighet, skal behandles ved de ordinære domstoler med <strong>Oslo tingrett</strong> som avtalt verneting.</p>
+    </main>
+
+    <footer class="legal-footer">
+      <div>
+        <span class="lang-en">© 2026 AIAPPSY. All rights reserved.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Alle rettigheter forbeholdt.</span>
+      </div>
+      <div>
+        <a href="/privacy.html"><span class="lang-en">Privacy Policy</span><span class="lang-no">Personvern</span></a>
+        <a href="/terms.html"><span class="lang-en">Terms of Use</span><span class="lang-no">Brukervilkår</span></a>
+        <a href="/gdpr.html"><span class="lang-en">GDPR</span><span class="lang-no">GDPR</span></a>
+        <a href="/disclaimer.html"><span class="lang-en">AI Disclaimers</span><span class="lang-no">Ansvarsfraskrivelse</span></a>
+      </div>
+    </footer>
+    <script src="/i18n.js"></script>
+  </div>
+</body>
+</html>

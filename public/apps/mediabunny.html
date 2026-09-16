@@ -3,223 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediaBunny — In-Browser AI Media Suite | WASM Background Removal & EBU R128 Audio</title>
-  <meta name="description" content="Private, on-device media processing in your browser. AI background removal, studio-grade EBU R128 loudness normalization, and 75% CRF video compression.">
-  <meta name="keywords" content="in-browser WebAssembly media converter, AI background removal WASM, EBU R128 audio normalizer, CRF video compression web, private audio video converter, BunnyBot AI">
+  <title>MediaBunny — The Swiss-Army Knife for AI Media Processing, Audio & Video Optimization | AIAPPSY</title>
+  <meta name="description" content="A lightning-fast, all-in-one browser media studio. Performs on-device AI background removal, studio-grade EBU R128 audio loudness normalization, CRF video compression, format conversions, and batch operations, guided by an interactive AI assistant (BunnyBot).">
   <link rel="canonical" href="https://aiappsy.com/apps/mediabunny.html">
-  
-  <!-- Open Graph / Social -->
-  <meta property="og:type" content="product">
-  <meta property="og:title" content="MediaBunny — In-Browser AI Media Suite | WASM Background Removal & EBU R128 Audio">
-  <meta property="og:description" content="Private, on-device media processing in your browser. AI background removal, studio-grade EBU R128 loudness normalization, and 75% CRF video compression.">
-  <meta property="og:url" content="https://aiappsy.com/apps/mediabunny.html">
-  <meta property="og:site_name" content="AIAppsy SaaS Studio">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="MediaBunny — In-Browser AI Media Suite | WASM Background Removal & EBU R128 Audio">
-  <meta name="twitter:description" content="Private, on-device media processing in your browser. AI background removal, studio-grade EBU R128 loudness normalization, and 75% CRF video compression.">
 
-  <!-- Fonts -->
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MediaBunny — The Swiss-Army Knife for AI Media Processing, Audio & Video Optimization">
+  <meta property="og:description" content="A lightning-fast, all-in-one browser media studio. Performs on-device AI background removal, studio-grade EBU R128 audio loudness normalization, CRF video compression, format conversions, and batch operations, guided by an interactive AI assistant (BunnyBot).">
+  <meta property="og:url" content="https://aiappsy.com/apps/mediabunny.html">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aiappsy.com/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Google Fonts & Shared Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  
-  <!-- Shared Stylesheet -->
   <link rel="stylesheet" href="../styles.css">
 
-  <!-- JSON-LD Structured Data for Google Rich Results -->
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "MediaBunny",
-  "headline": "The Swiss-Army Knife for AI Media Processing, Audio & Video Optimization",
-  "url": "https://aiappsy.com/apps/mediabunny.html",
-  "operatingSystem": "Web, iOS, Android, Cloud",
-  "applicationCategory": "MultimediaApplication",
-  "description": "A lightning-fast, all-in-one browser media studio. Performs on-device AI background removal, studio-grade EBU R128 audio loudness normalization, CRF video compression, format conversions, and batch operations, guided by an interactive AI assistant (BunnyBot).",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock",
-    "description": "Free - $19/mo"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "ratingCount": "45",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  "author": {
-    "@type": "Organization",
-    "name": "AIAppsy Studio",
-    "url": "https://aiappsy.com"
-  }
-}
-  </script>
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "AIAppsy Portfolio",
-      "item": "https://aiappsy.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "AI Media Processing & Audio",
-      "item": "https://aiappsy.com/#media-video"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "MediaBunny",
-      "item": "https://aiappsy.com/apps/mediabunny.html"
-    }
-  ]
-}
-  </script>
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Why is on-device WebAssembly (WASM) media processing superior?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Typical web converters force you to upload large media files to remote servers, causing privacy risks, slow transfer speeds, and server queue waits. MediaBunny executes compiled C/C++ WebAssembly binaries directly on your computer or phone CPU, meaning zero upload wait times and complete data confidentiality."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is EBU R128 audio normalization?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "EBU R128 (ITU-R BS.1770-4) is the international broadcast loudness standard. MediaBunny analyzes and normalizes voice tracks, podcasts, and commercial audio to exact streaming LUFS targets with true-peak dBTP limiting to prevent digital distortion."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How much file size reduction does smart CRF video compression achieve?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "MediaBunny's CRF compression reduces video file sizes by up to 75% with zero perceptible loss in visual clarity, ideal for web hero animations, social media uploads, and email attachments."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can MediaBunny operate without an internet connection?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. MediaBunny is built as a Progressive Web App (PWA) with full service-worker caching. Once visited, the core audio, video, and background removal tools can function entirely offline."
-      }
-    }
-  ]
-}
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
   </script>
 
   <style>
-    /* Dedicated High-Converting Landing Page Styles */
+    /* Bilingual Toggle Rules */
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+    .lang-switch-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.22); color: var(--text-heading, #ffffff); padding: 0.42rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: all 0.2s ease; font-family: inherit; }
+    .lang-switch-btn:hover { background: rgba(99, 102, 241, 0.25); border-color: #818cf8; color: #ffffff; }
+
     :root {
       --app-accent: #f59e0b;
     }
     .landing-wrapper {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0 1.5rem 4rem 1.5rem;
     }
     .landing-nav {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 1.25rem 0;
+      align-items: center;
+      padding: 1.5rem 0 2rem 0;
       border-bottom: 1px solid var(--border-light);
-      margin-bottom: 2rem;
+      margin-bottom: 3.5rem;
     }
     .landing-nav-brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
       text-decoration: none;
       color: var(--text-heading);
       font-weight: 800;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
+    }
+    .landing-nav-brand span span {
+      color: var(--primary);
     }
     .landing-nav-actions {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
-    .breadcrumbs {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 1.75rem;
-    }
-    .breadcrumbs a {
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-    .breadcrumbs a:hover {
-      color: var(--primary);
-    }
     .hero-landing {
       text-align: center;
-      padding: 2.5rem 0 3.5rem 0;
+      max-width: 820px;
+      margin: 0 auto 5rem auto;
     }
     .hero-badge-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.35rem 0.9rem;
-      background: var(--primary-subtle);
-      border: 1px solid var(--primary-border);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-medium);
+      padding: 0.4rem 1rem;
       border-radius: 9999px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--text-body);
       margin-bottom: 1.5rem;
     }
     .hero-landing h1 {
       font-size: 2.75rem;
       font-weight: 900;
-      color: var(--text-heading);
-      line-height: 1.2;
+      line-height: 1.18;
       letter-spacing: -0.03em;
+      color: var(--text-heading);
       margin-bottom: 1.25rem;
-      max-width: 860px;
-      margin-left: auto;
-      margin-right: auto;
     }
     .hero-landing .hero-subtitle {
-      font-size: 1.2rem;
-      color: var(--text-body);
+      font-size: 1.18rem;
       line-height: 1.6;
-      max-width: 760px;
-      margin: 0 auto 2.25rem auto;
+      color: var(--text-muted);
+      margin-bottom: 2.25rem;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .hero-cta-group {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      flex-wrap: wrap;
       margin-bottom: 2.5rem;
+      flex-wrap: wrap;
     }
     .btn-hero-primary {
-      background: var(--text-heading);
+      background: var(--app-accent);
       color: #ffffff;
+      border: none;
       padding: 0.85rem 1.75rem;
       border-radius: var(--radius-sm);
       font-weight: 700;
@@ -229,10 +143,11 @@
       align-items: center;
       gap: 0.5rem;
       transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
     }
     .btn-hero-primary:hover {
-      background: #1e293b;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      filter: brightness(1.1);
     }
     .btn-hero-secondary {
       background: #ffffff;
@@ -270,8 +185,6 @@
       color: #10b981;
       font-weight: 800;
     }
-    
-    /* Section Formatting */
     .landing-section {
       margin-bottom: 4.5rem;
     }
@@ -294,39 +207,28 @@
       font-weight: 800;
       color: var(--text-heading);
       letter-spacing: -0.02em;
-      line-height: 1.3;
     }
-    
-    /* Problem Solution Story Card */
     .story-card-box {
       background: #ffffff;
       border: 1px solid var(--border-light);
       border-radius: var(--radius-lg);
-      padding: 2.25rem;
+      padding: 2.5rem;
       box-shadow: var(--shadow-card);
       line-height: 1.75;
       font-size: 1.05rem;
       color: var(--text-body);
     }
-    .story-card-box p {
-      margin-bottom: 1.25rem;
-    }
-    .story-card-box p:last-child {
-      margin-bottom: 0;
-    }
-    .story-card-box .lead-text {
-      font-size: 1.15rem;
+    .story-card-box p.lead-text {
+      font-size: 1.2rem;
       font-weight: 600;
       color: var(--text-heading);
+      margin-bottom: 1.25rem;
       border-left: 3px solid var(--app-accent);
       padding-left: 1.25rem;
-      margin-bottom: 1.5rem;
     }
-
-    /* Feature Grid */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.5rem;
     }
     .landing-feature-card {
@@ -334,12 +236,13 @@
       border: 1px solid var(--border-light);
       border-radius: var(--radius-md);
       padding: 1.75rem;
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--shadow-subtle);
       transition: var(--transition);
     }
     .landing-feature-card:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
+      border-color: var(--border-medium);
     }
     .feature-icon-badge {
       width: 44px;
@@ -353,23 +256,22 @@
       margin-bottom: 1.25rem;
     }
     .landing-feature-card h3 {
-      font-size: 1.18rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: var(--text-heading);
       margin-bottom: 0.6rem;
     }
-    .landing-feature-card .feature-summary {
+    .landing-feature-card p.feature-summary {
       font-size: 0.92rem;
-      color: var(--text-heading);
+      color: var(--text-body);
       margin-bottom: 0.6rem;
+      line-height: 1.5;
     }
-    .landing-feature-card .feature-details {
-      font-size: 0.88rem;
+    .landing-feature-card p.feature-details {
+      font-size: 0.85rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.5;
     }
-
-    /* Metrics Grid */
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -403,8 +305,6 @@
       font-size: 0.85rem;
       color: var(--text-muted);
     }
-
-    /* Durability Architecture */
     .durability-panel {
       background: #0f172a;
       color: #f8fafc;
@@ -426,28 +326,28 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin-bottom: 2.25rem;
+      margin-bottom: 2rem;
     }
-    .durability-tech-chips .tech-chip {
-      background: rgba(255, 255, 255, 0.1);
+    .tech-chip {
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #e2e8f0;
-      padding: 0.3rem 0.75rem;
-      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
       font-size: 0.78rem;
-      font-family: var(--font-mono);
       font-weight: 600;
+      color: #cbd5e1;
+      font-family: 'JetBrains Mono', monospace;
     }
     .durability-grid-2x2 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.5rem;
     }
     .durability-box {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: var(--radius-md);
-      padding: 1.4rem;
+      padding: 1.5rem;
     }
     .durability-header {
       display: flex;
@@ -455,43 +355,46 @@
       gap: 0.6rem;
       margin-bottom: 0.6rem;
     }
-    .durability-header h4 {
+    .durability-icon {
+      font-size: 1.25rem;
+    }
+    .durability-box h4 {
       color: #ffffff;
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 700;
     }
     .durability-box p {
       color: #94a3b8;
       font-size: 0.85rem;
-      line-height: 1.6;
+      line-height: 1.5;
     }
-
-    /* Whitelabel Licensing Cards */
     .licensing-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
     }
     .license-model-card {
       background: #ffffff;
       border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-md);
       padding: 2rem;
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--shadow-subtle);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+    }
+    .license-tier-header {
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.25rem;
     }
     .license-badge {
+      display: inline-block;
       font-size: 0.72rem;
       font-weight: 800;
       text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--primary);
-      background: var(--primary-subtle);
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .license-model-card h4 {
       font-size: 1.2rem;
@@ -503,12 +406,13 @@
       font-size: 1.05rem;
       font-weight: 800;
       color: var(--app-accent);
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.5rem;
     }
     .license-features-list {
       list-style: none;
       padding: 0;
       margin: 0 0 1.5rem 0;
+      flex: 1;
     }
     .license-features-list li {
       font-size: 0.88rem;
@@ -523,8 +427,6 @@
       color: #10b981;
       font-weight: 800;
     }
-
-    /* FAQs Accordion */
     .faqs-container {
       max-width: 820px;
       margin: 0 auto;
@@ -567,8 +469,6 @@
       color: var(--text-body);
       line-height: 1.7;
     }
-
-    /* Internal Linking Grid */
     .related-apps-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -605,7 +505,7 @@
     }
     .related-app-info {
       flex: 1;
-    }
+    }}
     .related-cat {
       font-size: 0.7rem;
       font-weight: 700;
@@ -632,8 +532,6 @@
       color: var(--text-light);
       font-weight: 700;
     }
-
-    /* Footer */
     .landing-footer {
       border-top: 1px solid var(--border-light);
       padding: 3rem 0;
@@ -650,7 +548,6 @@
     .landing-footer a:hover {
       color: var(--primary);
     }
-
     @media (max-width: 768px) {
       .hero-landing h1 {
         font-size: 2rem;
@@ -670,14 +567,19 @@
 
     <!-- Navigation Header -->
     <nav class="landing-nav" aria-label="Main Navigation">
-      <a href="https://aiappsy.com" class="landing-nav-brand">
+      <a href="/" class="landing-nav-brand">
         <div class="brand-logo-badge">⚡</div>
-        <span>saasapps<span>.ai.studio</span></span>
+        <span>aiappsy<span>.com</span></span>
       </a>
       <div class="landing-nav-actions">
-        <a href="https://aiappsy.com" class="btn-card-action btn-learn-more" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-          <span>← All 7 Platforms</span>
+        <a href="/" class="btn-card-action btn-learn-more" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          <span class="lang-en">← All 7 Platforms</span>
+          <span class="lang-no">← Våre 7 apper</span>
         </a>
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
         <a href="https://mediabunny.ai.studio" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-launch-app" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
           <span>Launch MediaBunny</span>
           <span>↗</span>
@@ -685,55 +587,54 @@
       </div>
     </nav>
 
-    <!-- Breadcrumb Hierarchy for SEO -->
-    <div class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="https://aiappsy.com">Home</a>
-      <span>/</span>
-      <a href="https://aiappsy.com/#media-video">AI Media Processing & Audio</a>
-      <span>/</span>
-      <span>MediaBunny</span>
-    </div>
-
-    <!-- MAIN HERO SECTION -->
+    <!-- Main Hero -->
     <header class="hero-landing">
       <div class="hero-badge-pill">
         <span>✨</span>
-        <span>AI Media Processing & Audio · Active Production</span>
+        <span class="lang-en">AI Media Processing & Audio · Active Production</span>
+        <span class="lang-no">Lyd, Bilde & Medieprosessering · Aktiv Produksjon</span>
       </div>
 
-      <h1>The Swiss-Army Knife for AI Media Processing, Audio & Video Optimization</h1>
+      <h1 class="lang-en">Stop Paying for 5 Different Media Converters: One Workspace Does It All</h1>
+      <h1 class="lang-no">Raskere, tryggere og uten skykostnader: Mediebehandling rett på brukerens datamaskin</h1>
 
-      <p class="hero-subtitle">
-        A lightning-fast, all-in-one browser media studio. Performs on-device AI background removal, studio-grade EBU R128 audio loudness normalization, CRF video compression, format conversions, and batch operations, guided by an interactive AI assistant (BunnyBot).
-      </p>
+      <p class="hero-subtitle lang-en">A lightning-fast, all-in-one browser media studio. Performs on-device AI background removal, studio-grade EBU R128 audio loudness normalization, CRF video compression, format conversions, and batch operations, guided by an interactive AI assistant (BunnyBot).</p>
+      <p class="hero-subtitle lang-no">En komplett mediearbeidsstasjon rett i nettleseren. Kjører tung bilde- og lydbehandling direkte på brukerens enhet via WebAssembly, noe som fjerner skykostnader og gir operatøren tilnærmet 100 % bruttofortjeneste.</p>
 
       <div class="hero-cta-group">
         <a href="https://mediabunny.ai.studio" target="_blank" rel="noopener noreferrer" class="btn-hero-primary">
-          <span>🚀 Launch Live Platform</span>
+          <span>🚀</span>
+          <span class="lang-en">Launch Live Platform</span>
+          <span class="lang-no">Åpne live-versjon</span>
           <span>↗</span>
         </a>
-        <a href="https://aiappsy.com/#inquiry" class="btn-hero-secondary">
-          <span>💼 Whitelabel & Buyout Licensing</span>
+        <a href="/portfolio.html" class="btn-hero-secondary">
+          <span>💼</span>
+          <span class="lang-en">Whitelabel Licensing</span>
+          <span class="lang-no">White-label lisensiering</span>
         </a>
       </div>
 
       <div class="hero-trust-bar">
-        <div class="hero-trust-item"><span class="check">✓</span> 100% Turnkey Whitelabel</div>
-        <div class="hero-trust-item"><span class="check">✓</span> Custom Domain & Hosting Included</div>
-        <div class="hero-trust-item"><span class="check">✓</span> Zero Technical Skill Needed</div>
-        <div class="hero-trust-item"><span class="check">✓</span> Up to 95% Gross Margins</div>
+        <div class="hero-trust-item"><span class="check">✓</span> <span class="lang-en">100% Turnkey Whitelabel</span><span class="lang-no">100 % Nøkkelferdig White-label</span></div>
+        <div class="hero-trust-item"><span class="check">✓</span> <span class="lang-en">Custom Domain Included</span><span class="lang-no">Eget domene & drift inkludert</span></div>
+        <div class="hero-trust-item"><span class="check">✓</span> <span class="lang-en">Zero Maintenance</span><span class="lang-no">Null teknisk vedlikehold</span></div>
+        <div class="hero-trust-item"><span class="check">✓</span> <span class="lang-en">High Margins</span><span class="lang-no">Høy fortjeneste</span></div>
       </div>
     </header>
 
     <!-- SECTION 1: THE CORE PROBLEM & THE SOLUTION -->
     <section class="landing-section" aria-labelledby="section-story-title">
       <div class="section-header-block">
-        <span class="section-tag">Market Reality & Solution</span>
-        <h2 id="section-story-title">Stop Paying for 5 Different Media Converters: One Workspace Does It All</h2>
+        <span class="section-tag lang-en">Market Reality & Solution</span>
+        <span class="section-tag lang-no">Markedsbehov & Løsning</span>
+        <h2 id="section-story-title" class="lang-en">Stop Paying for 5 Different Media Converters: One Workspace Does It All</h2>
+        <h2 id="section-story-title-no" class="lang-no">Raskere, tryggere og uten skykostnader: Mediebehandling rett på brukerens datamaskin</h2>
       </div>
 
       <div class="story-card-box">
-        
+        <div class="lang-en">
+          
         <p class="lead-text">
           Digital creators, marketing teams, and developers constantly juggle clunky online converters, ad-riddled image compressors, and complicated desktop audio tools just to prepare assets for publishing.
         </p>
@@ -741,116 +642,136 @@
           <strong>MediaBunny is the modern, ad-free media utility.</strong> It combines high-performance WebAssembly processing with cutting-edge Gemini AI to handle image backgrounds, audio loudness standards, video compression, and batch transformations—instantly and securely without uploading raw files to third-party servers.
         </p>
       
+        </div>
+        <div class="lang-no">
+          
+        <p class="lead-text">
+          Tradisjonelle medie- og lydverktøy på nett krever at store videofiler og lydopptak lastes opp til trege servere i skyen. Dette skaper høye serverregninger for eieren, lang ventetid for brukeren og personvernutfordringer med sensitive opptak.
+        </p>
+        <p>
+          <strong>MediaBunny løser dette ved å flytte all tungregning direkte inn i brukerens egen nettleser via WebAssembly (WASM).</strong> Fjerning av bildebakgrunner, kringkastings-lydnormalisering og videokomprimering skjer umiddelbart på datamaskinen til brukeren. Filene forlater aldri enheten deres!
+        </p>
+      
+        </div>
       </div>
     </section>
 
     <!-- SECTION 2: 4 CORE SUPERPOWERS & CAPABILITIES -->
     <section class="landing-section" aria-labelledby="section-features-title">
       <div class="section-header-block">
-        <span class="section-tag">Engineered For Automation</span>
-        <h2 id="section-features-title">Core Functions & Superpowers</h2>
+        <span class="section-tag lang-en">Engineered For Automation</span>
+        <span class="section-tag lang-no">Automasjon & Kjernefunksjoner</span>
+        <h2 id="section-features-title" class="lang-en">Core Functions & Superpowers</h2>
+        <h2 id="section-features-title-no" class="lang-no">Kjernefunksjoner & Superkrefter</h2>
       </div>
 
       <div class="features-grid">
         
     <div class="landing-feature-card">
       <div class="feature-icon-badge">✂️</div>
-      <h3>On-Device AI Background Removal</h3>
-      <p class="feature-summary"><strong>Isolate subjects and export transparent PNGs or WebP files without uploading sensitive photos to third-party servers.</strong></p>
-      <p class="feature-details">Runs high-precision edge neural models directly in the browser via WebAssembly. Ideal for eCommerce product photography and marketing banners.</p>
+      <h3 class="lang-en">On-Device AI Background Removal</h3>
+      <h3 class="lang-no">Lokal AI-bakgrunnsfjerning</h3>
+      <p class="feature-summary lang-en"><strong>Isolate subjects and export transparent PNGs or WebP files without uploading sensitive photos to third-party servers.</strong></p>
+      <p class="feature-summary lang-no"><strong>Fjern bakgrunner på portretter og produktbilder på under 2 sekunder uten skyopplasting.</strong></p>
+      <p class="feature-details lang-en">Runs high-precision edge neural models directly in the browser via WebAssembly. Ideal for eCommerce product photography and marketing banners.</p>
+      <p class="feature-details lang-no">Drevet av optimaliserte nevrale nettverk som kjører direkte i nettleserminnet med millimeterpresisjon rundt hår og kanter.</p>
     </div>
-  
-
     <div class="landing-feature-card">
       <div class="feature-icon-badge">🎙️</div>
-      <h3>Broadcast Audio Normalization (EBU R128)</h3>
-      <p class="feature-summary"><strong>Calibrate podcast, video, and commercial voice tracks to official streaming loudness standards (-14 LUFS to -23 LUFS).</strong></p>
-      <p class="feature-details">True-peak limiting prevents harsh digital clipping and ensures audio sounds balanced on Spotify, YouTube, and podcasts.</p>
+      <h3 class="lang-en">Broadcast Audio Normalization (EBU R128)</h3>
+      <h3 class="lang-no">Kringkastingsstandard lydnormalisering</h3>
+      <p class="feature-summary lang-en"><strong>Calibrate podcast, video, and commercial voice tracks to official streaming loudness standards (-14 LUFS to -23 LUFS).</strong></p>
+      <p class="feature-summary lang-no"><strong>Gjør podcaster og videoopptak krystallklare i henhold til EBU R128 og Spotify-standarder.</strong></p>
+      <p class="feature-details lang-en">True-peak limiting prevents harsh digital clipping and ensures audio sounds balanced on Spotify, YouTube, and podcasts.</p>
+      <p class="feature-details lang-no">Jevner ut volumforskjeller, fjerner støy og gir profesjonelt radiolyd-nivå med ett klikk.</p>
     </div>
-  
-
     <div class="landing-feature-card">
       <div class="feature-icon-badge">🗜️</div>
-      <h3>Smart CRF Video Compression</h3>
-      <p class="feature-summary"><strong>Shrink video file sizes by up to 75% with zero perceptible loss in visual clarity.</strong></p>
-      <p class="feature-details">Optimized presets for Instagram Reels, TikTok, YouTube Shorts, and web hero backgrounds. Converts smoothly between MP4, WebM, and GIF.</p>
+      <h3 class="lang-en">Smart CRF Video Compression</h3>
+      <h3 class="lang-no">CRF Intelligent videokomprimering</h3>
+      <p class="feature-summary lang-en"><strong>Shrink video file sizes by up to 75% with zero perceptible loss in visual clarity.</strong></p>
+      <p class="feature-summary lang-no"><strong>Krymp store videofiler med opptil 80 % uten synlig kvalitetstap.</strong></p>
+      <p class="feature-details lang-en">Optimized presets for Instagram Reels, TikTok, YouTube Shorts, and web hero backgrounds. Converts smoothly between MP4, WebM, and GIF.</p>
+      <p class="feature-details lang-no">Gjør videoer klare for nettsider, e-post og sosiale medier uten pikselering.</p>
     </div>
-  
-
     <div class="landing-feature-card">
       <div class="feature-icon-badge">📦</div>
-      <h3>Batch Workflows & 1-Click ZIP Exports</h3>
-      <p class="feature-summary"><strong>Drop dozens of assorted files at once, apply unified resizing, format change, and compression, and download as a single archive.</strong></p>
-      <p class="feature-details">Massively accelerates agency production days, turning repetitive export clicks into a fast, single-step operation.</p>
+      <h3 class="lang-en">Batch Workflows & 1-Click ZIP Exports</h3>
+      <h3 class="lang-no">BunnyBot AI-assistent</h3>
+      <p class="feature-summary lang-en"><strong>Drop dozens of assorted files at once, apply unified resizing, format change, and compression, and download as a single archive.</strong></p>
+      <p class="feature-summary lang-no"><strong>Innebygd intelligent hjelper som veileder brukeren til optimale filformater og innstillinger.</strong></p>
+      <p class="feature-details lang-en">Massively accelerates agency production days, turning repetitive export clicks into a fast, single-step operation.</p>
+      <p class="feature-details lang-no">Gjør avansert medieproduksjon tilgjengelig for vanlige folk uten forkunnskaper.</p>
     </div>
-  
       </div>
     </section>
 
     <!-- SECTION 3: TANGIBLE ROI & COMMERCIAL METRICS -->
     <section class="landing-section" aria-labelledby="section-metrics-title">
       <div class="section-header-block">
-        <span class="section-tag">Proven Impact</span>
-        <h2 id="section-metrics-title">Tangible User & Commercial ROI</h2>
+        <span class="section-tag lang-en">Proven Impact</span>
+        <span class="section-tag lang-no">Målbar Gevinst</span>
+        <h2 id="section-metrics-title" class="lang-en">Tangible User & Commercial ROI</h2>
+        <h2 id="section-metrics-title-no" class="lang-no">Målbar forretningsverdi og avkastning</h2>
       </div>
 
       <div class="metrics-grid">
         
     <div class="landing-metric-card">
-      <div class="metric-pill">Zero Server Uploads</div>
-      <h4>On-Device Privacy</h4>
-      <p>Key transformations execute locally in-browser via WebAssembly, protecting confidential client media.</p>
+      <div class="metric-pill lang-en">Zero Server Uploads</div>
+      <div class="metric-pill lang-no">Lynraskt</div>
+      <h4 class="lang-en">On-Device Privacy</h4>
+      <h4 class="lang-no">Ingen opplastingstid</h4>
+      <p class="lang-en">Key transformations execute locally in-browser via WebAssembly, protecting confidential client media.</p>
+      <p class="lang-no">Filene behandles umiddelbart på enheten uten å måtte vente på treg skyopplasting.</p>
     </div>
-  
-
     <div class="landing-metric-card">
-      <div class="metric-pill">WebP & AVIF</div>
-      <h4>Lightweight Web Assets</h4>
-      <p>Convert heavy JPGs and PNGs to modern formats that dramatically speed up website loading.</p>
+      <div class="metric-pill lang-en">WebP & AVIF</div>
+      <div class="metric-pill lang-no">Lokal Behandling</div>
+      <h4 class="lang-en">Lightweight Web Assets</h4>
+      <h4 class="lang-no">100% Personvern</h4>
+      <p class="lang-en">Convert heavy JPGs and PNGs to modern formats that dramatically speed up website loading.</p>
+      <p class="lang-no">Konfidensielle opptak, private bilder og videoer forlater aldri maskinen til brukeren.</p>
     </div>
-  
-
     <div class="landing-metric-card">
-      <div class="metric-pill">Calibrated LUFS</div>
-      <h4>Broadcast Standards</h4>
-      <p>Deliver clear, authoritative sound across all video and podcast distribution channels.</p>
+      <div class="metric-pill lang-en">Calibrated LUFS</div>
+      <div class="metric-pill lang-no">EBU R128</div>
+      <h4 class="lang-en">Broadcast Standards</h4>
+      <h4 class="lang-no">Profesjonell lydkvalitet</h4>
+      <p class="lang-en">Deliver clear, authoritative sound across all video and podcast distribution channels.</p>
+      <p class="lang-no">Lydspor tilpasset kravene for podcast-plattformer, YouTube og kringkasting.</p>
     </div>
-  
-
     <div class="landing-metric-card">
-      <div class="metric-pill">BunnyBot AI</div>
-      <h4>Interactive Guidance</h4>
-      <p>Ask BunnyBot anything about codecs, aspect ratios, bitrate targets, and optimal export parameters.</p>
+      <div class="metric-pill lang-en">BunnyBot AI</div>
+      <div class="metric-pill lang-no">Mobil & Desktop</div>
+      <h4 class="lang-en">Interactive Guidance</h4>
+      <h4 class="lang-no">Virker overalt</h4>
+      <p class="lang-en">Ask BunnyBot anything about codecs, aspect ratios, bitrate targets, and optimal export parameters.</p>
+      <p class="lang-no">Fullverdig funksjonalitet i alle moderne nettlesere uten behov for tunge programvareinstallasjoner.</p>
     </div>
-  
       </div>
     </section>
 
     <!-- SECTION 4: DURABILITY, SECURITY & CLOUD STACK -->
     <section class="landing-section" aria-labelledby="section-tech-title">
       <div class="durability-panel">
-        <span class="section-tag" style="color: #38bdf8;">Production Architecture</span>
-        <h2 id="section-tech-title">The Power of In-Browser WebAssembly & Edge Intelligence</h2>
-        <p class="sub">MediaBunny is engineered with a hybrid client-edge philosophy: heavy audio/video transformations happen right in the user's browser via high-speed WebAssembly, backed by Gemini models for intelligent analysis.</p>
+        <span class="section-tag lang-en" style="color: #38bdf8;">Production Architecture</span>
+        <span class="section-tag lang-no" style="color: #38bdf8;">Produksjonsarkitektur & Sikkerhet</span>
+        <h2 id="section-tech-title" class="lang-en">The Power of In-Browser WebAssembly & Edge Intelligence</h2>
+        <h2 id="section-tech-title-no" class="lang-no">Banebrytende WebAssembly og klientside AI-prosessering</h2>
+        <p class="sub lang-en">MediaBunny is engineered with a hybrid client-edge philosophy: heavy audio/video transformations happen right in the user's browser via high-speed WebAssembly, backed by Gemini models for intelligent analysis.</p>
+        <p class="sub lang-no">Bygget med Rust-kompilerte WebAssembly-moduler og moderne Web Codecs for ekstrem ytelse rett i nettleseren.</p>
 
         <div class="durability-tech-chips">
           
     <span class="tech-chip">React 18</span>
-  
     <span class="tech-chip">TypeScript</span>
-  
     <span class="tech-chip">Tailwind CSS</span>
-  
     <span class="tech-chip">FFmpeg.wasm</span>
-  
     <span class="tech-chip">WebAssembly (WASM)</span>
-  
     <span class="tech-chip">Gemini 3.7 Flash API</span>
-  
     <span class="tech-chip">Vite Bundler</span>
-  
     <span class="tech-chip">Service Worker Cache</span>
-  
         </div>
 
         <div class="durability-grid-2x2">
@@ -858,38 +779,39 @@
     <div class="durability-box">
       <div class="durability-header">
         <span class="durability-icon">⚡</span>
-        <h4>In-Browser WebAssembly Acceleration</h4>
+        <h4 class="lang-en">In-Browser WebAssembly Acceleration</h4>
+        <h4 class="lang-no">Null serverbelastning</h4>
       </div>
-      <p>Utilizes compiled C/C++ libraries (FFmpeg and specialized audio filters) running inside WebAssembly threads. This means zero server video rendering costs and near-instant processing without upload lag.</p>
+      <p class="lang-en">Utilizes compiled C/C++ libraries (FFmpeg and specialized audio filters) running inside WebAssembly threads. This means zero server video rendering costs and near-instant processing without upload lag.</p>
+      <p class="lang-no">Skalerer til titusenvis av samtidige brukere uten at du trenger å oppgradere serveren en eneste gang.</p>
     </div>
-  
-
     <div class="durability-box">
       <div class="durability-header">
         <span class="durability-icon">🛡️</span>
-        <h4>Zero Data Leakage Architecture</h4>
+        <h4 class="lang-en">Zero Data Leakage Architecture</h4>
+        <h4 class="lang-no">Maksimal personvernsikkerhet</h4>
       </div>
-      <p>Because media never leaves the user's local machine for core compression and conversions, enterprise clients can safely process confidential media without compliance breaches.</p>
+      <p class="lang-en">Because media never leaves the user's local machine for core compression and conversions, enterprise clients can safely process confidential media without compliance breaches.</p>
+      <p class="lang-no">Ingen brukerdata eller sensitive filer sendes over nettet, noe som gjør GDPR-etterlevelse lekende lett.</p>
     </div>
-  
-
     <div class="durability-box">
       <div class="durability-header">
         <span class="durability-icon">🎚️</span>
-        <h4>EBU R128 Mathematical Sound Engine</h4>
+        <h4 class="lang-en">EBU R128 Mathematical Sound Engine</h4>
+        <h4 class="lang-no">Kompakt og lynrask kodebase</h4>
       </div>
-      <p>Strict adherence to the ITU-R BS.1770-4 standard for loudness measurement, providing accurate integrated LUFS and true-peak dBTP limiting across any audio format.</p>
+      <p class="lang-en">Strict adherence to the ITU-R BS.1770-4 standard for loudness measurement, providing accurate integrated LUFS and true-peak dBTP limiting across any audio format.</p>
+      <p class="lang-no">Høyt optimaliserte binærfiler som caches i nettleseren for umiddelbar oppstart.</p>
     </div>
-  
-
     <div class="durability-box">
       <div class="durability-header">
         <span class="durability-icon">📦</span>
-        <h4>Resilient Offline & PWA Capability</h4>
+        <h4 class="lang-en">Resilient Offline & PWA Capability</h4>
+        <h4 class="lang-no">Plattformuavhengig</h4>
       </div>
-      <p>The entire core processing toolkit can function offline once cached by service workers, making it a reliable tool for traveling creators.</p>
+      <p class="lang-en">The entire core processing toolkit can function offline once cached by service workers, making it a reliable tool for traveling creators.</p>
+      <p class="lang-no">Kjører like sømløst på Mac, Windows, Linux, iPad og moderne mobiler.</p>
     </div>
-  
         </div>
       </div>
     </section>
@@ -897,12 +819,15 @@
     <!-- SECTION 5: WHITELABEL LICENSING & REVENUE POTENTIAL -->
     <section class="landing-section" aria-labelledby="section-licensing-title">
       <div class="section-header-block">
-        <span class="section-tag">Commercial Ownership</span>
-        <h2 id="section-licensing-title">Whitelabel Licensing Models (BizBox Framework)</h2>
+        <span class="section-tag lang-en">Commercial Ownership</span>
+        <span class="section-tag lang-no">Eierskap & Lisensiering</span>
+        <h2 id="section-licensing-title" class="lang-en">Whitelabel Licensing Models (BizBox Framework)</h2>
+        <h2 id="section-licensing-title-no" class="lang-no">White-label lisensmodeller (BizBox-rammeverk)</h2>
       </div>
 
       <div class="story-card-box" style="margin-bottom: 2rem;">
-        
+        <div class="lang-en">
+          
           <p class="operator-lead">
             Every digital agency, web design company, and content studio needs clean media processing tools for their staff and clients. Rather than sending your clients to external sites full of ads and trackers, you can own the experience.
           </p>
@@ -910,108 +835,125 @@
             White-labeling MediaBunny gives you a sticky utility that keeps users returning to your branded ecosystem. Because high-computation image and audio tasks run on client hardware via WebAssembly, your server overhead is near zero.
           </p>
         
+        </div>
+        <div class="lang-no">
+          
+          <p class="operator-lead">
+            MediaBunny har kanskje den mest attraktive forretningsmodellen av samtlige SaaS-apper: Siden all tung prosessering skjer på brukerens datamaskin, har du som operatør nesten null sky- og serverkostnader!
+          </p>
+          <p>
+            Det betyr at nesten hver eneste krone du tar inn i abonnementsinntekter er ren bruttofortjeneste. Perfekt som tilleggsverktøy for mediebyråer, markedsførere og innholdsskapere.
+          </p>
+        
+        </div>
       </div>
 
       <div class="licensing-grid">
         
     <div class="license-model-card">
       <div class="license-tier-header">
-        <span class="license-badge">BizBox License</span>
-        <h4>Turnkey Utility Whitelabel</h4>
-        <div class="license-price">Setup: $1,290 + $190/mo Maintenance</div>
+        <span class="license-badge lang-en">BizBox License</span>
+        <span class="license-badge lang-no">BizBox Lisens</span>
+        <h4 class="lang-en">Turnkey Utility Whitelabel</h4>
+        <h4 class="lang-no">Nøkkelferdig Whitelabel (Turnkey)</h4>
+        <div class="license-price lang-en">Setup: $1,290 + $190/mo Maintenance</div>
+        <div class="license-price lang-no">Oppstart & Lisens: Diskuteres basert på omfang</div>
       </div>
-      <ul class="license-features-list">
-        <li><span class="check-icon">✓</span> Your custom branding, favicon, domain, and color palette</li><li><span class="check-icon">✓</span> Customized BunnyBot AI system prompt matching your company voice</li><li><span class="check-icon">✓</span> Zero ad banners or third-party links</li><li><span class="check-icon">✓</span> Direct Google Analytics & customer telemetry integration</li>
-      </ul>
+      <ul class="license-features-list lang-en"><li><span class="check-icon">✓</span> Your custom branding, favicon, domain, and color palette</li><li><span class="check-icon">✓</span> Customized BunnyBot AI system prompt matching your company voice</li><li><span class="check-icon">✓</span> Zero ad banners or third-party links</li><li><span class="check-icon">✓</span> Direct Google Analytics & customer telemetry integration</li></ul>
+      <ul class="license-features-list lang-no"><li><span class="check-icon">✓</span> Null teknisk kompetanse nødvendig — vi håndterer hele oppsettet</li><li><span class="check-icon">✓</span> Eget domene, din branding og inkluderte tilpasningstimer følger med</li><li><span class="check-icon">✓</span> Nær 100 % bruttofortjeneste takket være lokal WebAssembly-kjøring</li><li><span class="check-icon">✓</span> Behold 100 % av alle kundeinntekter</li><li><span class="check-icon">✓</span> Rimelige tilleggsmoduler ved behov</li></ul>
     </div>
-  
-
     <div class="license-model-card">
       <div class="license-tier-header">
-        <span class="license-badge">BizBox License</span>
-        <h4>Agency Lease-to-Own</h4>
-        <div class="license-price">From $490/mo (70% Equity Credit)</div>
+        <span class="license-badge lang-en">BizBox License</span>
+        <span class="license-badge lang-no">BizBox Lisens</span>
+        <h4 class="lang-en">Agency Lease-to-Own</h4>
+        <h4 class="lang-no">Leie-til-eie (Lease-to-own)</h4>
+        <div class="license-price lang-en">From $490/mo (70% Equity Credit)</div>
+        <div class="license-price lang-no">Månedlig leie (70 % godskrives kjøp)</div>
       </div>
-      <ul class="license-features-list">
-        <li><span class="check-icon">✓</span> Deploy immediately with minimal initial capital expenditure</li><li><span class="check-icon">✓</span> 70% of lease fees build equity toward outright ownership</li><li><span class="check-icon">✓</span> Includes ongoing updates to WebAssembly encoders & codec profiles</li><li><span class="check-icon">✓</span> Priority assistance for custom codec or workflow integrations</li>
-      </ul>
+      <ul class="license-features-list lang-en"><li><span class="check-icon">✓</span> Deploy immediately with minimal initial capital expenditure</li><li><span class="check-icon">✓</span> 70% of lease fees build equity toward outright ownership</li><li><span class="check-icon">✓</span> Includes ongoing updates to WebAssembly encoders & codec profiles</li><li><span class="check-icon">✓</span> Priority assistance for custom codec or workflow integrations</li></ul>
+      <ul class="license-features-list lang-no"><li><span class="check-icon">✓</span> Vi tar oss av drifting, oppdateringer og vedlikehold bak kulissene</li><li><span class="check-icon">✓</span> 70 % av månedsleien regnes som egenkapital mot fullt kildekode-kjøp</li><li><span class="check-icon">✓</span> Enormt lukrativ forretningsmodell med minimale løpende driftsutgifter</li><li><span class="check-icon">✓</span> Inkludert teknisk bistand og onboarding</li></ul>
     </div>
-  
-
     <div class="license-model-card">
       <div class="license-tier-header">
-        <span class="license-badge">BizBox License</span>
-        <h4>Master Software Buyout</h4>
-        <div class="license-price">Valuation upon inquiry (Source Code + IP)</div>
+        <span class="license-badge lang-en">BizBox License</span>
+        <span class="license-badge lang-no">BizBox Lisens</span>
+        <h4 class="lang-en">Master Software Buyout</h4>
+        <h4 class="lang-no">Fullt oppkjøp av IP & kildekode</h4>
+        <div class="license-price lang-en">Valuation upon inquiry (Source Code + IP)</div>
+        <div class="license-price lang-no">Verdivurdering ved forespørsel</div>
       </div>
-      <ul class="license-features-list">
-        <li><span class="check-icon">✓</span> Complete React & WebAssembly engine source code transfer</li><li><span class="check-icon">✓</span> Deploy on your own private cloud or package as an Electron desktop app</li><li><span class="check-icon">✓</span> Unlimited sub-licensing and commercial distribution rights</li><li><span class="check-icon">✓</span> No royalties or recurring licensing fees</li>
-      </ul>
+      <ul class="license-features-list lang-en"><li><span class="check-icon">✓</span> Complete React & WebAssembly engine source code transfer</li><li><span class="check-icon">✓</span> Deploy on your own private cloud or package as an Electron desktop app</li><li><span class="check-icon">✓</span> Unlimited sub-licensing and commercial distribution rights</li><li><span class="check-icon">✓</span> No royalties or recurring licensing fees</li></ul>
+      <ul class="license-features-list lang-no"><li><span class="check-icon">✓</span> Full overdragelse av WebAssembly-moduler, algoritmer og kildekode</li><li><span class="check-icon">✓</span> Eie en banebrytende klient-side teknologi uten tredjepartsavhengighet</li><li><span class="check-icon">✓</span> Ubegrenset kommersiell viderelisensiering uten royaltykrav</li><li><span class="check-icon">✓</span> Komplett teknisk arkitekturoverlevering</li></ul>
     </div>
-  
       </div>
     </section>
 
     <!-- SECTION 6: SEARCH ENGINE OPTIMIZED FAQS -->
     <section class="landing-section" aria-labelledby="section-faq-title">
       <div class="section-header-block">
-        <span class="section-tag">Got Questions?</span>
-        <h2 id="section-faq-title">Frequently Asked Questions</h2>
+        <span class="section-tag lang-en">Got Questions?</span>
+        <span class="section-tag lang-no">Ofte stilte spørsmål</span>
+        <h2 id="section-faq-title" class="lang-en">Frequently Asked Questions</h2>
+        <h2 id="section-faq-title-no" class="lang-no">Ofte stilte spørsmål om MediaBunny</h2>
       </div>
 
       <div class="faqs-container">
         
     <details class="faq-item" open>
       <summary class="faq-question">
-        <span>Why is on-device WebAssembly (WASM) media processing superior?</span>
+        <span class="lang-en">Why is on-device WebAssembly (WASM) media processing superior?</span>
+        <span class="lang-no">Hvorfor er lokal WebAssembly (WASM) mediekonvertering overlegen?</span>
         <span class="faq-toggle-icon">+</span>
       </summary>
       <div class="faq-answer">
-        <p>Typical web converters force you to upload large media files to remote servers, causing privacy risks, slow transfer speeds, and server queue waits. MediaBunny executes compiled C/C++ WebAssembly binaries directly on your computer or phone CPU, meaning zero upload wait times and complete data confidentiality.</p>
+        <p class="lang-en">By executing FFmpeg and media codecs directly in the user's browser via WebAssembly, files never upload to third-party cloud servers. This eliminates bandwidth bottlenecks, ensures strict GDPR data privacy, and cuts server rendering costs to zero.</p>
+        <p class="lang-no">Ved å kjøre FFmpeg og medieprosessering direkte i nettleseren via WebAssembly, lastes filene aldri opp til eksterne servere. Dette gir lynrask prosessering uten ventetid, 100 % GDPR-personvern og null serverkostnader.</p>
       </div>
     </details>
-  
-
-    <details class="faq-item" >
+    <details class="faq-item">
       <summary class="faq-question">
-        <span>What is EBU R128 audio normalization?</span>
+        <span class="lang-en">What is EBU R128 audio normalization?</span>
+        <span class="lang-no">Hva innebærer EBU R128 lydnormalisering?</span>
         <span class="faq-toggle-icon">+</span>
       </summary>
       <div class="faq-answer">
-        <p>EBU R128 (ITU-R BS.1770-4) is the international broadcast loudness standard. MediaBunny analyzes and normalizes voice tracks, podcasts, and commercial audio to exact streaming LUFS targets with true-peak dBTP limiting to prevent digital distortion.</p>
+        <p class="lang-en">EBU R128 is the international broadcasting standard for perceived loudness. MediaBunny automatically normalizes podcast and video audio tracks to exactly -23 LUFS / -14 LUFS for YouTube, Spotify, and TikTok compliance.</p>
+        <p class="lang-no">EBU R128 er den internasjonale kringkastingsstandarden for oppfattet lydstyrke. MediaBunny normaliserer podkaster og lydspor automatisk til nøyaktig -23 LUFS / -14 LUFS tilpasset YouTube, Spotify og TikTok.</p>
       </div>
     </details>
-  
-
-    <details class="faq-item" >
+    <details class="faq-item">
       <summary class="faq-question">
-        <span>How much file size reduction does smart CRF video compression achieve?</span>
+        <span class="lang-en">How much file size reduction does smart CRF video compression achieve?</span>
+        <span class="lang-no">Hvor mye kan filstørrelsen reduseres med smart CRF-videokomprimering?</span>
         <span class="faq-toggle-icon">+</span>
       </summary>
       <div class="faq-answer">
-        <p>MediaBunny's CRF compression reduces video file sizes by up to 75% with zero perceptible loss in visual clarity, ideal for web hero animations, social media uploads, and email attachments.</p>
+        <p class="lang-en">MediaBunny typically slashes MP4/WebM video file sizes by 60% to 80% with visually lossless Constant Rate Factor (CRF) encoding, perfect for web delivery and email attachments.</p>
+        <p class="lang-no">MediaBunny reduserer normalt filstørrelsen på MP4- og WebM-videoer med 60 % til 80 % uten synlig kvalitetstap, optimalt for rask weblast og e-postvedlegg.</p>
       </div>
     </details>
-  
-
-    <details class="faq-item" >
+    <details class="faq-item">
       <summary class="faq-question">
-        <span>Can MediaBunny operate without an internet connection?</span>
+        <span class="lang-en">Can MediaBunny operate without an internet connection?</span>
+        <span class="lang-no">Kan MediaBunny brukes uten internettforbindelse?</span>
         <span class="faq-toggle-icon">+</span>
       </summary>
       <div class="faq-answer">
-        <p>Yes. MediaBunny is built as a Progressive Web App (PWA) with full service-worker caching. Once visited, the core audio, video, and background removal tools can function entirely offline.</p>
+        <p class="lang-en">Yes. Once the initial Progressive Web App (PWA) assets are cached, all media conversion and audio filtering run 100% offline on the user's local CPU/GPU.</p>
+        <p class="lang-no">Ja. Så snart PWA-komponentene er bufret i nettleseren, foregår all konvertering og redigering 100 % lokalt på brukerens egen enhet uten nettilgang.</p>
       </div>
     </details>
-  
       </div>
     </section>
 
     <!-- SECTION 7: INTERNAL LINKING GRID - ALL 7 PLATFORMS -->
     <section class="landing-section" aria-labelledby="section-suite-title">
       <div class="section-header-block">
-        <span class="section-tag">The Complete Ecosystem</span>
-        <h2 id="section-suite-title">Explore Our Other AI SaaS Platforms</h2>
+        <span class="section-tag lang-en">The Complete Ecosystem</span>
+        <span class="section-tag lang-no">Økosystemet</span>
+        <h2 id="section-suite-title" class="lang-en">Explore Our Other AI SaaS Platforms</h2>
+        <h2 id="section-suite-title-no" class="lang-no">Utforsk våre andre operative AI-plattformer</h2>
       </div>
 
       <div class="related-apps-grid">
@@ -1019,88 +961,98 @@
       <a href="hubzoo.html" class="related-app-card">
         <div class="related-app-icon" style="color: #10b981">⚡</div>
         <div class="related-app-info">
-          <span class="related-cat">Sales & Autonomous CRM</span>
-          <h4>Hubzoo</h4>
-          <p>Your Autonomous Sales Partner: Never Lose a Deal to Slow Follow-Up</p>
+          <span class="related-cat lang-en">Sales & Autonomous CRM</span>
+          <span class="related-cat lang-no">Salg & Autonom CRM</span>
+          <h4 class="lang-en">Hubzoo</h4>
+          <h4 class="lang-no">Hubzoo</h4>
+          <p class="lang-en">Your Autonomous Sales Partner: Never Lose a Deal to Slow Follow-Up</p>
+          <p class="lang-no">Din autonome salgspartner: Slutt å tape oppdrag på grunn av treg oppfølging</p>
         </div>
         <span class="related-arrow">→</span>
       </a>
-    
-
       <a href="maxmotion.html" class="related-app-card">
         <div class="related-app-icon" style="color: #8b5cf6">⚡</div>
         <div class="related-app-info">
-          <span class="related-cat">Generative Video & Media</span>
-          <h4>MaxMotion AI</h4>
-          <p>Next-Gen Multi-Model Generative Video Studio for Creative Directors</p>
+          <span class="related-cat lang-en">Generative Video & Media</span>
+          <span class="related-cat lang-no">AI Video & Kreativt Studio</span>
+          <h4 class="lang-en">MaxMotion AI</h4>
+          <h4 class="lang-no">MaxMotion AI</h4>
+          <p class="lang-en">Next-Gen Multi-Model Generative Video Studio for Creative Directors</p>
+          <p class="lang-no">Multi-modell generativt videostudio: Wan 2.1, Kling 1.5, Minimax & Seedance samlet i ett grensesnitt</p>
         </div>
         <span class="related-arrow">→</span>
       </a>
-    
-
       <a href="subsentry.html" class="related-app-card">
         <div class="related-app-icon" style="color: #0ea5e9">⚡</div>
         <div class="related-app-info">
-          <span class="related-cat">SaaS Protection & Subscription Telemetry</span>
-          <h4>SubSentry</h4>
-          <p>Subscription Watchdog, 1-Click Cancellation CMS & Deceptive Pattern Shield</p>
+          <span class="related-cat lang-en">SaaS Protection & Subscription Telemetry</span>
+          <span class="related-cat lang-no">SaaS & Finansteknologi</span>
+          <h4 class="lang-en">SubSentry</h4>
+          <h4 class="lang-no">SubSentry</h4>
+          <p class="lang-en">Subscription Watchdog, 1-Click Cancellation CMS & Deceptive Pattern Shield</p>
+          <p class="lang-no">Abonnementsvakt & forbrukerskjold: Avslør skjulte trekk og avbryt unødvendige abonnementer med ett klikk</p>
         </div>
         <span class="related-arrow">→</span>
       </a>
-    
-
       <a href="appsave.html" class="related-app-card">
         <div class="related-app-icon" style="color: #ec4899">⚡</div>
         <div class="related-app-info">
-          <span class="related-cat">E-Commerce & SaaS Discounts</span>
-          <h4>AppSave</h4>
-          <p>The Honey for SaaS, AI Tools & Cloud Subscriptions</p>
+          <span class="related-cat lang-en">E-Commerce & SaaS Discounts</span>
+          <span class="related-cat lang-no">SaaS & Finansteknologi</span>
+          <h4 class="lang-en">AppSave</h4>
+          <h4 class="lang-no">AppSave</h4>
+          <p class="lang-en">The Honey for SaaS, AI Tools & Cloud Subscriptions</p>
+          <p class="lang-no">"Honey" for SaaS og AI-verktøy: Automatisk rabatt-utfylling i nettleseren og verifisert rabattoversikt</p>
         </div>
         <span class="related-arrow">→</span>
       </a>
-    
-
       <a href="upworkz.html" class="related-app-card">
         <div class="related-app-icon" style="color: #22c55e">⚡</div>
         <div class="related-app-info">
-          <span class="related-cat">Freelance Deal Closer & Proposal Architect</span>
-          <h4>Upworkz</h4>
-          <p>Autonomous Proposal Architect & Deal Closer: Land $100+/hr Contracts While You Sleep</p>
+          <span class="related-cat lang-en">Freelance Deal Closer & Proposal Architect</span>
+          <span class="related-cat lang-no">Frilans & Salgsarkitektur</span>
+          <h4 class="lang-en">Upworkz</h4>
+          <h4 class="lang-no">Upworkz</h4>
+          <p class="lang-en">Autonomous Proposal Architect & Deal Closer: Land $100+/hr Contracts While You Sleep</p>
+          <p class="lang-no">Autonom tilbudsarkitekt for frilansere: Vinn store oppdrag med Gemini 2.5-optimaliserte søknader og felle-revisjon</p>
         </div>
         <span class="related-arrow">→</span>
       </a>
-    
-
       <a href="manus.html" class="related-app-card">
         <div class="related-app-icon" style="color: #6366f1">⚡</div>
         <div class="related-app-info">
-          <span class="related-cat">Autonomous Action Agents & Orchestration</span>
-          <h4>Manus AI Studio</h4>
-          <p>Autonomous General-Purpose Action Agent: From Idea to Complete Execution</p>
+          <span class="related-cat lang-en">Autonomous Action Agents & Orchestration</span>
+          <span class="related-cat lang-no">Autonome Handlingsagenter</span>
+          <h4 class="lang-en">Manus AI Studio</h4>
+          <h4 class="lang-no">Manus AI Studio</h4>
+          <p class="lang-en">Autonomous General-Purpose Action Agent: From Idea to Complete Execution</p>
+          <p class="lang-no">Autonom generalist-agent: Flerstegs research, hodeløs nettleserstyring & sikker kodekjøring</p>
         </div>
         <span class="related-arrow">→</span>
       </a>
-    
       </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="landing-footer">
       <p style="margin-bottom: 0.75rem;">
-        <strong>saasapps.ai.studio</strong> — Turnkey AI SaaS Marketplace & Whitelabel Hub.
+        <strong class="lang-en">aiappsy.com — Turnkey AI SaaS Marketplace & Whitelabel Hub.</strong>
+        <strong class="lang-no">aiappsy.com — Operativ AI SaaS-markedsplass og White-label Hub.</strong>
       </p>
       <p>
-        <a href="https://aiappsy.com">All Platforms</a> · 
-        <a href="https://aiappsy.com/#inquiry">Licensing Guide</a> · 
-        <a href="https://aiappsy.com/#templates">50+ Offline Templates</a> · 
-        <a href="https://mediabunny.ai.studio" target="_blank" rel="noopener noreferrer">Launch MediaBunny ↗</a>
+        <a href="/" class="lang-en">All Platforms</a><a href="/" class="lang-no">Våre 7 apper</a> · 
+        <a href="/custom-development.html" class="lang-en">Custom AI Engineering</a><a href="/custom-development.html" class="lang-no">Skreddersydd utvikling</a> · 
+        <a href="/articles/index.html" class="lang-en">Articles & Guides</a><a href="/articles/index.html" class="lang-no">Innsikt & Veiledninger</a> · 
+        <a href="/custom-development.html#contact" class="lang-en">Contact</a><a href="/custom-development.html#contact" class="lang-no">Kontakt oss</a>
       </p>
       <p style="margin-top: 1.25rem; font-size: 0.78rem; color: var(--text-light);">
-        © 2026 AIAppsy. Engineered on Google Cloud Run & Frontier AI Models.
+        <span class="lang-en">© 2026 AIAPPSY. Engineered on Google Cloud Run & Frontier AI Models.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Driftet på Google Cloud Run med ledende AI-modeller.</span>
       </p>
     </footer>
 
   </div>
 
+  <script src="/i18n.js"></script>
 </body>
 </html>

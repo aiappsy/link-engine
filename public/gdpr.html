@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>GDPR & Data Security Commitment | AIAPPSY</title>
+  <meta name="description" content="AIAPPSY GDPR compliance, data protection by design, zero AI model training on client confidential data, and tenant-isolated cloud architecture.">
+  <link rel="canonical" href="https://aiappsy.com/gdpr.html">
+  <link rel="alternate" hreflang="en" href="https://aiappsy.com/gdpr.html">
+  <link rel="alternate" hreflang="no" href="https://aiappsy.com/gdpr.html?lang=no">
+  <link rel="alternate" hreflang="x-default" href="https://aiappsy.com/gdpr.html">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:image" content="https://aiappsy.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
+  <style>
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+    body {
+      background: #070a12;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+    }
+    .legal-container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+    .legal-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: 3rem;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .brand-link span { color: #818cf8; }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-actions a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-actions a:hover { color: #ffffff; }
+
+    .lang-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .lang-switch-btn:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      color: #ffffff;
+    }
+
+    .legal-header {
+      margin-bottom: 3rem;
+    }
+    .legal-tag {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+    }
+    .legal-header h1 {
+      font-size: 2.75rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
+    .legal-header p.last-updated {
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .legal-content h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 0.5rem;
+    }
+    .legal-content h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-top: 1.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .legal-content p {
+      color: #cbd5e1;
+      font-size: 1.02rem;
+      margin-bottom: 1.35rem;
+    }
+    .legal-content ul, .legal-content ol {
+      color: #cbd5e1;
+      margin-bottom: 1.5rem;
+      padding-left: 1.75rem;
+    }
+    .legal-content li {
+      margin-bottom: 0.5rem;
+    }
+    .legal-content strong {
+      color: #ffffff;
+    }
+
+    .callout-box {
+      background: rgba(15, 22, 41, 0.75);
+      border: 1px solid #1e2942;
+      border-left: 4px solid #6366f1;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .callout-box p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .legal-footer {
+      margin-top: 5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #1e293b;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .legal-footer a {
+      color: #94a3b8;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+    .legal-footer a:hover { color: #ffffff; }
+  </style>
+</head>
+<body>
+  <div class="legal-container">
+    <nav class="legal-nav">
+      <a href="/" class="brand-link">
+        <div>⚡</div>
+        <div>aiappsy<span>.com</span></div>
+      </a>
+      <div class="nav-actions">
+        <a href="/">
+          <span class="lang-en">← Home</span>
+          <span class="lang-no">← Forside</span>
+        </a>
+        <a href="/custom-development.html">
+          <span class="lang-en">Custom Dev</span>
+          <span class="lang-no">Skreddersøm</span>
+        </a>
+        <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+      </div>
+    </nav>
+
+    <header class="legal-header">
+      <span class="legal-tag">
+        <span class="lang-en">European Data Standards</span>
+        <span class="lang-no">Europeisk Datasikkerhet</span>
+      </span>
+      <h1 class="lang-en">GDPR & Data Protection</h1>
+      <h1 class="lang-no">GDPR & Datasikkerhet</h1>
+      <p class="last-updated">
+        <span class="lang-en">Full Compliance with EU Regulation 2016/679 and Norwegian Personopplysningsloven</span>
+        <span class="lang-no">Full overholdelse av personvernforordningen (GDPR) og norsk personopplysningslov</span>
+      </p>
+    </header>
+
+    <!-- English Content -->
+    <main class="legal-content lang-en">
+      <div class="callout-box">
+        <p><strong>Strict Privacy Commitment:</strong> We design and engineer all applications according to the principles of <em>Data Protection by Design and by Default</em>. We ensure your corporate and customer data remains strictly confidential and is never used to train public AI foundation models.</p>
+      </div>
+
+      <h2>1. Zero AI Model Training Guarantee</h2>
+      <p>When you use AIAPPSY platforms or commission bespoke action agents:</p>
+      <ul>
+        <li><strong>No Public Model Training:</strong> Your business records, financial accounting syncs, prompts, and customer data are <strong>never</strong> used to train or fine-tune public foundation models (Claude, Gemini, GPT).</li>
+        <li><strong>Ephemeral Context Execution:</strong> Autonomous agent browser runs and API transactions operate in isolated memory contexts that are cleared upon task completion.</li>
+      </ul>
+
+      <h2>2. Architectural Isolation (Tenant Separation)</h2>
+      <p>Enterprise data security is enforced at the infrastructure level:</p>
+      <ul>
+        <li><strong>Cloud Run Container Isolation:</strong> Microservices run in independently isolated container instances hosted on Google Cloud Run.</li>
+        <li><strong>AES-256 Encryption:</strong> In-transit data is protected with TLS 1.3 encryption, and at-rest data is safeguarded with AES-256 standards.</li>
+        <li><strong>Sub-Processor Security:</strong> We partner exclusively with tier-1 enterprise cloud providers adhering to SOC 2 Type II, ISO 27001, and EU Standard Contractual Clauses (SCCs).</li>
+      </ul>
+
+      <h2>3. Data Processing Agreements (DPA)</h2>
+      <p>For bespoke enterprise contracts and whitelabel licensing partnerships, AIAPPSY provides standardized or custom Data Processing Agreements (DPA) specifying exact sub-processor roles, breach notification protocols, and data return/destruction obligations upon contract completion.</p>
+
+      <h2>4. Data Subject Requests</h2>
+      <p>We provide full support for customer data rights:</p>
+      <ul>
+        <li>Right of access, rectification, portability, and complete erasure within 30 days of written request.</li>
+        <li>Direct contact: <a href="mailto:paljuritzen@gmail.com" style="color: #818cf8;">paljuritzen@gmail.com</a>.</li>
+      </ul>
+    </main>
+
+    <!-- Norwegian Content -->
+    <main class="legal-content lang-no">
+      <div class="callout-box">
+        <p><strong>Kompromissløst personvern:</strong> Alle våre løsninger bygges etter prinsippene om <em>innebygd personvern (Privacy by Design)</em>. Vi garanterer at din bedrifts interne data aldri benyttes til å trene åpne AI-modeller.</p>
+      </div>
+
+      <h2>1. Ingen AI-modelltrening på dine data</h2>
+      <p>Når din virksomhet tar i bruk AIAPPSYs apper eller bestiller skreddersøm:</p>
+      <ul>
+        <li><strong>Null modelltrening:</strong> Bedriftens data, fakturaopplysninger fra Fiken/Tripletex og kundehenvendelser blir <strong>aldri</strong> brukt til å trene offentlige språkmodeller (Claude, Gemini, ChatGPT).</li>
+        <li><strong>Isolerte kjøremiljøer:</strong> Autonome handlingsagenter opererer i lukkede minneprosesser som nullstilles så snart oppgaven er fullført.</li>
+      </ul>
+
+      <h2>2. Teknisk og organisatorisk sikkerhet</h2>
+      <p>Sikkerheten er ivaretatt på infrastrukturnivå:</p>
+      <ul>
+        <li><strong>Isolerte Cloud Run containere:</strong> Tjenestene kjører i lukkede mikrotjenester hos Google Cloud Run med strenge tilgangskontroller.</li>
+        <li><strong>Kryptering:</strong> All datatrafikk er kryptert under transport (TLS 1.3) og under lagring (AES-256).</li>
+        <li><strong>Europeiske garantier:</strong> Vi benytter kun skyleverandører som oppfyller EUs krav til standardavtaler (SCC) og GDPR-etterlevelse.</li>
+      </ul>
+
+      <h2>3. Databehandleravtale (DPA)</h2>
+      <p>For bedriftskunder og white-label partnere tilbyr vi standardisert eller tilpasset databehandleravtale (DPA) i henhold til Datatilsynets retningslinjer, som regulerer ansvarsforhold, varsling ved eventuelle avvik og sletterutiner.</p>
+
+      <h2>4. Henvendelser og sletting</h2>
+      <p>Ved forespørsel om innsyn, dataportabilitet eller full sletting av opplysninger i henhold til GDPR artikkel 17, ta kontakt på <a href="mailto:paljuritzen@gmail.com" style="color: #818cf8;">paljuritzen@gmail.com</a>.</p>
+    </main>
+
+    <footer class="legal-footer">
+      <div>
+        <span class="lang-en">© 2026 AIAPPSY. All rights reserved.</span>
+        <span class="lang-no">© 2026 AIAPPSY. Alle rettigheter forbeholdt.</span>
+      </div>
+      <div>
+        <a href="/privacy.html"><span class="lang-en">Privacy Policy</span><span class="lang-no">Personvern</span></a>
+        <a href="/terms.html"><span class="lang-en">Terms of Use</span><span class="lang-no">Brukervilkår</span></a>
+        <a href="/gdpr.html"><span class="lang-en">GDPR</span><span class="lang-no">GDPR</span></a>
+        <a href="/disclaimer.html"><span class="lang-en">AI Disclaimers</span><span class="lang-no">Ansvarsfraskrivelse</span></a>
+      </div>
+    </footer>
+    <script src="/i18n.js"></script>
+  </div>
+</body>
+</html>
