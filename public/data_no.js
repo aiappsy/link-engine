@@ -942,160 +942,156 @@ const APPS_DATA_NO = [
     "name": "Manus AI Studio",
     "url": "https://manus.ai.studio",
     "domain": "manus.ai.studio",
-    "category": "autonomous-agents",
-    "categoryLabel": "Autonome Handlingsagenter",
+    "category": "media-video",
+    "categoryLabel": "Bok- & Manuskriptproduksjon",
     "statusBadge": "Aktiv Produksjon",
     "statusType": "live",
-    "accentColor": "#6366f1",
-    "tagline": "Autonom generalist-agent: Flerstegs research, hodeløs nettleserstyring & sikker kodekjøring",
-    "shortDescription": "Fremtidens autonome datamaskinassistent for bedrifter. Manus chatter ikke bare — den utfører faktiske oppgaver: navigerer komplekse nettsider, trekker ut data, genererer analyser og kjører kode i isolerte sandkasser.",
+    "accentColor": "#8b5cf6",
+    "tagline": "Autonom manuskript- og bokgenerator: Fra idé til ferdig utgitt bok på dager",
+    "shortDescription": "Et profesjonelt AI-studio for forfattere, forlag og fageksperter. Genererer komplette manuskripter, kapittelutkast, konsistente narrative strukturer og eksportklare e-bøker (ePub, PDF) fra idé til ferdig bok på dager.",
     "tags": [
       {
-        "label": "Agenttype",
-        "val": "Autonom Handlings- og Dataagent"
+        "label": "Kjernefunksjon",
+        "val": "Komplett bok- og manuskriptgenerator"
       },
       {
-        "label": "Nettleserstyring",
-        "val": "Hodeløs Chromium & DOM-Parsing"
+        "label": "Formater",
+        "val": "ePub, Kindle KDP, Trykkeklar PDF"
       },
       {
-        "label": "Sikkerhet",
-        "val": "Isolert MicroVM Kjøremiljø"
+        "label": "Redaktør",
+        "val": "Stil- og kontinuitetsredaktør"
       },
       {
-        "label": "Lisensstatus",
-        "val": "Whitelabel & Oppkjøpsklar"
+        "label": "Lisensiering",
+        "val": "Klar for forlag, kurs & white-label"
       }
     ],
     "mockupType": "manus-ui",
     "deepDive": {
-      "headline": "En digital kollega som faktisk utfører komplekse dataoppgaver på datamaskinen for deg",
-      "problemSolution": "\n        <p class=\"lead-text\">\n          Tradisjonelle AI-chatboter gir deg svar i form av tekst, men overlater det kjedelige arbeidet til deg: å gå inn på nettsider, laste ned filer, sammenstille tabeller og formatere rapporter. Mennesker bruker utallige timer hver uke på mekanisk klikking og kjedelig datainnsamling.\n        </p>\n        <p>\n          <strong>Manus AI Studio representerer det neste store steget innen kunstig intelligens: autonome handlingsagenter.</strong> Du gir agenten et mål på vanlig norsk, og Manus legger opp en plan, åpner en usynlig nettleser, søker opp kilder, filtrerer data og leverer et fiks ferdig resultat — helt selvstendig.\n        </p>\n      ",
+      "headline": "Bokmaskinen som gjør dine ideer og fagkunnskaper til ferdige bøker",
+      "problemSolution": "\n      <p class=\"lead-text\">\n        Å skrive en hel fagbok eller et skjønnlitterært manus tar tradisjonelt 6 til 18 måneder med krevende arbeid. De fleste gründere, fageksperter, forfattere og rådgivere stopper opp i kapittel 3 på grunn av skrivesperre, manglende struktur og et formateringsmareritt for e-bøker og trykk.\n      </p>\n      <p>\n        <strong>Manus AI Studio snur bokskriving til en smidig og automatisert prosess.</strong> Du oppgir bokidé, målgruppe og hovedbudskap; Manus bygger en helhetlig kapittelstruktur, produserer dyptpløyende og velskrevne kapitler med konsistent stemme, ivaretar rød tråd gjennom hundrevis av sider, og eksporterer ferdig formaterte bøker til ePub, Amazon KDP og trykkeklar PDF med ett klikk.\n      </p>\n    ",
       "coreFunctions": [
         {
-          "title": "Autonom nett-research & syntese",
-          "icon": "🌐",
-          "summary": "Tråler titalls kilder, filtrerer bort støy og sammenstiller rapporter automatisk.",
-          "details": "Leser gjennom lange artikler, analyserer tabeller og oppsummerer kjerneinnholdet med kildehenvisninger."
+          "title": "Intelligent bokstruktur & disposisjonsmotor",
+          "icon": "📚",
+          "summary": "Bryter ned bokideen din til en profesjonell disposisjon med 10–25 kapitler, underkapitler og pedagogisk progresjon.",
+          "details": "Sikrer en logisk reise for leseren og eliminerer skrivesperre før du i det hele tatt begynner å skrive."
         },
         {
-          "title": "Hodeløs nettleserstyring",
-          "icon": "🖱️",
-          "summary": "Navigerer moderne webapplikasjoner, logger inn, klikker på knapper og fyller ut skjemaer.",
-          "details": "Utfører kjedelige rutineoppgaver på nettet nøyaktig slik et menneske ville gjort det."
+          "title": "Kapittelforfatter med stemmegjenkjenning",
+          "icon": "✍️",
+          "summary": "Produserer fyldige kapitler på 2 000 til 5 000 ord med levende språk, dybde og din personlige forfatterstemme.",
+          "details": "Unngår kunstige AI-klisjeer og tilpasser seg fagbøker, erindringsbøker, ledelseslitteratur eller spenningsromaner."
         },
         {
-          "title": "Sikker MicroVM kodekjøring",
-          "icon": "💻",
-          "summary": "Skriver og kjører Python- og JavaScript-kode i isolerte sandkasser for feilfri databeregning.",
-          "details": "Matematisk presisjon og databehandling uten risiko for systemet."
+          "title": "Utviklingsredaktør & kontinuitetskontroll",
+          "icon": "🔍",
+          "summary": "Analyserer hele manuskriptet på tvers av kapitler for å sikre en rød tråd og luke ut selvmotsigelser.",
+          "details": "Fungerer som din egen personlige forlagsredaktør som sjekker sammenheng, karakterutvikling og tempo døgnet rundt."
         },
         {
-          "title": "Vedvarende minne og kontekst",
-          "icon": "🧠",
-          "summary": "Husker bedriftens rutiner, preferanser og tidligere oppdrag over tid.",
-          "details": "Blir mer verdifull og tilpasset for hver oppgave den løser."
+          "title": "Eksport til ePub, Kindle KDP og trykk-PDF",
+          "icon": "📦",
+          "summary": "Eksport med ett klikk til Amazon KDP, ePub for e-boklesere og trykkeklar PDF med profesjonell typografi.",
+          "details": "Ferdig oppsatt med riktige marger, kapitteltitler, sidetall, fotnoter og klikkbar innholdsfortegnelse."
         }
       ],
       "userBenefits": [
         {
-          "title": "Frigjør hundrevis av arbeidstimer",
-          "metric": "80% Tidsbesparelse",
-          "desc": "Overlat repetitiv research, datainnsamling og rapportering til agenten."
+          "title": "Rask ferdigstillelse",
+          "metric": "14 dager vs 1 år",
+          "desc": "Fullfør en velskrevet bok på over 200 sider på to uker i stedet for å slite i månedsvis."
         },
         {
-          "title": "Null menneskelige tastefeil",
-          "metric": "100% Nøyaktighet",
-          "desc": "Presis datauttrekking og beregning via dedikerte kode-sandkasser."
+          "title": "100 % Opphavsrett",
+          "metric": "Behold alle inntekter",
+          "desc": "Du eier alt innhold, alle rettigheter og 100 % av royalties ved salg uten provisjoner."
         },
         {
-          "title": "Jobber uavbrutt døgnet rundt",
-          "metric": "24/7 Kapasitet",
-          "desc": "Start en omfattende markedsanalyse på kvelden og ha det ferdige resultatet klart til frokost."
+          "title": "Økt faglig autoritet",
+          "metric": "Bli forfatter og ekspert",
+          "desc": "En utgitt bok bygger enorm tillit, tiltrekker betalingsvillige kunder og åpner dører for foredrag."
         },
         {
-          "title": "Enkel å bruke",
-          "metric": "Vanlig Norsk",
-          "desc": "Ingen programmering kreves — forklar hva du vil ha gjort i vanlig dagligtale."
+          "title": "90 % Kostnadskutt",
+          "metric": "Spar 150 000+ kr",
+          "desc": "Spar hundretusenvis av kroner sammenlignet med tradisjonelle skyggeforfattere (ghostwriters)."
         }
       ],
       "whitelabel": {
-        "operatorPitch": "\n          <p class=\"operator-lead\">\n            Autonome agenter som kan styre datamaskinen er det heteste investeringsområdet i tech-verdenen akkurat nå. Ved å tilby Manus AI Studio til bedriftskunder under ditt eget navn, posisjonerer du deg helt i spissen av AI-bølgen.\n          </p>\n          <p>\n            Bedriftskunder betaler gjerne 1 990 – 9 900 kr/mnd for en digital agent som sparer dem for en halv stilling innen research og datahåndtering.\n          </p>\n        ",
+        "operatorPitch": "\n        <p class=\"operator-lead\">\n          Etterspørselen etter å gi ut egne bøker og e-bøker eksploderer. Forfattercoacher, kursledere, markedsføringsbyråer og forlag ønsker programvare som hjelper deres kunder med å skrive og utgi bøker enkelt.\n        </p>\n        <p>\n          Ved å lisensiere Manus AI Studio kan du tilby en komplett bokgenerator under eget varemerke og domene. Ta månedlige abonnementsinntekter (490–1 900 kr/mnd) eller pakk løsningen inn i eksklusive forfatterkurs.\n        </p>\n      ",
         "models": [
           {
-            "tier": "Nøkkelferdig Whitelabel (Turnkey)",
-            "price": "Oppstart & Lisens: Diskuteres basert på omfang",
+            "tier": "Nøkkelferdig White-label (Turnkey)",
+            "price": "Oppsett: kr 19 900 + kr 2 900/mnd drift",
             "features": [
-              "Krever null teknisk kompetanse — vi håndterer sandkasser, servere og AI-klynger",
-              "Din merkevare, eget domene og inkluderte onboarding- og utviklingstimer",
-              "Ferdig oppsatt bedriftsportal med flerbrukertilgang og rollefordeling",
-              "Behold 100 % av bedriftsinntektene selv",
-              "Rimelige tilleggsmoduler og skreddersøm tilgjengelig ved behov"
+              "Ferdig bokskrivingsportal med din logo, farger og eget domene",
+              "Ubegrenset antall forfatterprosjekter med sikker skylagring",
+              "Eksport til ePub, Kindle og trykkeklar PDF under ditt merke",
+              "Behold 100 % av abonnementsinntektene fra dine brukere"
             ]
           },
           {
             "tier": "Leie-til-eie (Lease-to-own)",
-            "price": "Månedlig leie (70 % godskrives kjøp)",
+            "price": "Fra kr 6 900/mnd (70 % godskrives kjøp)",
             "features": [
-              "Vårt ingeniørteam tar fullt driftsansvar og sikkerhetsvedlikehold i bakgrunnen",
-              "70 % av hver månedsleie trekkes fra ved fremtidig oppkjøp av kildekoden",
-              "Bygg en solid enterprise-kundeportefølje med lav startinvestering",
-              "Dedikert teknisk bistand og rådgivning inkludert"
+              "Perfekt for kursledere, forlag og byråer som vil starte risikofritt",
+              "70 % av månedsleien akkumuleres som egenkapital mot fullt frikjøp",
+              "Kontinuerlige modell- og formateringsforbedringer inkludert",
+              "Bistand til tilpasning av sjangere og forlagsmaler"
             ]
           },
           {
             "tier": "Fullt oppkjøp av IP & kildekode",
-            "price": "Verdivurdering ved forespørsel",
+            "price": "Verdivurdering på forespørsel",
             "features": [
-              "Full overdragelse av agent-rammeverket, MicroVM-motoren og kildekoden",
-              "Eie et cutting-edge autonomt agent-system med full kommersiell frihet",
-              "Null løpende avgifter — ubegrenset viderelisensiering globalt",
-              "Omfattende teknisk arkitekturoverlevering og opplæring"
+              "Full kildekode for bokstrukturmotor, kapittelforfatter og PDF-kompiler",
+              "Full kommersiell frihet uten lisenskostnader eller begrensninger",
+              "Kjør på egne sikre Kubernetes- eller skyservere",
+              "Full overdragelse av immaterielle rettigheter (IP)"
             ]
           }
         ],
-        "revenuePotential": "Enterprise-prising: Kun 10 bedriftskunder @ 2 990 kr/mnd gir nesten 30 000 kr i månedlige gjentakende inntekter."
+        "revenuePotential": "Høy verdi: månedlige abonnementsinntekter fra forfattere og bedrifter kombinert med premium forfatterkurs."
       }
     },
     "techStack": {
-      "headline": "Avansert agent-arkitektur med isolerte MicroVM-er og DOM-parsing",
-      "summary": "Manus kombinerer hodeløse nettlesere, sanntids synkronisering og isolerte kjøremiljøer for sikker og kraftfull datamaskinhandling.",
+      "headline": "Avansert bokarkitektur med 1M-tokens kontekstminne og vektor-PDF",
+      "summary": "Manus AI Studio kombinerer ledende språkmodeller med kjempekontekst (Gemini 2.5 Pro) for å bevare rød tråd gjennom 100 000 ord, paret med profesjonell typografimotor for trykkeklare bøker.",
       "stackPills": [
-        "TypeScript",
-        "Node.js",
-        "Playwright / Chromium",
-        "Docker MicroVMs",
-        "Gemini 2.5 Flash",
-        "PostgreSQL",
-        "Tailwind CSS"
+        "TypeScript & Node.js",
+        "Gemini 2.5 Pro (1M+ Token Kontekst)",
+        "Rekursivt kapittelminne",
+        "PrinceXML & Weasyprint Vektor-PDF",
+        "ePub3 & Kindle KDP Kompiler",
+        "Strukturert Markdown & AST",
+        "Sikker PostgreSQL bokdatabase",
+        "Google Cloud Run infrastruktur"
       ],
       "durabilityPillars": [
         {
-          "title": "Sandkasse-isolert kjøring",
+          "title": "100 000 ords sammenhengende minne",
+          "icon": "🧠",
+          "desc": "Holder styr på karakterer, nøkkelbegreper og kapittelprogresjon så handlingen aldri sporer av eller gjentar seg."
+        },
+        {
+          "title": "Forlagsstandard trykk-PDF",
+          "icon": "📄",
+          "desc": "Kompilerer trykkeklare filer med riktige marger, skjærelinjer, sidetall og overskrifter iht. Amazon KDP og trykkerier."
+        },
+        {
+          "title": "Innebygd plagiat- og originalitetskontroll",
           "icon": "🛡️",
-          "desc": "All kodekjøring og web-navigasjon skjer i fullstendig isolerte miljøer for maksimal sikkerhet."
+          "desc": "Sikrer at all tekst er 100 % nyprodusert, unik og klar for salg uten opphavsrettskonflikter."
         },
         {
-          "title": "Robust nettleserfeilhåndtering",
+          "title": "Revisjonshistorikk og versjonskontroll",
           "icon": "🔄",
-          "desc": "Automatiske omveier dersom nettsider laster tregt, har popups eller krever spesielle handlinger."
-        },
-        {
-          "title": "Sanntids strømming av fremgang",
-          "icon": "⚡",
-          "desc": "Brukeren ser steg-for-steg hva agenten tenker og gjør i sanntid via WebSocket-strømming."
-        },
-        {
-          "title": "GDPR-godkjent databehandling",
-          "icon": "🔒",
-          "desc": "Ingen sensitiv bedriftsinformasjon lekker ut eller brukes til videre modelltrening."
+          "desc": "Mulighet til å rulle tilbake til tidligere kapittelutkast og teste ulike historielinjer med ett klikk."
         }
       ],
-      "continuousEvolution": "\n        <p>\n          Agentteknologien utvikler seg i rekordfart. Vi oppdaterer kontinuerlig agentens evne til å forstå komplekse nettsider og grensesnitt helt usynlig bak kulissene.\n        </p>\n      "
+      "continuousEvolution": "\n      <p>\n        Språkmodeller og formateringsstandarder forbedrer seg kontinuerlig. Manus oppdateres jevnlig med de nyeste modellene for enda mer levende prosa og presis bokoppbygging.\n      </p>\n    "
     }
   }
 ];
-
-if (typeof window !== "undefined") {
-  window.APPS_DATA_NO = APPS_DATA_NO;
-}

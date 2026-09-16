@@ -265,6 +265,9 @@
 
   function applyLanguageUI() {
     const s = UI_STRINGS[currentLang];
+
+    document.documentElement.className = (document.documentElement.className.replace(/\blang-(no|en)\b/g, '') + ' lang-' + currentLang).trim();
+    document.documentElement.setAttribute('lang', currentLang);
     
     if (langFlag) langFlag.textContent = s.flag;
     if (langLabel) langLabel.textContent = s.switchLabel;
@@ -548,9 +551,9 @@
         return `
           <div class="app-ui-canvas">
             <div class="ui-manus-agent">
-              <div class="agent-step-item"><span class="step-check">✓</span> 1. ${isNo ? 'Autonom nett-research & syntese' : 'Autonomous Web Research & Competitor Synthesis'}</div>
-              <div class="agent-step-item"><span class="step-check">✓</span> 2. ${isNo ? 'Hodeløs nettleserstyring & tabelltolking' : 'Headless Browser Navigation & Table Parsing'}</div>
-              <div class="agent-step-item"><span class="step-check">✓</span> 3. ${isNo ? 'Sikker MicroVM kodekjøring & levering' : 'Isolated MicroVM Code Generation & Live Deployment'}</div>
+              <div class="agent-step-item"><span class="step-check">✓</span> 1. ${isNo ? 'Bokdisposisjon & kapittelarkitektur (15 kapitler)' : 'Book Outline & Chapter Blueprint (15 Chapters)'}</div>
+              <div class="agent-step-item"><span class="step-check">✓</span> 2. ${isNo ? 'Langformat kapittelforfatting & rød tråd' : 'Long-Form Chapter Drafting & Narrative Continuity'}</div>
+              <div class="agent-step-item"><span class="step-check">✓</span> 3. ${isNo ? '1-klikks eksport til ePub, Kindle KDP & trykk-PDF' : '1-Click Export to ePub, Kindle KDP & Print PDF'}</div>
             </div>
           </div>
         `;
