@@ -199,4 +199,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://aiappsy.com/generator.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aiappsy.com/generator.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://aiappsy.com/generator.html?lang=no" />
+  </url>
 </urlset>
