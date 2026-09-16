@@ -439,52 +439,71 @@ app.get('/api/links', requireAdminAuth, (req, res) => {
 });
 
 // Create Shortlink
-app.post('/api/shorten', requireAdminAuth, (req, res) => {
-  let { url: targetUrl, customSlug } = req.body;
-  if (!targetUrl) {
+function handleCreateOrShortenLink(req, res) {
+  const body = req.body || {};
+  let { slug, customSlug, url, targetUrl } = body;
+  const inputUrl = (url || targetUrl || '').trim();
+  let cleanSlug = (slug || customSlug || '').trim().toLowerCase().replace(/^\/+/, '').replace(/[^a-z0-9-_]/g, '');
+
+  if (!inputUrl) {
     return res.status(400).json({ success: false, error: 'Mål-URL er påkrevd' });
   }
 
-  targetUrl = targetUrl.trim();
-  if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
-    targetUrl = 'https://' + targetUrl;
+  let cleanUrl = inputUrl;
+  if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+    cleanUrl = 'https://' + cleanUrl;
   }
 
   const links = loadLinks();
-  let slug = customSlug ? customSlug.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '') : '';
 
-  if (!slug) {
+  if (!cleanSlug) {
     const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
     do {
-      slug = '';
+      cleanSlug = '';
       for (let i = 0; i < 5; i++) {
-        slug += chars.charAt(Math.floor(Math.random() * chars.length));
+        cleanSlug += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-    } while (links[slug]);
+    } while (links[cleanSlug]);
   }
 
-  // Check reserved routes
   const reserved = [
     'api', 'admin', 'studio', 'public', 'assets', 'favicon.ico', 
     'index.html', 'styles.css', 'app.js', 'data.js', 'data_no.js',
     'advisor.js', 'custom-development', 'custom-development.html',
+    'portfolio', 'portfolio.html', 'generator', 'generator.html',
     'sitemap.xml', 'robots.txt'
   ];
-  if (reserved.includes(slug)) {
+  if (reserved.includes(cleanSlug)) {
     return res.status(400).json({ success: false, error: 'Dette kortnavnet er reservert av systemet.' });
   }
 
-  links[slug] = {
-    url: targetUrl,
-    createdAt: new Date().toISOString(),
-    clicks: links[slug] ? links[slug].clicks : 0
+  const isNew = !links[cleanSlug];
+  links[cleanSlug] = {
+    url: cleanUrl,
+    createdAt: links[cleanSlug] ? links[cleanSlug].createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    clicks: links[cleanSlug] ? links[cleanSlug].clicks : 0
   };
 
   saveLinksAtomic(links);
 
-  const shortUrl = `${req.protocol}://${req.get('host')}/${slug}`;
-  res.json({ success: true, slug, shortUrl, destination: targetUrl, clicks: links[slug].clicks });
-});
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+  const host = req.get('host') || 'aiappsy.com';
+  const shortUrl = `${protocol}://${host}/${cleanSlug}`;
+
+  return res.json({
+    success: true,
+    message: isNew ? `Kortlenke /${cleanSlug} opprettet!` : `Kortlenke /${cleanSlug} oppdatert!`,
+    slug: cleanSlug,
+    shortUrl: shortUrl,
+    destination: cleanUrl,
+    clicks: links[cleanSlug].clicks,
+    item: links[cleanSlug]
+  });
+}
+
+app.post('/api/shorten', requireAdminAuth, handleCreateOrShortenLink);
+app.post('/api/links', requireAdminAuth, handleCreateOrShortenLink);
 
 // Delete Shortlink
 app.delete('/api/links/:slug', requireAdminAuth, (req, res) => {

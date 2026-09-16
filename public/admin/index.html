@@ -630,19 +630,57 @@
       const customSlug = customSlugInput.value.trim();
       const pwd = getPassword();
 
+      if (!url) {
+        alert('Vennligst oppgi en gyldig mål-URL.');
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '⚡ Oppretter...';
+
       try {
-        const res = await fetch('/api/shorten', {
+        const payload = {
+          url: url,
+          targetUrl: url,
+          customSlug: customSlug,
+          slug: customSlug
+        };
+
+        let res = await fetch('/api/shorten', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
             'x-admin-password': pwd
           },
-          body: JSON.stringify({ url, customSlug })
+          body: JSON.stringify(payload)
         });
+
+        // Hvis /api/shorten returnerer 404 eller ikke-JSON, prøv /api/links i stedet
+        const contentType = res.headers.get('content-type') || '';
+        if (res.status === 404 || !contentType.includes('application/json')) {
+          res = await fetch('/api/links', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'x-admin-password': pwd
+            },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const finalContentType = res.headers.get('content-type') || '';
+        if (!finalContentType.includes('application/json')) {
+          const text = await res.text();
+          throw new Error('Serverfeil: Responsen var ikke JSON (' + res.status + ').');
+        }
+
         const data = await res.json();
         if (data.success) {
-          resultLink.textContent = data.shortUrl;
-          resultLink.href = data.shortUrl;
+          const shortUrl = data.shortUrl || (window.location.origin + '/' + data.slug);
+          resultLink.textContent = shortUrl;
+          resultLink.href = shortUrl;
           resultBox.style.display = 'flex';
           targetUrlInput.value = '';
           customSlugInput.value = '';
@@ -651,7 +689,10 @@
           alert('Feil: ' + (data.error || 'Kunne ikke opprette lenke'));
         }
       } catch(err) {
-        alert('Nettverksfeil: ' + err.message);
+        alert('Feil ved oppretting: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
       }
     });
 
@@ -665,13 +706,18 @@
       if (!confirm('Er du sikker på at du vil slette /' + slug + '?')) return;
       const pwd = getPassword();
       try {
-        const res = await fetch('/api/links/' + slug, { 
+        const res = await fetch('/api/links/' + encodeURIComponent(slug), { 
           method: 'DELETE',
           headers: { 'x-admin-password': pwd }
         });
-        const data = await res.json();
-        if (data.success) fetchLinks();
-        else alert('Feil ved sletting: ' + data.error);
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json();
+          if (data.success) fetchLinks();
+          else alert('Feil ved sletting: ' + data.error);
+        } else {
+          fetchLinks();
+        }
       } catch(err) {
         alert('Kunne ikke slette lenke: ' + err.message);
       }
