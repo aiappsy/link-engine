@@ -4,318 +4,1223 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Møte & Gratis AI-Strategisamtale | AIAPPSY</title>
-  <meta name="description" content="Book en uforpliktende 30-minutters AI-strategisamtale med våre ingeniører. Vi kartlegger automatiseringspotensialet for din bedrift.">
+  <meta name="description" content="Book en uforpliktende AI-strategisamtale med våre ingeniører. Velg direkte i kalenderen mellom ledige tidspunkter.">
   <link rel="canonical" href="https://aiappsy.com/booking.html">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+
+  <!-- Instant language check to prevent layout shift -->
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'no') {
+          document.documentElement.className = (document.documentElement.className + ' lang-no').trim();
+          document.documentElement.setAttribute('lang', 'no');
+        } else {
+          document.documentElement.className = (document.documentElement.className + ' lang-en').trim();
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
   <style>
-    .booking-wrap {
-      max-width: 900px; margin: 3rem auto; padding: 0 1.5rem;
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f1629;
+      --card-hover: #141e36;
+      --border: #1e2942;
+      --border-glow: rgba(99, 102, 241, 0.4);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #818cf8;
+      --accent: #06b6d4;
+      --accent-green: #10b981;
+      --accent-danger: #ef4444;
+      --font-mono: 'JetBrains Mono', monospace;
     }
-    .booking-card {
-      background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px; padding: 2.5rem;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.12);
+
+    /* Bilingual Toggle Rules */
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .meeting-type-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
-      margin: 1.5rem 0;
+
+    .ambient-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1400px;
+      height: 520px;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(99, 102, 241, 0.22), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .type-card {
-      background: #131d35; border: 2px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s ease;
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
       position: relative;
+      z-index: 1;
     }
-    .type-card:hover { border-color: rgba(99, 102, 241, 0.5); transform: translateY(-2px); }
-    .type-card.selected {
-      border-color: #6366f1; background: rgba(99, 102, 241, 0.12);
+
+    /* Navigation Bar */
+    nav.site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(30, 41, 66, 0.6);
+      margin-bottom: 2.5rem;
     }
-    .type-badge {
-      font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 999px;
-      background: rgba(99, 102, 241, 0.25); color: #818cf8; display: inline-block; margin-bottom: 8px;
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #ffffff;
     }
-    .time-slot-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.75rem;
-      margin-top: 1rem;
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
     }
-    .slot-pill {
-      background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff; padding: 0.65rem 0.5rem; border-radius: 8px; text-align: center;
-      font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: all 0.15s ease;
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
     }
-    .slot-pill:hover { border-color: #6366f1; background: rgba(99, 102, 241, 0.15); }
-    .slot-pill.selected {
-      background: #6366f1; border-color: #6366f1; color: #ffffff;
-      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+    .brand-text h1 span {
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .slot-pill.disabled {
-      background: rgba(255, 255, 255, 0.03); color: #64748b; cursor: not-allowed;
-      border-color: transparent; text-decoration: line-through;
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
     }
-    .form-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-link:hover { color: #ffffff; }
+
+    .lang-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .lang-switch-btn:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .btn-nav-cta {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1px solid #10b981;
+      color: #ffffff;
+      padding: 0.55rem 1.15rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .btn-nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links .nav-link { display: none; }
+      nav.site-nav { margin-bottom: 1.5rem; }
+    }
+
+    /* Page Hero Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .page-title {
+      font-size: 2.35rem;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+      color: #ffffff;
+    }
+    .page-title span.grad {
+      background: linear-gradient(135deg, #818cf8 0%, #38bdf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .page-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Main Booking Card */
+    .booking-wrapper {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.12);
+      margin-bottom: 3rem;
     }
     @media (max-width: 640px) {
-      .form-row { grid-template-columns: 1fr; }
-      .booking-card { padding: 1.5rem; }
+      .booking-wrapper { padding: 1.5rem; border-radius: 16px; }
+      .page-title { font-size: 1.85rem; }
+    }
+
+    .step-section-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .step-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    /* STEP 1: Meeting Type Cards */
+    .meeting-type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .type-card {
+      background: #090e1a;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .type-card:hover {
+      border-color: rgba(99, 102, 241, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+    }
+    .type-card.selected {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.1);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+    .type-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.25);
+      color: #818cf8;
+      display: inline-block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .type-badge.green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .type-badge.cyan { background: rgba(6, 182, 212, 0.2); color: #38bdf8; }
+
+    .type-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .type-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* STEP 2: Modern Calendly-Style Calendar & Slot Grid */
+    .cal-slot-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+      background: #090e1a;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 820px) {
+      .cal-slot-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.25rem;
+      }
+    }
+
+    /* Calendar Left Side */
+    .cal-widget {
+      display: flex;
+      flex-direction: column;
+    }
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding: 0 4px;
+    }
+    .cal-month-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+    .cal-nav-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #ffffff;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.15s;
+    }
+    .cal-nav-btn:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .cal-nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .cal-day-cell {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      user-select: none;
+      border: 1px solid transparent;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .cal-day-cell.empty {
+      background: transparent;
+      cursor: default;
+      border: none;
+    }
+    .cal-day-cell.available {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .cal-day-cell.available:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      transform: scale(1.05);
+    }
+    .cal-day-cell.available::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+    .cal-day-cell.selected {
+      background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+      border-color: #818cf8 !important;
+      color: #ffffff !important;
+      font-weight: 900;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
+      transform: scale(1.04);
+    }
+    .cal-day-cell.selected::after {
+      background: #ffffff !important;
+    }
+    .cal-day-cell.disabled {
+      color: #475569;
+      background: transparent;
+      cursor: not-allowed;
+      text-decoration: line-through;
+      opacity: 0.45;
+    }
+    .cal-day-cell.today-marker {
+      border: 1px dashed #38bdf8;
+    }
+
+    /* Legend */
+    .cal-legend {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    /* Slots Right Side */
+    .slots-panel {
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border);
+      padding-left: 1.5rem;
+    }
+    @media (max-width: 820px) {
+      .slots-panel {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-left: 0;
+        padding-top: 1.5rem;
+      }
+    }
+    .slots-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1rem;
+    }
+    .slots-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .slots-tz {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .slots-grid::-webkit-scrollbar { width: 4px; }
+    .slots-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .slot-pill {
+      background: #131d35;
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 0.75rem 0.5rem;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .slot-pill:hover {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.2);
+      transform: translateY(-1px);
+    }
+    .slot-pill.selected {
+      background: #6366f1;
+      border-color: #818cf8;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
+    }
+    .slot-status-msg {
+      grid-column: 1 / -1;
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* STEP 3: Attendee Form */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
+    .b-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
     }
     .b-input {
-      width: 100%; background: #090e1a; border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #ffffff; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.95rem;
-      outline: none; transition: border-color 0.2s;
+      width: 100%;
+      background: #090e1a;
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     .b-input:focus {
-      border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
     }
+    .btn-submit {
+      width: 100%;
+      padding: 1.1rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: inherit;
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Confirmation Area */
     .confirm-card {
-      text-align: center; padding: 2rem 1rem; display: none;
+      text-align: center;
+      padding: 3rem 1.5rem;
+      display: none;
+      animation: fadeIn 0.3s ease;
     }
-    .confirm-icon {
-      font-size: 3.5rem; margin-bottom: 1rem;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .confirm-icon-wrap {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+    }
+    .confirm-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .confirm-sub {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 550px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.6;
+    }
+    .confirm-box {
+      background: #090e1a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      max-width: 520px;
+      margin: 0 auto 2.5rem auto;
+      text-align: left;
+    }
+    .confirm-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.92rem;
+    }
+    .confirm-row:last-child { border-bottom: none; }
+    .confirm-label { color: var(--text-muted); }
+    .confirm-val { font-weight: 700; color: #ffffff; text-align: right; }
+
+    .confirm-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-cal-export {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 0.85rem 1.4rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-cal-export:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+      transform: translateY(-1px);
+    }
+    .btn-home {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      border: none;
+      color: #ffffff;
+      padding: 0.85rem 1.4rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-home:hover {
+      box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+      transform: translateY(-1px);
+    }
+
+    /* Footer */
+    footer.site-footer {
+      margin-top: auto;
+      padding: 2.5rem 0;
+      border-top: 1px solid rgba(30, 41, 66, 0.6);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="site-nav">
-    <a href="/" class="brand-logo">
-      <div class="brand-icon">⚡</div>
-      <div class="brand-text">
-        <h1>aiappsy<span>.com</span></h1>
-        <p class="lang-en">Frontier AI Product Studio</p>
-        <p class="lang-no">Norsk AI-produktstudio</p>
+  <div class="ambient-glow"></div>
+
+  <div class="container">
+
+    <!-- Navigation Header -->
+    <nav class="site-nav">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>aiappsy<span>.com</span></h1>
+          <p class="lang-en">Frontier AI Product Studio</p>
+          <p class="lang-no">Norsk AI-produktstudio</p>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <a href="/#apps" class="nav-link">
+          <span class="lang-en">Our Apps</span>
+          <span class="lang-no">Våre AI-apper</span>
+        </a>
+        <a href="/custom-development.html" class="nav-link">
+          <span class="lang-en">Custom Engineering</span>
+          <span class="lang-no">Skreddersøm</span>
+        </a>
+        <a href="/generator.html" class="nav-link">
+          <span class="lang-en">⚡ Proposal Generator</span>
+          <span class="lang-no">⚡ Tilbudsgenerator</span>
+        </a>
+        <a href="/articles/index.html" class="nav-link">
+          <span class="lang-en">Articles</span>
+          <span class="lang-no">Innsikt</span>
+        </a>
+        <button class="lang-switch-btn" id="btn-lang-toggle" onclick="toggleAiappsyLanguage()" title="Bytt språk / Switch language">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+        <a href="/booking.html" class="btn-nav-cta">
+          <span>📅</span>
+          <span class="lang-en">Book Meeting</span>
+          <span class="lang-no">Book Møte</span>
+        </a>
       </div>
-    </a>
+    </nav>
 
-    <div class="nav-links">
-      <a href="/#apps" class="nav-link">
-        <span class="lang-en">Our Apps</span>
-        <span class="lang-no">Våre AI-apper</span>
-      </a>
-      <a href="/custom-development.html" class="nav-link">
-        <span class="lang-en">Custom Engineering</span>
-        <span class="lang-no">Skreddersøm</span>
-      </a>
-      <a href="/generator.html" class="nav-link">
-        <span class="lang-en">⚡ Proposal Generator</span>
-        <span class="lang-no">⚡ Tilbudsgenerator</span>
-      </a>
-      <a href="/articles/index.html" class="nav-link">
-        <span class="lang-en">Articles</span>
-        <span class="lang-no">Innsikt</span>
-      </a>
-      <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
-        <span class="lang-flag">🇳🇴</span>
-        <span class="lang-label">Norsk</span>
-      </button>
-      <a href="/booking.html" class="btn-nav-cta" style="background: linear-gradient(135deg, #10b981, #059669);">
-        <span>📅</span>
-        <span class="lang-en">Book Meeting</span>
-        <span class="lang-no">Book Møte</span>
-      </a>
-    </div>
-  </nav>
-
-  <main class="booking-wrap">
-    <div style="text-align: center; margin-bottom: 2rem;">
-      <div class="hero-pill-tag" style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+    <!-- Page Header -->
+    <header class="page-header">
+      <div class="badge-pill">
         <span>📅</span>
         <span class="lang-en">Direct Video Consultation</span>
         <span class="lang-no">Direkte Videomøte med våre ingeniører</span>
       </div>
-      <h1 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 10px;">
-        <span class="lang-en">Book a Strategy Session</span>
-        <span class="lang-no">Book en Uforpliktende AI-Strategisamtale</span>
+      <h1 class="page-title">
+        <span class="lang-en">Book an <span class="grad">AI Strategy Session</span></span>
+        <span class="lang-no">Book en Uforpliktende <span class="grad">AI-Strategisamtale</span></span>
       </h1>
-      <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">
-        <span class="lang-en">Select a meeting format, choose an open calendar slot, and discuss your workflow automation goals with our senior AI engineers.</span>
-        <span class="lang-no">Velg møteformat, plukk et tidspunkt som passer, og diskuter hvordan autonome agenter eller skreddersøm kan automatisere din bedrift.</span>
+      <p class="page-subtitle">
+        <span class="lang-en">Select a meeting format, choose an open date and time directly in our calendar, and let us map out your workflow automation roadmap.</span>
+        <span class="lang-no">Velg ønsket møteformat, finn en ledig tid i kalenderen, og la oss kartlegge hvordan autonome AI-agenter kan kutte manuelle timer for din bedrift.</span>
       </p>
-    </div>
+    </header>
 
-    <div class="booking-card">
+    <!-- Booking Card -->
+    <main class="booking-wrapper">
 
-      <!-- STEP 1: SELECT MEETING TYPE -->
-      <div id="booking-step-area">
-        <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem;">
-          <span class="lang-en">1. Select Meeting Format</span>
-          <span class="lang-no">1. Velg ønsket møteformat</span>
-        </h3>
+      <!-- ACTIVE BOOKING FLOW -->
+      <div id="booking-flow-area">
 
-        <div class="meeting-type-grid">
-          <div class="type-card selected" data-type="strategy">
-            <span class="type-badge">30 MIN · GRATIS</span>
-            <h4 style="font-size: 1.05rem; margin-bottom: 6px;">AI-Strategisamtale</h4>
-            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
-              Kartlegging av manuelle flaskehalser, tidsbruk og hvilke AI-modeller som gir raskest ROI.
-            </p>
+        <!-- STEP 1: MEETING FORMAT -->
+        <section>
+          <div class="step-section-title">
+            <span class="step-number">1</span>
+            <span class="lang-en">Select Meeting Format</span>
+            <span class="lang-no">Velg ønsket møteformat</span>
           </div>
 
-          <div class="type-card" data-type="technical">
-            <span class="type-badge" style="background: rgba(16, 185, 129, 0.25); color: #10b981;">45 MIN · TEKNISK</span>
-            <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Arkitekturgjennomgang</h4>
-            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
-              For bedrifter som ønsker dypere integrasjon med interne databaser, ERP eller CRM (Fiken, HubSpot).
-            </p>
-          </div>
+          <div class="meeting-type-grid" id="meeting-types-container">
+            <div class="type-card selected" data-type="strategy" data-duration="30">
+              <span class="type-badge">30 MIN · GRATIS</span>
+              <h3 class="type-title">AI-Strategisamtale</h3>
+              <p class="type-desc">
+                Kartlegging av manuelle flaskehalser, tidsbruk og hvilke AI-modeller som gir raskest avkastning (ROI).
+              </p>
+            </div>
 
-          <div class="type-card" data-type="demo">
-            <span class="type-badge" style="background: rgba(56, 189, 248, 0.25); color: #38bdf8;">15 MIN · LYNRASK</span>
-            <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Produktdemo & Whitelabel</h4>
-            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
-              Rask gjennomgang av våre 7 ferdige AI-apper for byråer eller investorer som vil lansere egne merkevarer.
-            </p>
-          </div>
-        </div>
+            <div class="type-card" data-type="technical" data-duration="45">
+              <span class="type-badge green">45 MIN · TEKNISK</span>
+              <h3 class="type-title">Arkitekturgjennomgang</h3>
+              <p class="type-desc">
+                For bedrifter som ønsker dypere integrasjon med interne databaser, ERP eller CRM (Fiken, HubSpot).
+              </p>
+            </div>
 
-        <!-- STEP 2: CHOOSE DATE & TIME -->
-        <h3 style="font-size: 1.15rem; font-weight: 800; margin: 2rem 0 0.5rem 0;">
-          <span class="lang-en">2. Choose Date & Time Slot (Oslo Time)</span>
-          <span class="lang-no">2. Velg dato og klokkeslett (Norsk tid)</span>
-        </h3>
-
-        <div class="form-row" style="margin-top: 1rem;">
-          <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase;">
-              Møtedato (Mandag–Fredag)
-            </label>
-            <input type="date" id="book-date" class="b-input" />
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase;">
-              Ledige tidspunkter
-            </label>
-            <div class="time-slot-grid" id="slots-container">
-              <span style="font-size: 0.85rem; color: #94a3b8;">Velg en dato først...</span>
+            <div class="type-card" data-type="demo" data-duration="15">
+              <span class="type-badge cyan">15 MIN · LYNRASK</span>
+              <h3 class="type-title">Produktdemo & Whitelabel</h3>
+              <p class="type-desc">
+                Rask gjennomgang av våre ferdige AI-apper for byråer eller investorer som vil lansere egne merkevarer.
+              </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- STEP 3: ATTENDEE DETAILS -->
-        <h3 style="font-size: 1.15rem; font-weight: 800; margin: 2rem 0 1rem 0;">
-          <span class="lang-en">3. Your Contact Information</span>
-          <span class="lang-no">3. Dine kontaktopplysninger</span>
-        </h3>
-
-        <form id="meeting-booking-form">
-          <div class="form-row">
-            <div>
-              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Ditt Navn *</label>
-              <input type="text" id="b-name" class="b-input" placeholder="Ola Nordmann" required />
-            </div>
-            <div>
-              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Arbeids-epost *</label>
-              <input type="email" id="b-email" class="b-input" placeholder="ola@bedrift.no" required />
-            </div>
+        <!-- STEP 2: INTERACTIVE MONTH CALENDAR & SLOTS -->
+        <section>
+          <div class="step-section-title">
+            <span class="step-number">2</span>
+            <span class="lang-en">Choose Date & Available Time Slot</span>
+            <span class="lang-no">Velg dato og ledig klokkeslett</span>
           </div>
 
-          <div class="form-row">
-            <div>
-              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Selskap / Bedrift</label>
-              <input type="text" id="b-company" class="b-input" placeholder="Bedrift AS" />
+          <div class="cal-slot-layout">
+            <!-- Left: Interactive Month Calendar -->
+            <div class="cal-widget">
+              <div class="cal-header">
+                <div class="cal-month-title" id="cal-display-month">Laster måned...</div>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="cal-nav-btn" id="btn-prev-month" title="Forrige måned">‹</button>
+                  <button type="button" class="cal-nav-btn" id="btn-next-month" title="Neste måned">›</button>
+                </div>
+              </div>
+
+              <div class="cal-weekdays">
+                <span>Man</span><span>Tir</span><span>Ons</span><span>Tor</span><span>Fre</span><span>Lør</span><span>Søn</span>
+              </div>
+
+              <div class="cal-days-grid" id="cal-grid-cells">
+                <!-- Day cells rendered dynamically -->
+              </div>
+
+              <div class="cal-legend">
+                <div class="legend-item">
+                  <span class="legend-dot" style="background: #10b981;"></span>
+                  <span>Ledige timer</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot" style="background: #6366f1;"></span>
+                  <span>Valgt dato</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot" style="background: #475569;"></span>
+                  <span>Stengt / Helg</span>
+                </div>
+              </div>
             </div>
-            <div>
-              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Telefonnummer</label>
-              <input type="tel" id="b-phone" class="b-input" placeholder="+47 000 00 000" />
+
+            <!-- Right: Dynamic Time Slot Picker -->
+            <div class="slots-panel">
+              <div class="slots-header">
+                <div class="slots-title" id="slots-header-date">Velg dato i kalenderen</div>
+                <div class="slots-tz">🌐 Europe/Oslo (CET)</div>
+              </div>
+
+              <div class="slots-grid" id="slots-container">
+                <div class="slot-status-msg">Velg en tilgjengelig dato til venstre...</div>
+              </div>
             </div>
           </div>
+        </section>
 
-          <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">
-              Hva ønsker du spesifikt å diskutere? (Valgfritt)
-            </label>
-            <textarea id="b-notes" class="b-input" style="min-height: 80px; resize: vertical;" placeholder="F.eks: Vi ønsker en AI-agent på nettsiden vår for å svare på prisspørsmål og booke befaringer..."></textarea>
+        <!-- STEP 3: ATTENDEE FORM -->
+        <section>
+          <div class="step-section-title">
+            <span class="step-number">3</span>
+            <span class="lang-en">Your Contact Information</span>
+            <span class="lang-no">Dine kontaktopplysninger</span>
           </div>
 
-          <button type="submit" id="btn-submit-booking" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.05rem; font-weight: 800; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 10px; cursor: pointer;">
-            <span>📅</span> Bekreft og reserver møte nå
-          </button>
-        </form>
+          <form id="meeting-booking-form">
+            <div class="form-grid-2">
+              <div>
+                <label class="b-label" for="b-name">Ditt Navn *</label>
+                <input type="text" id="b-name" class="b-input" placeholder="Ola Nordmann" required />
+              </div>
+              <div>
+                <label class="b-label" for="b-email">Arbeids-epost *</label>
+                <input type="email" id="b-email" class="b-input" placeholder="ola@bedrift.no" required />
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div>
+                <label class="b-label" for="b-company">Selskap / Bedrift</label>
+                <input type="text" id="b-company" class="b-input" placeholder="Bedrift AS" />
+              </div>
+              <div>
+                <label class="b-label" for="b-phone">Telefonnummer</label>
+                <input type="tel" id="b-phone" class="b-input" placeholder="+47 900 00 000" />
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+              <label class="b-label" for="b-notes">Hva ønsker du spesifikt å diskutere? (Valgfritt)</label>
+              <textarea id="b-notes" class="b-input" style="min-height: 85px; resize: vertical;" placeholder="F.eks: Vi ønsker en AI-agent på nettsiden vår for å svare på prisspørsmål og booke befaringer..."></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-booking" class="btn-submit">
+              <span>📅</span>
+              <span id="submit-btn-text">Bekreft og reserver møte nå</span>
+            </button>
+          </form>
+        </section>
+
       </div>
 
-      <!-- CONFIRMATION STATE -->
+      <!-- CONFIRMATION SCREEN (REVEALED ON SUCCESS) -->
       <div class="confirm-card" id="booking-confirm-area">
-        <div class="confirm-icon">🎉</div>
-        <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: #ffffff;">Møtet ditt er bekreftet!</h2>
-        <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 1.5rem;">
-          Vi gleder oss til samtalen. En kalenderinvitasjon er klargjort med Google Meet-videolenke.
+        <div class="confirm-icon-wrap">🎉</div>
+        <h2 class="confirm-title">Møtet ditt er bekreftet!</h2>
+        <p class="confirm-sub">
+          Vi gleder oss til samtalen. En automatisk kalenderinvitasjon med Google Meet-videolenke er opprettet.
         </p>
 
-        <div style="background: #131d35; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 20px; max-width: 480px; margin: 0 auto 2rem auto; text-align: left;">
-          <div style="margin-bottom: 8px; font-size: 0.88rem; color: #94a3b8;">Møtetype: <strong id="res-title" style="color: #ffffff;"></strong></div>
-          <div style="margin-bottom: 8px; font-size: 0.88rem; color: #94a3b8;">Tidspunkt: <strong id="res-datetime" style="color: #10b981;"></strong></div>
-          <div style="margin-bottom: 8px; font-size: 0.88rem; color: #94a3b8;">Møtelenke: <a id="res-meet" href="#" target="_blank" style="color: #38bdf8; font-weight: 700; word-break: break-all;"></a></div>
+        <div class="confirm-box">
+          <div class="confirm-row">
+            <span class="confirm-label">Møtetype:</span>
+            <span class="confirm-val" id="res-title">AI-Strategisamtale</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Tidspunkt:</span>
+            <span class="confirm-val" id="res-datetime" style="color: #34d399;"></span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Varighet:</span>
+            <span class="confirm-val" id="res-duration">30 minutter</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Deltaker:</span>
+            <span class="confirm-val" id="res-attendee"></span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Google Meet:</span>
+            <span class="confirm-val">
+              <a id="res-meet-link" href="#" target="_blank" style="color: #38bdf8; text-decoration: none;">Åpne romlenke ↗</a>
+            </span>
+          </div>
         </div>
 
-        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-          <a id="btn-dl-ics" href="#" class="btn btn-secondary" style="padding: 0.8rem 1.4rem;">
-            <span>📥</span> Last ned Kalenderfil (.ics)
+        <div class="confirm-actions">
+          <a id="btn-add-gcal" href="#" target="_blank" class="btn-cal-export">
+            <span>📅</span> Legg til i Google Kalender
           </a>
-          <a href="/" class="btn btn-primary" style="padding: 0.8rem 1.4rem;">
-            <span>←</span> Tilbake til Forsiden
+          <a id="btn-add-outlook" href="#" target="_blank" class="btn-cal-export">
+            <span>📅</span> Legg til i Outlook
+          </a>
+          <a id="btn-dl-ics" href="#" class="btn-cal-export">
+            <span>📥</span> Last ned .ics
+          </a>
+          <a href="/" class="btn-home">
+            <span>←</span> Forsiden
           </a>
         </div>
       </div>
 
-    </div>
-  </main>
+    </main>
 
-  <footer class="site-footer" style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; color: #64748b; font-size: 0.85rem;">
-    <p>© 2026 AIAPPSY. Built on Google Cloud Run & Frontier AI Models.</p>
-  </footer>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p>© 2026 AIAPPSY. Built on Google Cloud Run & Frontier AI Models.</p>
+    </footer>
+
+  </div>
 
   <script src="/i18n.js"></script>
   <script>
+    // Global Calendar State
+    let calendarConfig = null;
     let selectedType = 'strategy';
-    let selectedTime = null;
+    let selectedDuration = 30;
+    let selectedDate = null; // YYYY-MM-DD
+    let selectedTime = null; // HH:mm
 
-    // 1. Select meeting type
+    const today = new Date();
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth(); // 0-indexed
+
+    const MONTH_NAMES_NO = [
+      'Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni',
+      'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const DAY_MAP = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+    // 1. Initialize meeting types selection
     const typeCards = document.querySelectorAll('.type-card');
     typeCards.forEach(c => {
       c.addEventListener('click', () => {
         typeCards.forEach(tc => tc.classList.remove('selected'));
         c.classList.add('selected');
         selectedType = c.getAttribute('data-type');
+        selectedDuration = parseInt(c.getAttribute('data-duration') || '30', 10);
+        if (selectedDate) {
+          fetchSlotsForDate(selectedDate);
+        }
       });
     });
 
-    // 2. Set default date to tomorrow / next weekday
-    const dateInput = document.getElementById('book-date');
-    const slotsContainer = document.getElementById('slots-container');
+    // 2. Fetch Availability Configuration
+    async function initCalendar() {
+      try {
+        const res = await fetch('/api/bookings/config?_t=' + Date.now());
+        const data = await res.json();
+        if (data.success && data.config) {
+          calendarConfig = data.config;
+        }
+      } catch (err) {
+        console.warn('Fallback standard kalenderconfig', err);
+      }
 
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    // If weekend, skip to Monday
-    if (tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 2);
-    if (tomorrow.getDay() === 0) tomorrow.setDate(tomorrow.getDate() + 1);
+      renderMonthCalendar();
+      pickFirstAvailableDate();
+    }
 
-    const defaultDateStr = tomorrow.toISOString().split('T')[0];
-    dateInput.value = defaultDateStr;
-    dateInput.min = new Date().toISOString().split('T')[0];
+    // Check if a given Date object is open according to weeklySchedule, blackoutDates, horizon, and notice
+    function isDateAvailable(d) {
+      // Past dates
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const testDate = new Date(d);
+      testDate.setHours(0, 0, 0, 0);
+      if (testDate.getTime() < now.getTime()) return false;
 
-    async function loadAvailableSlots(dateStr) {
-      slotsContainer.innerHTML = '<span style="font-size: 0.85rem; color: #94a3b8;">Henter ledige tider...</span>';
+      // Max future horizon
+      const maxDays = calendarConfig?.maxFutureDays || 30;
+      const maxLimit = new Date(now);
+      maxLimit.setDate(maxLimit.getDate() + maxDays);
+      if (testDate.getTime() > maxLimit.getTime()) return false;
+
+      // Format YYYY-MM-DD
+      const dateStr = formatDateIso(d);
+
+      // Blackout dates
+      const blackouts = calendarConfig?.blackoutDates || [];
+      if (blackouts.includes(dateStr)) return false;
+
+      // Weekly schedule
+      const dayKey = DAY_MAP[d.getDay()];
+      const sched = calendarConfig?.weeklySchedule?.[dayKey];
+      if (sched && sched.enabled === false) return false;
+
+      return true;
+    }
+
+    function formatDateIso(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function pickFirstAvailableDate() {
+      const probe = new Date();
+      probe.setDate(probe.getDate() + 1); // start tomorrow
+      for (let i = 0; i < 30; i++) {
+        if (isDateAvailable(probe)) {
+          selectDate(formatDateIso(probe));
+          return;
+        }
+        probe.setDate(probe.getDate() + 1);
+      }
+    }
+
+    // 3. Render Month Calendar
+    function renderMonthCalendar() {
+      const monthTitle = document.getElementById('cal-display-month');
+      const cellsContainer = document.getElementById('cal-grid-cells');
+      const btnPrev = document.getElementById('btn-prev-month');
+
+      monthTitle.textContent = `${MONTH_NAMES_NO[viewMonth]} ${viewYear}`;
+
+      // Disable prev button if view is current month or past
+      const now = new Date();
+      if (viewYear === now.getFullYear() && viewMonth <= now.getMonth()) {
+        btnPrev.disabled = true;
+      } else {
+        btnPrev.disabled = false;
+      }
+
+      // First day of viewed month (0 = Sunday, 1 = Monday, ...)
+      const firstDay = new Date(viewYear, viewMonth, 1);
+      let startDayOfWeek = firstDay.getDay() - 1; // Align to Monday = 0
+      if (startDayOfWeek === -1) startDayOfWeek = 6;
+
+      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      const todayStr = formatDateIso(new Date());
+
+      let html = '';
+
+      // Leading empty cells
+      for (let i = 0; i < startDayOfWeek; i++) {
+        html += '<div class="cal-day-cell empty"></div>';
+      }
+
+      // Actual month days
+      for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(viewYear, viewMonth, day);
+        const iso = formatDateIso(d);
+        const available = isDateAvailable(d);
+        const isSelected = (iso === selectedDate);
+        const isToday = (iso === todayStr);
+
+        let classes = ['cal-day-cell'];
+        if (isSelected) classes.push('selected');
+        else if (available) classes.push('available');
+        else classes.push('disabled');
+
+        if (isToday) classes.push('today-marker');
+
+        const onclick = available ? `onclick="selectDate('${iso}')"` : '';
+
+        html += `<div class="${classes.join(' ')}" data-date="${iso}" ${onclick}>${day}</div>`;
+      }
+
+      cellsContainer.innerHTML = html;
+    }
+
+    document.getElementById('btn-prev-month').addEventListener('click', () => {
+      viewMonth--;
+      if (viewMonth < 0) {
+        viewMonth = 11;
+        viewYear--;
+      }
+      renderMonthCalendar();
+    });
+
+    document.getElementById('btn-next-month').addEventListener('click', () => {
+      viewMonth++;
+      if (viewMonth > 11) {
+        viewMonth = 0;
+        viewYear++;
+      }
+      renderMonthCalendar();
+    });
+
+    window.selectDate = function(dateStr) {
+      selectedDate = dateStr;
+      selectedTime = null;
+
+      // Update calendar cells
+      document.querySelectorAll('.cal-day-cell').forEach(c => {
+        if (c.getAttribute('data-date') === dateStr) {
+          c.classList.add('selected');
+        } else {
+          c.classList.remove('selected');
+        }
+      });
+
+      // Update Header
+      const dParts = dateStr.split('-');
+      const dObj = new Date(parseInt(dParts[0]), parseInt(dParts[1]) - 1, parseInt(dParts[2]));
+      const dateReadable = `${dObj.getDate()}. ${MONTH_NAMES_NO[dObj.getMonth()]}`;
+      document.getElementById('slots-header-date').textContent = `Ledige tider for ${dateReadable}`;
+
+      // Fetch dynamic slots
+      fetchSlotsForDate(dateStr);
+    };
+
+    // 4. Fetch Available Slots for Date
+    async function fetchSlotsForDate(dateStr) {
+      const container = document.getElementById('slots-container');
+      container.innerHTML = '<div class="slot-status-msg">Henter ledige tider... ⏳</div>';
       selectedTime = null;
 
       try {
-        const res = await fetch('/api/bookings/available-slots?date=' + dateStr);
+        const res = await fetch(`/api/bookings/available-slots?date=${dateStr}&duration=${selectedDuration}&_t=${Date.now()}`);
         const data = await res.json();
+
         if (data.success && data.availableSlots) {
           if (data.availableSlots.length === 0) {
-            slotsContainer.innerHTML = '<span style="color: #ef4444; font-size: 0.85rem;">Ingen ledige tider denne datoen. Velg en annen dag.</span>';
+            container.innerHTML = '<div class="slot-status-msg" style="color: #f87171;">Ingen ledige tider denne dagen.<br>Vennligst velg en annen dato.</div>';
             return;
           }
 
-          slotsContainer.innerHTML = data.availableSlots.map(slot => {
+          container.innerHTML = data.availableSlots.map((slot, idx) => {
             return `<div class="slot-pill" data-slot="${slot}">${slot}</div>`;
           }).join('');
 
           // Auto-select first slot
-          const pills = slotsContainer.querySelectorAll('.slot-pill');
+          const pills = container.querySelectorAll('.slot-pill');
           if (pills.length > 0) {
             pills[0].classList.add('selected');
             selectedTime = pills[0].getAttribute('data-slot');
@@ -328,37 +1233,38 @@
               selectedTime = p.getAttribute('data-slot');
             });
           });
+        } else {
+          container.innerHTML = '<div class="slot-status-msg" style="color: #f87171;">Kunne ikke hente tider.</div>';
         }
       } catch (err) {
-        slotsContainer.innerHTML = '<span style="color: #ef4444;">Kunne ikke hente tider.</span>';
+        container.innerHTML = '<div class="slot-status-msg" style="color: #f87171;">Nettverksfeil ved lasting av tider.</div>';
       }
     }
 
-    dateInput.addEventListener('change', () => {
-      loadAvailableSlots(dateInput.value);
-    });
-
-    // Initial load
-    loadAvailableSlots(defaultDateStr);
-
-    // 3. Handle Booking Submission
+    // 5. Booking Form Submission
     const form = document.getElementById('meeting-booking-form');
     const submitBtn = document.getElementById('btn-submit-booking');
+    const submitBtnText = document.getElementById('submit-btn-text');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!selectedDate) {
+        alert('Vennligst velg en dato i kalenderen først.');
+        return;
+      }
       if (!selectedTime) {
         alert('Vennligst velg et ledig klokkeslett for møtet.');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Reserverer møte...';
+      submitBtnText.textContent = 'Reserverer møte...';
 
       const payload = {
         type: selectedType,
-        date: dateInput.value,
+        date: selectedDate,
         time: selectedTime,
+        duration: selectedDuration,
         name: document.getElementById('b-name').value.trim(),
         email: document.getElementById('b-email').value.trim(),
         company: document.getElementById('b-company').value.trim(),
@@ -376,29 +1282,69 @@
 
         if (data.success && data.booking) {
           const b = data.booking;
-          document.getElementById('booking-step-area').style.display = 'none';
+          document.getElementById('booking-flow-area').style.display = 'none';
           document.getElementById('booking-confirm-area').style.display = 'block';
 
           document.getElementById('res-title').textContent = b.title;
-          document.getElementById('res-datetime').textContent = `${b.date} kl. ${b.time} (${b.duration} min)`;
-          document.getElementById('res-meet').textContent = b.meetUrl;
-          document.getElementById('res-meet').href = b.meetUrl;
-          document.getElementById('btn-dl-ics').href = `/api/bookings/${b.id}/ics`;
+          document.getElementById('res-datetime').textContent = `${b.date} kl. ${b.time}`;
+          document.getElementById('res-duration').textContent = `${b.duration} minutter`;
+          document.getElementById('res-attendee').textContent = `${b.name} (${b.email})`;
+          
+          const meetAnchor = document.getElementById('res-meet-link');
+          meetAnchor.href = b.meetUrl;
+          meetAnchor.textContent = b.meetUrl;
 
-          // Track in Clarity / GA if available
+          // Wire export buttons
+          setupCalendarExportButtons(b);
+
+          window.scrollTo({ top: 100, behavior: 'smooth' });
+
+          // Track events
           if (window.clarity) window.clarity('event', 'meeting_booked');
           if (window.gtag) window.gtag('event', 'meeting_booked', { date: b.date, time: b.time });
         } else {
           alert('Feil: ' + (data.error || 'Kunne ikke reservere møtet'));
           submitBtn.disabled = false;
-          submitBtn.innerHTML = '<span>📅</span> Bekreft og reserver møte nå';
+          submitBtnText.textContent = 'Bekreft og reserver møte nå';
         }
       } catch (err) {
         alert('Nettverksfeil: ' + err.message);
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>📅</span> Bekreft og reserver møte nå';
+        submitBtnText.textContent = 'Bekreft og reserver møte nå';
       }
     });
+
+    function setupCalendarExportButtons(b) {
+      // Direct .ics download link
+      document.getElementById('btn-dl-ics').href = `/api/bookings/${b.id}/ics`;
+
+      // Date parsing for Google & Outlook
+      const [year, month, day] = b.date.split('-').map(Number);
+      const [hour, min] = b.time.split(':').map(Number);
+      const startDate = new Date(year, month - 1, day, hour, min);
+      const endDate = new Date(startDate.getTime() + (b.duration || 30) * 60000);
+
+      function formatGCal(d) {
+        return d.toISOString().replace(/-|:|\.\d+/g, '');
+      }
+
+      const gcalStart = formatGCal(startDate);
+      const gcalEnd = formatGCal(endDate);
+      const detailsText = `Videomøte med AIAPPSY: ${b.meetUrl}\n\nDeltaker: ${b.name} (${b.email})\nSelskap: ${b.company || 'Ikke oppgitt'}\nNotater: ${b.notes || 'Ingen'}`;
+
+      // 1. Google Calendar link
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(b.title + ' - AIAPPSY')}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(detailsText)}&location=${encodeURIComponent(b.meetUrl)}&ctz=Europe/Oslo`;
+      document.getElementById('btn-add-gcal').href = gcalUrl;
+
+      // 2. Outlook Web Calendar link
+      const outlookStart = startDate.toISOString();
+      const outlookEnd = endDate.toISOString();
+      const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(b.title + ' - AIAPPSY')}&startdt=${encodeURIComponent(outlookStart)}&enddt=${encodeURIComponent(outlookEnd)}&body=${encodeURIComponent(detailsText)}&location=${encodeURIComponent(b.meetUrl)}`;
+      document.getElementById('btn-add-outlook').href = outlookUrl;
+    }
+
+    // Start on DOM ready
+    initCalendar();
   </script>
   <script src="/campaign-runner.js" defer></script>
 </body>

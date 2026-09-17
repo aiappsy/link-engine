@@ -1003,7 +1003,89 @@ app.post('/api/leads/:id/reply', requireAdminAuth, (req, res) => {
 // ============================================================================
 // MEETING BOOKING & MANAGEMENT ENGINE
 // ============================================================================
+// MEETING BOOKING & CALENDAR ENGINE (CALENDLY / CAL.COM ARCHITECTURE)
+// ============================================================================
 const BOOKINGS_FILE = path.join(__dirname, 'bookings.json');
+const CALENDAR_CONFIG_FILE = path.join(__dirname, 'calendar_config.json');
+
+const DEFAULT_CALENDAR_CONFIG = {
+  weeklySchedule: {
+    monday:    { enabled: true,  start: '09:00', end: '16:30' },
+    tuesday:   { enabled: true,  start: '09:00', end: '16:30' },
+    wednesday: { enabled: true,  start: '09:00', end: '16:30' },
+    thursday:  { enabled: true,  start: '09:00', end: '16:30' },
+    friday:    { enabled: true,  start: '09:00', end: '15:30' },
+    saturday:  { enabled: false, start: '10:00', end: '14:00' },
+    sunday:    { enabled: false, start: '10:00', end: '14:00' }
+  },
+  lunchBreak: { enabled: true, start: '12:00', end: '12:30' },
+  bufferMinutes: 15,
+  minNoticeHours: 2,
+  maxFutureDays: 30,
+  timeZone: 'Europe/Oslo',
+  blackoutDates: [],
+  defaultMeetType: 'google_meet',
+  customMeetUrl: '',
+  meetingTypes: [
+    {
+      id: 'strategy',
+      name_no: 'AI-Strategisamtale',
+      name_en: 'AI Strategy Session',
+      duration: 30,
+      badge_no: '30 MIN · GRATIS',
+      badge_en: '30 MIN · FREE',
+      desc_no: 'Kartlegging av manuelle flaskehalser, tidsbruk og hvilke AI-modeller som gir raskest ROI.',
+      desc_en: 'Identify automation bottlenecks and AI models for fastest ROI.'
+    },
+    {
+      id: 'technical',
+      name_no: 'Arkitekturgjennomgang',
+      name_en: 'Technical Architecture Review',
+      duration: 45,
+      badge_no: '45 MIN · TEKNISK',
+      badge_en: '45 MIN · TECHNICAL',
+      desc_no: 'For bedrifter som ønsker dypere integrasjon med interne databaser, ERP eller CRM (Fiken, HubSpot).',
+      desc_en: 'Deep dive into custom ERP, CRM and enterprise AI integrations.'
+    },
+    {
+      id: 'demo',
+      name_no: 'Produktdemo & Whitelabel',
+      name_en: 'Product Demo & Whitelabel',
+      duration: 15,
+      badge_no: '15 MIN · LYNRASK',
+      badge_en: '15 MIN · QUICK',
+      desc_no: 'Rask gjennomgang av våre 7 ferdige AI-apper for byråer eller investorer som vil lansere egne merkevarer.',
+      desc_en: 'Fast walkthrough of our 7 ready-to-use apps for agencies & founders.'
+    }
+  ]
+};
+
+function loadCalendarConfig() {
+  try {
+    if (fs.existsSync(CALENDAR_CONFIG_FILE)) {
+      const parsed = JSON.parse(fs.readFileSync(CALENDAR_CONFIG_FILE, 'utf8'));
+      return {
+        ...DEFAULT_CALENDAR_CONFIG,
+        ...parsed,
+        weeklySchedule: { ...DEFAULT_CALENDAR_CONFIG.weeklySchedule, ...(parsed.weeklySchedule || {}) },
+        lunchBreak: { ...DEFAULT_CALENDAR_CONFIG.lunchBreak, ...(parsed.lunchBreak || {}) }
+      };
+    }
+  } catch (e) {
+    console.error('Feil ved lesing av calendar_config.json:', e);
+  }
+  return { ...DEFAULT_CALENDAR_CONFIG };
+}
+
+function saveCalendarConfig(cfg) {
+  try {
+    fs.writeFileSync(CALENDAR_CONFIG_FILE, JSON.stringify(cfg, null, 2), 'utf8');
+    return true;
+  } catch (e) {
+    console.error('Feil ved lagring av calendar_config.json:', e);
+    return false;
+  }
+}
 
 function loadBookings() {
   try {
@@ -1026,22 +1108,137 @@ function saveBookings(bookings) {
   }
 }
 
-const STANDARD_TIME_SLOTS = ['09:00', '10:00', '11:30', '13:00', '14:30', '16:00'];
+function timeToMinutes(t) {
+  if (!t || typeof t !== 'string') return 0;
+  const [h, m] = t.split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
 
-// GET available slots for a given date (Public)
+function minutesToTime(m) {
+  const h = Math.floor(m / 60);
+  const min = m % 60;
+  return String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+}
+
+// GET calendar configuration (Public)
+app.get('/api/bookings/config', (req, res) => {
+  const cfg = loadCalendarConfig();
+  res.json({ success: true, config: cfg });
+});
+
+// POST save calendar configuration (Admin protected)
+app.post('/api/bookings/config', requireAdminAuth, (req, res) => {
+  const incoming = req.body || {};
+  const current = loadCalendarConfig();
+  const updated = {
+    ...current,
+    ...incoming,
+    weeklySchedule: { ...current.weeklySchedule, ...(incoming.weeklySchedule || {}) },
+    lunchBreak: { ...current.lunchBreak, ...(incoming.lunchBreak || {}) },
+    meetingTypes: Array.isArray(incoming.meetingTypes) ? incoming.meetingTypes : current.meetingTypes,
+    blackoutDates: Array.isArray(incoming.blackoutDates) ? incoming.blackoutDates : current.blackoutDates,
+    updatedAt: new Date().toISOString()
+  };
+
+  saveCalendarConfig(updated);
+  console.log('[Calendar Config] Innstillinger oppdatert av admin.');
+  res.json({ success: true, message: 'Kalender- og tilgjengelighetsinnstillinger lagret!', config: updated });
+});
+
+// GET available slots for a given date and meeting type (Public)
 app.get('/api/bookings/available-slots', (req, res) => {
   const date = req.query.date;
+  const type = req.query.type || 'strategy';
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return res.status(400).json({ success: false, error: 'Ugyldig datoformat (YYYY-MM-DD).' });
   }
 
+  const config = loadCalendarConfig();
+
+  // 1. Sjekk sperredatoer / feriedager
+  if (config.blackoutDates && config.blackoutDates.includes(date)) {
+    return res.json({ success: true, date, availableSlots: [], bookedSlots: [], isClosed: true, reason: 'blackout' });
+  }
+
+  // 2. Finn ukedag
+  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const [y, m, d] = date.split('-').map(Number);
+  const dateObj = new Date(y, m - 1, d);
+  const dayName = dayNames[dateObj.getDay()];
+  const dayConfig = config.weeklySchedule[dayName];
+
+  if (!dayConfig || !dayConfig.enabled) {
+    return res.json({ success: true, date, availableSlots: [], bookedSlots: [], isClosed: true, reason: 'day_disabled' });
+  }
+
+  // 3. Finn møtevarighet
+  const mType = (config.meetingTypes || []).find(t => t.id === type) || config.meetingTypes[0] || { duration: 30 };
+  const duration = parseInt(mType.duration, 10) || 30;
+  const buffer = parseInt(config.bufferMinutes, 10) || 0;
+
+  // 4. Arbeidstid og lunsj
+  const dayStart = timeToMinutes(dayConfig.start || '09:00');
+  const dayEnd = timeToMinutes(dayConfig.end || '16:30');
+  const hasLunch = config.lunchBreak && config.lunchBreak.enabled;
+  const lunchStart = hasLunch ? timeToMinutes(config.lunchBreak.start || '12:00') : -1;
+  const lunchEnd = hasLunch ? timeToMinutes(config.lunchBreak.end || '12:30') : -1;
+
+  // 5. Eksisterende bookinger
   const bookings = loadBookings();
-  const bookedSlots = bookings
+  const dayBookings = bookings
+    .filter(b => b.date === date && b.status !== 'cancelled')
+    .map(b => ({
+      start: timeToMinutes(b.time),
+      end: timeToMinutes(b.time) + (parseInt(b.duration, 10) || 30)
+    }));
+
+  const bookedSlotStrings = bookings
     .filter(b => b.date === date && b.status !== 'cancelled')
     .map(b => b.time);
 
-  const available = STANDARD_TIME_SLOTS.filter(slot => !bookedSlots.includes(slot));
-  res.json({ success: true, date, availableSlots: available, bookedSlots });
+  // 6. Sjekk om datoen er i dag (forhåndsvarsel)
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const isToday = (date === todayStr);
+  const minNoticeMin = (parseInt(config.minNoticeHours, 10) || 2) * 60;
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  // 7. Generer tidsluker med 30-minutters intervall (eller 15 min ved korte møter)
+  const step = duration <= 15 ? 15 : 30;
+  const availableSlots = [];
+
+  for (let slotStart = dayStart; slotStart + duration <= dayEnd; slotStart += step) {
+    const slotEnd = slotStart + duration;
+
+    // Forhåndsvarsel for i dag
+    if (isToday && slotStart < currentMinutes + minNoticeMin) {
+      continue;
+    }
+
+    // Kollisjon med lunsjpause
+    if (hasLunch && slotStart < lunchEnd && slotEnd > lunchStart) {
+      continue;
+    }
+
+    // Kollisjon med eksisterende bookinger (inkludert buffer)
+    const hasConflict = dayBookings.some(b => {
+      return (slotStart < (b.end + buffer)) && (slotEnd > (b.start - buffer));
+    });
+
+    if (!hasConflict) {
+      availableSlots.push(minutesToTime(slotStart));
+    }
+  }
+
+  res.json({
+    success: true,
+    date,
+    dayName,
+    duration,
+    availableSlots,
+    bookedSlots: bookedSlotStrings,
+    isClosed: false
+  });
 });
 
 // POST create booking (Public)
@@ -1057,18 +1254,16 @@ app.post('/api/bookings', (req, res) => {
     return res.status(400).json({ success: false, error: 'Dette tidspunktet er dessverre allerede booket. Vennligst velg et annet.' });
   }
 
-  let title = '30 min Gratis AI-Strategisamtale';
-  let duration = 30;
-  if (type === 'technical') {
-    title = '45 min Teknisk AI-Arkitekturgjennomgang';
-    duration = 45;
-  } else if (type === 'demo') {
-    title = '15 min AI-Demo & White-label Q&A';
-    duration = 15;
-  }
+  const config = loadCalendarConfig();
+  const mType = (config.meetingTypes || []).find(t => t.id === type) || config.meetingTypes[0] || {};
+  const title = mType.name_no || '30 min Gratis AI-Strategisamtale';
+  const duration = parseInt(mType.duration, 10) || 30;
 
-  const meetId = 'aiappsy-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 6);
-  const meetUrl = `https://meet.google.com/${meetId}`;
+  let meetUrl = config.customMeetUrl;
+  if (!meetUrl) {
+    const meetId = 'aiappsy-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 6);
+    meetUrl = `https://meet.google.com/${meetId}`;
+  }
 
   const booking = {
     id: 'meet_' + Date.now(),

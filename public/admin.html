@@ -1132,6 +1132,101 @@
         </div>
       </div>
 
+      <!-- Availability & Calendar Configuration Hub -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span>⚙️</span> Tilgjengelighet & Møtekalender-konfigurasjon</div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+              Konfigurer dine åpningstider, lunsjpauser og stengte dager. Kunder på bookingsiden kan kun velge ledige tidspunkter i henhold til denne planen.
+            </p>
+          </div>
+          <button type="button" id="btn-save-cal-config" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.1rem;">
+            <span>💾</span> Lagre kalenderinnstillinger
+          </button>
+        </div>
+
+        <!-- Weekly Schedule Grid -->
+        <div style="margin-bottom: 1.5rem;">
+          <label class="form-label" style="font-size: 0.92rem; font-weight: 800; margin-bottom: 10px; display: block;">
+            Ukentlig åpningstid for møter (Mandag–Søndag)
+          </label>
+          <div id="cal-weekly-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Lunch & Rules Settings -->
+        <div class="grid-3" style="gap: 1rem; margin-bottom: 1.5rem; background: #090e1a; padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border);">
+          <div>
+            <label class="form-label" style="display: flex; align-items: center; justify-content: space-between;">
+              <span>🍽️ Lunsjpause (Blokkeres)</span>
+              <input type="checkbox" id="cal-lunch-enabled" style="accent-color: #10b981; width: 18px; height: 18px; cursor: pointer;" />
+            </label>
+            <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
+              <input type="time" id="cal-lunch-start" class="form-input" style="padding: 6px 10px;" value="12:00" />
+              <span style="color: var(--text-muted); font-weight: 700;">–</span>
+              <input type="time" id="cal-lunch-end" class="form-input" style="padding: 6px 10px;" value="12:30" />
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Ingen møter kan bookes i lunsjen.</div>
+          </div>
+
+          <div>
+            <label class="form-label">⏱️ Møtebuffer mellom samtaler</label>
+            <select id="cal-buffer" class="form-select" style="margin-top: 8px;">
+              <option value="0">Ingen buffer (0 min)</option>
+              <option value="10">10 minutter</option>
+              <option value="15" selected>15 minutter (Anbefalt)</option>
+              <option value="30">30 minutter</option>
+            </select>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Gir pusterom før neste samtale.</div>
+          </div>
+
+          <div>
+            <label class="form-label">⏳ Frister & Planleggingshorisont</label>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <select id="cal-notice" class="form-select" title="Minste varslingstid">
+                <option value="1">Min 1 time før</option>
+                <option value="2" selected>Min 2 timer før</option>
+                <option value="4">Min 4 timer før</option>
+                <option value="24">Min 24 timer før</option>
+              </select>
+              <select id="cal-horizon" class="form-select" title="Maks forhåndsbestilling">
+                <option value="7">Maks 7 dager</option>
+                <option value="14">Maks 14 dager</option>
+                <option value="30" selected>Maks 30 dager</option>
+                <option value="60">Maks 60 dager</option>
+              </select>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Unngå uventede hastebookinger.</div>
+          </div>
+        </div>
+
+        <!-- Blackout Dates & Google Meet Link -->
+        <div class="grid-2" style="gap: 1rem;">
+          <div style="background: #090e1a; padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border);">
+            <label class="form-label" style="font-weight: 700;">🏖️ Ferie, fravær & stengte datoer</label>
+            <div style="display: flex; gap: 8px; margin: 8px 0 10px 0;">
+              <input type="date" id="cal-blackout-input" class="form-input" />
+              <button type="button" id="btn-add-blackout" class="btn btn-secondary" style="white-space: nowrap; font-size: 0.82rem; padding: 6px 12px;">
+                + Legg til
+              </button>
+            </div>
+            <div id="cal-blackout-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 36px; padding: 6px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border);">
+              <!-- Blackout tags -->
+            </div>
+          </div>
+
+          <div style="background: #090e1a; padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border);">
+            <label class="form-label" style="font-weight: 700;">📹 Google Meet / Videomøte fast romlenke</label>
+            <input type="url" id="cal-meet-url" class="form-input" style="margin-top: 8px;" placeholder="https://meet.google.com/xyz-qwer-abc" />
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+              Valgfritt. Hvis feltet står tomt, genereres en unik rom-ID automatisk per møtereservasjon.
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -2017,6 +2112,7 @@
       fetchLinks();
       fetchCampaign();
       fetchMeetings();
+      fetchCalendarConfig();
       fetchVouchers();
       fetchLeads();
       fetchTracking();
@@ -2667,7 +2763,205 @@
       } catch(e) {}
     }
 
-    document.getElementById('btn-refresh-meetings').addEventListener('click', fetchMeetings);
+    document.getElementById('btn-refresh-meetings').addEventListener('click', () => {
+      fetchMeetings();
+      fetchCalendarConfig();
+    });
+
+    // =========================================================================
+    // 3.1 KALENDERINNSTILLINGER & TILGJENGELIGHET
+    // =========================================================================
+    const DAY_LABELS = {
+      monday: 'Mandag',
+      tuesday: 'Tirsdag',
+      wednesday: 'Onsdag',
+      thursday: 'Torsdag',
+      friday: 'Fredag',
+      saturday: 'Lørdag',
+      sunday: 'Søndag'
+    };
+
+    let currentCalConfig = null;
+    let currentBlackoutDates = [];
+
+    async function fetchCalendarConfig() {
+      try {
+        const res = await fetch('/api/bookings/config?_t=' + Date.now());
+        const data = await res.json();
+        if (data.success && data.config) {
+          currentCalConfig = data.config;
+          renderCalendarConfig(currentCalConfig);
+        }
+      } catch (err) {
+        console.error('Feil ved henting av kalenderconfig:', err);
+      }
+    }
+
+    function renderCalendarConfig(config) {
+      const container = document.getElementById('cal-weekly-list');
+      if (!container) return;
+
+      const sched = config.weeklySchedule || {};
+      currentBlackoutDates = Array.isArray(config.blackoutDates) ? [...config.blackoutDates] : [];
+
+      container.innerHTML = Object.keys(DAY_LABELS).map(dayKey => {
+        const dayData = sched[dayKey] || { enabled: false, start: '09:00', end: '16:30' };
+        const label = DAY_LABELS[dayKey];
+        const isChecked = !!dayData.enabled;
+
+        return `
+          <div class="cal-day-row" id="cal-day-card-${dayKey}" style="background: #090e1a; border: 1px solid ${isChecked ? 'rgba(99,102,241,0.35)' : 'var(--border)'}; border-radius: 10px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="font-weight: 700; font-size: 0.88rem; color: ${isChecked ? '#ffffff' : 'var(--text-muted)'}; display: flex; align-items: center; gap: 6px;">
+                <span id="cal-day-dot-${dayKey}" style="width: 8px; height: 8px; border-radius: 50%; background: ${isChecked ? '#10b981' : '#64748b'};"></span>
+                <span>${label}</span>
+              </div>
+              <label class="switch" style="transform: scale(0.85);">
+                <input type="checkbox" id="cal-day-enable-${dayKey}" ${isChecked ? 'checked' : ''} onchange="toggleDayInputs('${dayKey}', this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <input type="time" id="cal-day-start-${dayKey}" class="form-input" style="padding: 4px 8px; font-size: 0.82rem;" value="${dayData.start || '09:00'}" ${isChecked ? '' : 'disabled'}>
+              <span style="color: var(--text-muted); font-size: 0.8rem;">–</span>
+              <input type="time" id="cal-day-end-${dayKey}" class="form-input" style="padding: 4px 8px; font-size: 0.82rem;" value="${dayData.end || '16:30'}" ${isChecked ? '' : 'disabled'}>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Lunch break
+      const lunch = config.lunchBreak || {};
+      const lunchCheck = document.getElementById('cal-lunch-enabled');
+      if (lunchCheck) lunchCheck.checked = !!lunch.enabled;
+      const lunchStart = document.getElementById('cal-lunch-start');
+      if (lunchStart) lunchStart.value = lunch.start || '12:00';
+      const lunchEnd = document.getElementById('cal-lunch-end');
+      if (lunchEnd) lunchEnd.value = lunch.end || '12:30';
+
+      // Buffer, Notice, Horizon
+      const elBuffer = document.getElementById('cal-buffer');
+      if (elBuffer) elBuffer.value = String(config.bufferMinutes ?? 15);
+      const elNotice = document.getElementById('cal-notice');
+      if (elNotice) elNotice.value = String(config.minNoticeHours ?? 2);
+      const elHorizon = document.getElementById('cal-horizon');
+      if (elHorizon) elHorizon.value = String(config.maxFutureDays ?? 30);
+
+      // Meet URL
+      const elMeet = document.getElementById('cal-meet-url');
+      if (elMeet) elMeet.value = config.customMeetUrl || '';
+
+      // Blackout tags
+      renderBlackoutTags();
+    }
+
+    window.toggleDayInputs = function(dayKey, enabled) {
+      const s = document.getElementById(`cal-day-start-${dayKey}`);
+      const e = document.getElementById(`cal-day-end-${dayKey}`);
+      const dot = document.getElementById(`cal-day-dot-${dayKey}`);
+      const card = document.getElementById(`cal-day-card-${dayKey}`);
+      if (s) s.disabled = !enabled;
+      if (e) e.disabled = !enabled;
+      if (dot) dot.style.background = enabled ? '#10b981' : '#64748b';
+      if (card) card.style.borderColor = enabled ? 'rgba(99,102,241,0.35)' : 'var(--border)';
+    };
+
+    function renderBlackoutTags() {
+      const container = document.getElementById('cal-blackout-tags');
+      if (!container) return;
+      if (currentBlackoutDates.length === 0) {
+        container.innerHTML = '<span style="font-size: 0.78rem; color: var(--text-muted); padding: 4px;">Ingen stengte dager lagt inn.</span>';
+        return;
+      }
+      container.innerHTML = currentBlackoutDates.map((d, idx) => `
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; font-size: 0.78rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+          <span>📅 ${d}</span>
+          <button type="button" onclick="removeBlackoutDate(${idx})" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.95rem; line-height: 1; padding: 0 2px;" title="Slett stengt dato">✕</button>
+        </span>
+      `).join('');
+    }
+
+    window.removeBlackoutDate = function(index) {
+      currentBlackoutDates.splice(index, 1);
+      renderBlackoutTags();
+    };
+
+    function addBlackoutDate() {
+      const input = document.getElementById('cal-blackout-input');
+      if (!input || !input.value) return;
+      const val = input.value;
+      if (!currentBlackoutDates.includes(val)) {
+        currentBlackoutDates.push(val);
+        currentBlackoutDates.sort();
+        renderBlackoutTags();
+      }
+      input.value = '';
+    }
+
+    async function saveCalendarConfig() {
+      const btn = document.getElementById('btn-save-cal-config');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Lagrer...';
+      }
+
+      const weeklySchedule = {};
+      for (const dayKey of Object.keys(DAY_LABELS)) {
+        const check = document.getElementById(`cal-day-enable-${dayKey}`);
+        const start = document.getElementById(`cal-day-start-${dayKey}`);
+        const end = document.getElementById(`cal-day-end-${dayKey}`);
+        weeklySchedule[dayKey] = {
+          enabled: check ? check.checked : false,
+          start: start ? start.value : '09:00',
+          end: end ? end.value : '16:30'
+        };
+      }
+
+      const payload = {
+        weeklySchedule,
+        lunchBreak: {
+          enabled: document.getElementById('cal-lunch-enabled') ? document.getElementById('cal-lunch-enabled').checked : true,
+          start: document.getElementById('cal-lunch-start') ? document.getElementById('cal-lunch-start').value : '12:00',
+          end: document.getElementById('cal-lunch-end') ? document.getElementById('cal-lunch-end').value : '12:30'
+        },
+        bufferMinutes: parseInt(document.getElementById('cal-buffer')?.value, 10) || 15,
+        minNoticeHours: parseInt(document.getElementById('cal-notice')?.value, 10) || 2,
+        maxFutureDays: parseInt(document.getElementById('cal-horizon')?.value, 10) || 30,
+        blackoutDates: currentBlackoutDates,
+        customMeetUrl: document.getElementById('cal-meet-url') ? document.getElementById('cal-meet-url').value.trim() : ''
+      };
+
+      try {
+        const res = await fetch('/api/bookings/config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': getPassword()
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✓ Kalenderinnstillinger lagret!');
+          fetchCalendarConfig();
+        } else {
+          alert('Feil ved lagring: ' + (data.error || 'Ukjent feil'));
+        }
+      } catch (err) {
+        alert('Nettverksfeil ved lagring: ' + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>💾</span> Lagre kalenderinnstillinger';
+        }
+      }
+    }
+
+    const btnSaveCal = document.getElementById('btn-save-cal-config');
+    if (btnSaveCal) btnSaveCal.addEventListener('click', saveCalendarConfig);
+
+    const btnAddBlackout = document.getElementById('btn-add-blackout');
+    if (btnAddBlackout) btnAddBlackout.addEventListener('click', addBlackoutDate);
 
     // =========================================================================
     // 4. RABATTKODER & VOUCHERS [NEW!]

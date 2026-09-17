@@ -1,0 +1,87 @@
+{
+  "weeklySchedule": {
+    "monday": {
+      "enabled": true,
+      "start": "09:00",
+      "end": "16:30"
+    },
+    "tuesday": {
+      "enabled": true,
+      "start": "09:00",
+      "end": "16:30"
+    },
+    "wednesday": {
+      "enabled": true,
+      "start": "09:00",
+      "end": "16:30"
+    },
+    "thursday": {
+      "enabled": true,
+      "start": "09:00",
+      "end": "16:30"
+    },
+    "friday": {
+      "enabled": true,
+      "start": "09:30",
+      "end": "15:00"
+    },
+    "saturday": {
+      "enabled": false,
+      "start": "10:00",
+      "end": "14:00"
+    },
+    "sunday": {
+      "enabled": false,
+      "start": "10:00",
+      "end": "14:00"
+    }
+  },
+  "lunchBreak": {
+    "enabled": true,
+    "start": "12:00",
+    "end": "12:30"
+  },
+  "bufferMinutes": 15,
+  "minNoticeHours": 2,
+  "maxFutureDays": 30,
+  "timeZone": "Europe/Oslo",
+  "blackoutDates": [
+    "2026-12-24",
+    "2026-12-25"
+  ],
+  "defaultMeetType": "google_meet",
+  "customMeetUrl": "",
+  "meetingTypes": [
+    {
+      "id": "strategy",
+      "name_no": "AI-Strategisamtale",
+      "name_en": "AI Strategy Session",
+      "duration": 30,
+      "badge_no": "30 MIN · GRATIS",
+      "badge_en": "30 MIN · FREE",
+      "desc_no": "Kartlegging av manuelle flaskehalser, tidsbruk og hvilke AI-modeller som gir raskest ROI.",
+      "desc_en": "Identify automation bottlenecks and AI models for fastest ROI."
+    },
+    {
+      "id": "technical",
+      "name_no": "Arkitekturgjennomgang",
+      "name_en": "Technical Architecture Review",
+      "duration": 45,
+      "badge_no": "45 MIN · TEKNISK",
+      "badge_en": "45 MIN · TECHNICAL",
+      "desc_no": "For bedrifter som ønsker dypere integrasjon med interne databaser, ERP eller CRM (Fiken, HubSpot).",
+      "desc_en": "Deep dive into custom ERP, CRM and enterprise AI integrations."
+    },
+    {
+      "id": "demo",
+      "name_no": "Produktdemo & Whitelabel",
+      "name_en": "Product Demo & Whitelabel",
+      "duration": 15,
+      "badge_no": "15 MIN · LYNRASK",
+      "badge_en": "15 MIN · QUICK",
+      "desc_no": "Rask gjennomgang av våre 7 ferdige AI-apper for byråer eller investorer som vil lansere egne merkevarer.",
+      "desc_en": "Fast walkthrough of our 7 ready-to-use apps for agencies & founders."
+    }
+  ],
+  "updatedAt": "2026-09-17T23:49:15.232Z"
+}
