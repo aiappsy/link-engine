@@ -535,9 +535,7 @@
         <a href="/booking.html" target="_blank" class="sidebar-link-btn" title="Åpne kundens bookingside">
           <span>📅</span> <span>Bookingside ↗</span>
         </a>
-        <a href="/generator.html" target="_blank" class="sidebar-link-btn" title="Åpne B2B tilbudsgenerator">
-          <span>⚡</span> <span>Tilbudsgenerator ↗</span>
-        </a>
+        
         <button id="btn-admin-logout" class="sidebar-logout-btn" title="Logg ut">
           <span>🚪</span> <span>Logg ut</span>
         </button>
@@ -980,38 +978,24 @@
     <!-- TAB 6: TILBUDSBYGGER & PDF -->
     <!-- ================================================================= -->
     <div class="tab-pane" id="pane-proposals">
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h2 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Intern Tilbuds- & Prisbygger</h2>
-            <p style="color: var(--text-muted); font-size: 0.88rem;">
-              Bygg formelle tilbud for potensielle oppdragsgivere og eksporter PDF.
-            </p>
+      <div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div class="card-title" style="font-size: 1.15rem; margin-bottom: 3px;">
+            <span>💼</span> Integrert B2B Tilbudsgenerator & Priskalkulator
           </div>
-          <a href="/generator.html" target="_blank" class="btn btn-primary" style="font-size: 0.82rem;">
-            <span>⚡</span> Åpne Full Tilbudsgenerator
+          <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+            Kalkuler prosjektpriser for kunder, legg til rabattkuponger og generer formelle PDF-tilbud direkte herfra uten å forlate Admin.
+          </p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <a href="/generator.html" target="_blank" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;" title="Åpne tilbudsgeneratoren i egen separat fane">
+            <span>↗</span> Åpne i ny fane
           </a>
         </div>
-        <div class="grid-2">
-          <div style="background: #090e1a; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
-            <h4 style="margin-bottom: 12px;">Standard Fastprispakker</h4>
-            <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem;">
-              <li style="display: flex; justify-content: space-between;"><span>🤖 Autonom Nettside-Agent</span> <strong>kr 14 900</strong></li>
-              <li style="display: flex; justify-content: space-between;"><span>💬 WhatsApp & Messenger Agent</span> <strong>kr 19 900</strong></li>
-              <li style="display: flex; justify-content: space-between;"><span>🎯 Konverterings- & Pop-up Rigg</span> <strong>kr 7 900</strong></li>
-              <li style="display: flex; justify-content: space-between;"><span>📚 RAG Kunnskapsbase & Trening</span> <strong>kr 12 500</strong></li>
-              <li style="display: flex; justify-content: space-between;"><span>🎙️ Live Tale / Voice AI Agent</span> <strong>kr 16 000</strong></li>
-            </ul>
-          </div>
-          <div style="background: #090e1a; padding: 16px; border-radius: 8px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-            <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.6;">
-              Bruk den interaktive generatoren for å tilpasse moduler, legge til rabattkuponger og skrive ut et formelt PDF-tilbud klart for styremøter.
-            </p>
-            <a href="/generator.html#proposal" target="_blank" class="btn btn-secondary">
-              <span>📄</span> Generer Tilbud & Last ned PDF
-            </a>
-          </div>
-        </div>
+      </div>
+
+      <div style="background: #0b1120; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; height: 86vh; min-height: 820px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+        <iframe src="/generator.html?embed=admin" style="width: 100%; height: 100%; border: none;" title="B2B Tilbudsgenerator & PDF-eksport"></iframe>
       </div>
     </div>
 

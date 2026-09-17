@@ -637,6 +637,24 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     }
   </style>
+
+  <style>
+    /* Embedded mode when loaded inside Admin Panel */
+    .is-embedded .top-nav { display: none !important; }
+    .is-embedded .generator-container { padding-top: 0.5rem !important; max-width: 100% !important; }
+    .is-embedded .hero-header { padding: 1rem 0 !important; margin-bottom: 1rem !important; }
+  </style>
+  <script>
+    try {
+      if (window.self !== window.top || new URLSearchParams(window.location.search).get('embed') === 'admin') {
+        document.documentElement.classList.add('is-embedded');
+        window.addEventListener('DOMContentLoaded', () => {
+          if (document.body) document.body.classList.add('is-embedded');
+        });
+      }
+    } catch (e) {}
+  </script>
+
 </head>
 <body>
 
