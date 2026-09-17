@@ -2002,6 +2002,587 @@ app.get('/api/test-link/:slug', (req, res) => {
   });
 });
 
+// ============================================================================
+// ADMIN AI ASSISTANT & PROACTIVE ACTION ENGINE (COPILOT)
+// ============================================================================
+
+// Helper: Call Google Gemini REST API if key is present
+function callGeminiApi(apiKey, systemInstruction, userPrompt, history = []) {
+  return new Promise((resolve, reject) => {
+    const contents = [];
+    if (Array.isArray(history)) {
+      for (const msg of history) {
+        if (msg.role && msg.content) {
+          contents.push({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+          });
+        }
+      }
+    }
+    contents.push({
+      role: 'user',
+      parts: [{ text: userPrompt }]
+    });
+
+    const payload = JSON.stringify({
+      contents,
+      systemInstruction: {
+        parts: [{ text: systemInstruction }]
+      },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2048
+      }
+    });
+
+    const options = {
+      hostname: 'generativelanguage.googleapis.com',
+      port: 443,
+      path: `/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.error) {
+            return reject(new Error(parsed.error.message || 'Gemini API Feil'));
+          }
+          const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            resolve(text);
+          } else {
+            resolve('Beklager, mottok ikke noe svar fra Gemini.');
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.setTimeout(15000, () => {
+      req.destroy();
+      reject(new Error('Tidsavbrudd mot Gemini API'));
+    });
+    req.write(payload);
+    req.end();
+  });
+}
+
+// GET /api/assistant/insights (Admin protected)
+app.get('/api/assistant/insights', requireAdminAuth, (req, res) => {
+  try {
+    const links = typeof loadLinks === 'function' ? loadLinks() : {};
+    const linksList = Object.keys(links);
+    let totalClicks = 0;
+    linksList.forEach(k => { totalClicks += (links[k].clicks || 0); });
+
+    const campaign = typeof loadCampaign === 'function' ? loadCampaign() : {};
+    const bookings = typeof loadBookings === 'function' ? loadBookings() : [];
+    const vouchers = typeof loadVouchers === 'function' ? loadVouchers() : [];
+    const leads = typeof loadLeadsSafe === 'function' ? loadLeadsSafe() : [];
+    const tracking = typeof loadTrackingConfig === 'function' ? loadTrackingConfig() : {};
+    const payments = typeof loadPaymentsConfig === 'function' ? loadPaymentsConfig() : DEFAULT_PAYMENTS_CONFIG;
+
+    const uncontactedLeads = leads.filter(l => !l.status || l.status === 'new' || l.status === 'received');
+    const activeVouchers = vouchers.filter(v => v.active !== false);
+    const pendingBookings = bookings.filter(b => b.status === 'pending');
+
+    const insights = [];
+
+    // 1. Leads
+    if (uncontactedLeads.length > 0) {
+      insights.push({
+        id: 'uncontacted_leads',
+        level: 'warning',
+        category: 'crm',
+        title: `${uncontactedLeads.length} ubehandlede henvendelser krever oppfølging`,
+        message: `Siste henvendelse: ${uncontactedLeads[0].name || uncontactedLeads[0].email} (${uncontactedLeads[0].projectType || 'Forespørsel'}). Å svare raskt øker vinnersjansen dramatisk.`,
+        actionLabel: 'Åpne Leads & CRM',
+        actionPayload: { type: 'open_tab', tab: 'leads' }
+      });
+    } else {
+      insights.push({
+        id: 'leads_clean',
+        level: 'tip',
+        category: 'crm',
+        title: 'Alle henvendelser er besvart!',
+        message: 'Ingen ubehandlede henvendelser i pipeline akkurat nå. Utmerket kundeservice!',
+        actionLabel: 'Se leads-arkiv',
+        actionPayload: { type: 'open_tab', tab: 'leads' }
+      });
+    }
+
+    // 2. Kampanje
+    if (!campaign.enabled) {
+      insights.push({
+        id: 'campaign_disabled',
+        level: 'tip',
+        category: 'campaign',
+        title: 'Ingen aktiv lanseringskampanje på nettsiden',
+        message: 'En synlig rabattbanner med 25 % tidsbegrenset rabatt kan øke konvertering på SaaS-appene betydelig.',
+        actionLabel: 'Aktiver lanseringsbanner (25% avslag)',
+        actionPayload: {
+          type: 'update_campaign',
+          params: {
+            enabled: true,
+            headline_no: '🚀 Lanseringstilbud: Få 25% rabatt på alle Pro-abonnementer denne uken!',
+            headline_en: '🚀 Launch Offer: Get 25% off all Pro subscriptions this week!',
+            cta_text_no: 'Utforsk appene',
+            cta_text_en: 'Explore apps',
+            cta_url: '/apps/upworkz.html',
+            badge_text_no: 'TIDLIG TILGANG',
+            badge_text_en: 'EARLY ACCESS',
+            discount_percent: 25
+          }
+        }
+      });
+    }
+
+    // 3. Betalinger & Gateways
+    const isPaypalSandbox = payments.gateways && payments.gateways.paypal && payments.gateways.paypal.mode === 'sandbox';
+    if (isPaypalSandbox) {
+      insights.push({
+        id: 'paypal_sandbox',
+        level: 'info',
+        category: 'payments',
+        title: 'PayPal er satt i Sandbox (Testmodus)',
+        message: 'Kunder belastes ikke reelt. Husk å bytte til "Live" før offisiell markedsføring starter.',
+        actionLabel: 'Gå til betalingsinnstillinger',
+        actionPayload: { type: 'open_tab', tab: 'payments' }
+      });
+    }
+
+    // 4. Rabattkoder
+    if (activeVouchers.length === 0) {
+      insights.push({
+        id: 'no_vouchers',
+        level: 'warning',
+        category: 'vouchers',
+        title: 'Ingen aktive rabattkoder funnet',
+        message: 'Opprett en velkomstrabatt (f.eks. VELKOMMEN20 med 20% rabatt) for å stimulere tidlige bestillinger.',
+        actionLabel: 'Opprett VELKOMMEN20 (20%)',
+        actionPayload: {
+          type: 'create_voucher',
+          params: {
+            code: 'VELKOMMEN20',
+            discountType: 'percent',
+            discountValue: 20,
+            active: true,
+            notes: 'Opprettet automatisk av AI-assistenten'
+          }
+        }
+      });
+    }
+
+    // 5. Møtebooking
+    if (pendingBookings.length > 0) {
+      insights.push({
+        id: 'pending_bookings',
+        level: 'warning',
+        category: 'bookings',
+        title: `${pendingBookings.length} ventende møtebooking(er)`,
+        message: `Møteforespørsel registrert fra ${pendingBookings[0].name} (${pendingBookings[0].date} kl. ${pendingBookings[0].time}).`,
+        actionLabel: 'Bekreft eller håndter møter',
+        actionPayload: { type: 'open_tab', tab: 'bookings' }
+      });
+    }
+
+    // 6. Sporing
+    if (!tracking.ga4_id && !tracking.clarity_id) {
+      insights.push({
+        id: 'missing_tracking',
+        level: 'tip',
+        category: 'tracking',
+        title: 'Webanalyse er ikke aktivert',
+        message: 'Legg inn Google Analytics 4 (G-XXXX) eller Microsoft Clarity for å spore besøkende på nettsiden.',
+        actionLabel: 'Sett opp sporing',
+        actionPayload: { type: 'open_tab', tab: 'tracking' }
+      });
+    }
+
+    return res.json({
+      success: true,
+      stats: {
+        totalLinks: linksList.length,
+        totalClicks,
+        campaignActive: !!campaign.enabled,
+        totalBookings: bookings.length,
+        pendingBookings: pendingBookings.length,
+        totalVouchers: vouchers.length,
+        activeVouchers: activeVouchers.length,
+        totalLeads: leads.length,
+        uncontactedLeads: uncontactedLeads.length,
+        paypalMode: payments.gateways && payments.gateways.paypal ? payments.gateways.paypal.mode : 'unknown',
+        hasTracking: !!(tracking.ga4_id || tracking.clarity_id)
+      },
+      insights
+    });
+  } catch (err) {
+    console.error('Feil i assistant insights:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /api/assistant/execute-action (Admin protected)
+app.post('/api/assistant/execute-action', requireAdminAuth, async (req, res) => {
+  const { type, params = {} } = req.body || {};
+  if (!type) {
+    return res.status(400).json({ success: false, error: 'Mangler handlingstype (type).' });
+  }
+
+  try {
+    switch (type) {
+      case 'create_voucher': {
+        const code = (params.code || 'RABATT' + Math.floor(Math.random()*100)).toUpperCase().trim().replace(/[^A-Z0-9_-]/g, '');
+        const discountType = params.discountType === 'fixed' ? 'fixed' : 'percent';
+        const discountValue = parseFloat(params.discountValue) || 10;
+        let vouchers = typeof loadVouchers === 'function' ? loadVouchers() : [];
+        vouchers = vouchers.filter(v => v.code !== code);
+        const newVoucher = {
+          code,
+          discountType,
+          discountValue,
+          active: params.active !== false,
+          expiryDate: params.expiryDate || null,
+          usageLimit: parseInt(params.usageLimit) || null,
+          usedCount: 0,
+          notes: params.notes || 'Opprettet av AI-assistenten',
+          createdAt: new Date().toISOString()
+        };
+        vouchers.unshift(newVoucher);
+        saveVouchers(vouchers);
+        return res.json({
+          success: true,
+          action: 'create_voucher',
+          message: `Rabattkoden '${code}' (${discountValue}${discountType === 'percent' ? '%' : ' kr'} avslag) er nå opprettet og aktiv!`,
+          voucher: newVoucher
+        });
+      }
+
+      case 'update_campaign': {
+        let campaign = typeof loadCampaign === 'function' ? loadCampaign() : {};
+        campaign = { ...campaign, ...params, updatedAt: new Date().toISOString() };
+        saveCampaign(campaign);
+        return res.json({
+          success: true,
+          action: 'update_campaign',
+          message: `Kampanjebanneret er oppdatert og ${campaign.enabled ? 'AKTIVERT' : 'DEAKTIVERT'}!`,
+          campaign
+        });
+      }
+
+      case 'shorten_link': {
+        const url = (params.url || '').trim();
+        if (!url) return res.status(400).json({ success: false, error: 'Mangler URL for kortlenke.' });
+        const slug = (params.customSlug || params.slug || ('ai' + Math.floor(Math.random()*10000))).toLowerCase().trim();
+        const links = loadLinks();
+        links[slug] = {
+          url,
+          createdAt: new Date().toISOString(),
+          clicks: 0,
+          domain: params.domain || 'aiappsy.com'
+        };
+        saveLinks(links, slug);
+        return res.json({
+          success: true,
+          action: 'shorten_link',
+          message: `Kortlenken https://aiappsy.com/${slug} -> ${url} er opprettet!`,
+          shortUrl: `https://aiappsy.com/${slug}`,
+          slug,
+          targetUrl: url
+        });
+      }
+
+      case 'update_app_price': {
+        const appKey = (params.appKey || '').toLowerCase().trim();
+        if (!appKey) return res.status(400).json({ success: false, error: 'Mangler app-nøkkel (f.eks. upworkz).' });
+        const price_nok = parseFloat(params.price_nok !== undefined ? params.price_nok : params.price);
+        const price_usd = parseFloat(params.price_usd);
+        const cfg = loadPaymentsConfig();
+        if (!cfg.apps) cfg.apps = {};
+        if (!cfg.apps[appKey]) cfg.apps[appKey] = {};
+        if (!isNaN(price_nok)) {
+          cfg.apps[appKey].price_nok = price_nok;
+          cfg.apps[appKey].price = price_nok;
+        }
+        if (!isNaN(price_usd)) {
+          cfg.apps[appKey].price_usd = price_usd;
+        }
+        savePaymentsConfig(cfg);
+        return res.json({
+          success: true,
+          action: 'update_app_price',
+          message: `Prisen for '${appKey}' er oppdatert til kr ${cfg.apps[appKey].price_nok},- NOK og $${cfg.apps[appKey].price_usd || ''} USD!`,
+          app: cfg.apps[appKey]
+        });
+      }
+
+      case 'update_lead_status': {
+        const { leadId, status, note } = params;
+        if (!leadId) return res.status(400).json({ success: false, error: 'Mangler leadId.' });
+        const leads = loadLeadsSafe();
+        const idx = leads.findIndex(l => l.id === leadId);
+        if (idx === -1) return res.status(404).json({ success: false, error: 'Fant ikke henvendelse med oppgitt ID.' });
+        if (status) leads[idx].status = status;
+        if (note) {
+          if (!leads[idx].notes) leads[idx].notes = [];
+          leads[idx].notes.push({ text: note, createdAt: new Date().toISOString() });
+        }
+        saveLeadsSafe(leads);
+        return res.json({
+          success: true,
+          action: 'update_lead_status',
+          message: `Lead '${leads[idx].name || leads[idx].email}' har nå status '${status || leads[idx].status}'.`,
+          lead: leads[idx]
+        });
+      }
+
+      case 'update_tracking': {
+        let tr = typeof loadTrackingConfig === 'function' ? loadTrackingConfig() : {};
+        if (params.ga4_id !== undefined) tr.ga4_id = params.ga4_id;
+        if (params.clarity_id !== undefined) tr.clarity_id = params.clarity_id;
+        saveTrackingConfig(tr);
+        return res.json({
+          success: true,
+          action: 'update_tracking',
+          message: 'Sporingsinnstillinger er lagret!',
+          tracking: tr
+        });
+      }
+
+      default:
+        return res.status(400).json({ success: false, error: `Ukjent handlingstype: ${type}` });
+    }
+  } catch (err) {
+    console.error('Feil ved kjøring av assistant action:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /api/assistant/chat (Admin protected)
+app.post('/api/assistant/chat', requireAdminAuth, async (req, res) => {
+  const { message = '', history = [], geminiApiKey = '' } = req.body || {};
+  const query = message.trim();
+  if (!query) {
+    return res.status(400).json({ success: false, error: 'Mangler meldingstekst.' });
+  }
+
+  const effectiveGeminiKey = geminiApiKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+
+  try {
+    // 1. SEMANTIC INTENT PARSER & ACTION DETECTOR
+    const qLower = query.toLowerCase();
+
+    // Intent: Opprett rabattkode
+    if ((qLower.includes('rabatt') || qLower.includes('voucher') || qLower.includes('kupong')) && 
+        (qLower.includes('lag') || qLower.includes('opprett') || qLower.includes('ny') || qLower.includes('generer') || qLower.includes('sett'))) {
+      
+      const valMatch = qLower.match(/(\d+)\s*(%|prosent|kr)?/i);
+      const val = valMatch ? parseInt(valMatch[1]) : 20;
+      const isKr = valMatch && valMatch[2] && (valMatch[2].toLowerCase() === 'kr');
+      const discountType = isKr ? 'fixed' : 'percent';
+
+      // Finn kodenavn
+      let codeName = '';
+      const namedMatch = query.match(/\b(?:som\s+heter|heter|kalt|kodenavn)\s+([A-Za-z0-9_-]+)/i) ||
+                         query.match(/\bkode\s+([A-Za-z0-9_-]+)/i);
+      if (namedMatch && !['på', 'paa', 'for', 'med', 'til', 'en', 'et'].includes(namedMatch[1].toLowerCase())) {
+        codeName = namedMatch[1];
+      } else {
+        // Let etter ord med store bokstaver eller alfanumeriske koder
+        const tokens = query.split(/\s+/);
+        for (const tok of tokens) {
+          const cleanTok = tok.replace(/[^A-Za-z0-9_-]/g, '');
+          if (cleanTok.length >= 3 && !['rabatt', 'rabattkode', 'voucher', 'prosent', 'opprett', 'lag', 'med', 'for', 'paa', 'på', 'til'].includes(cleanTok.toLowerCase()) && !cleanTok.match(/^\d+$/)) {
+            codeName = cleanTok;
+            break;
+          }
+        }
+      }
+      const code = (codeName || ('RABATT' + Math.floor(Math.random()*100))).toUpperCase().trim();
+
+      let vouchers = typeof loadVouchers === 'function' ? loadVouchers() : [];
+      vouchers = vouchers.filter(v => v.code !== code);
+      const newVoucher = {
+        code,
+        discountType,
+        discountValue: val,
+        active: true,
+        notes: 'Opprettet via AI Copilot chat',
+        createdAt: new Date().toISOString()
+      };
+      vouchers.unshift(newVoucher);
+      saveVouchers(vouchers);
+
+      return res.json({
+        success: true,
+        reply: `Jeg har opprettet rabattkoden **${code}** med **${val}${discountType === 'percent' ? ' %' : ' kr'} rabatt** for deg! Koden er umiddelbart aktiv i kassen (\`/checkout.html\`).`,
+        actionTaken: {
+          type: 'create_voucher',
+          data: newVoucher
+        }
+      });
+    }
+
+    // Intent: Kampanjebanner aktivering/deaktivering
+    if (qLower.includes('kampanje') || qLower.includes('banner')) {
+      if (qLower.includes('aktiver') || qLower.includes('slå på') || qLower.includes('start') || qLower.includes('enable')) {
+        let campaign = typeof loadCampaign === 'function' ? loadCampaign() : {};
+        campaign.enabled = true;
+        saveCampaign(campaign);
+        return res.json({
+          success: true,
+          reply: `🚀 **Kampanjebanneret er nå aktivert!** Besøkende på forsiden og app-sidene vil nå se kunngjøringsbanneret ditt øverst.`,
+          actionTaken: { type: 'update_campaign', data: campaign }
+        });
+      }
+      if (qLower.includes('deaktiver') || qLower.includes('slå av') || qLower.includes('stopp') || qLower.includes('disable')) {
+        let campaign = typeof loadCampaign === 'function' ? loadCampaign() : {};
+        campaign.enabled = false;
+        saveCampaign(campaign);
+        return res.json({
+          success: true,
+          reply: `⏸️ **Kampanjebanneret er nå deaktivert.** Banneret skjules for besøkende.`,
+          actionTaken: { type: 'update_campaign', data: campaign }
+        });
+      }
+    }
+
+    // Intent: Endre pris på en app
+    const priceMatch = qLower.match(/(?:sett|endre|oppdater)\s+pris(?:en)?\s+(?:på|for)?\s*([a-z0-9_-]+)\s+til\s+(\d+)\s*(?:nok|kr)?(?:\s+og\s+(\d+)\s*(?:usd|\$)?)?/i);
+    if (priceMatch) {
+      const appKey = priceMatch[1].toLowerCase();
+      const nokPrice = parseInt(priceMatch[2]);
+      const usdPrice = priceMatch[3] ? parseInt(priceMatch[3]) : Math.round(nokPrice / 10);
+      const cfg = loadPaymentsConfig();
+      if (cfg.apps && cfg.apps[appKey]) {
+        cfg.apps[appKey].price_nok = nokPrice;
+        cfg.apps[appKey].price = nokPrice;
+        if (usdPrice) cfg.apps[appKey].price_usd = usdPrice;
+        savePaymentsConfig(cfg);
+        return res.json({
+          success: true,
+          reply: `💳 **Prisen for ${cfg.apps[appKey].name || appKey} er oppdatert:**\n- **Norsk pris:** kr ${nokPrice},- / mnd\n- **Internasjonal pris:** $${usdPrice}.00 USD / mo\n\nPrisen er umiddelbart synlig i kasseportalen for nye abonnenter.`,
+          actionTaken: { type: 'update_app_price', data: cfg.apps[appKey] }
+        });
+      }
+    }
+
+    // Intent: Forkort lenke
+    const shortenMatch = qLower.match(/(?:forkort|lag\s+lenke|kortlenke)\s+(?:for\s+)?(https?:\/\/[^\s]+)(?:\s+(?:med\s+slug|slug)\s+([a-z0-9_-]+))?/i);
+    if (shortenMatch) {
+      const targetUrl = shortenMatch[1].trim();
+      const slug = (shortenMatch[2] || ('ai' + Math.floor(Math.random()*10000))).toLowerCase().trim();
+      const links = loadLinks();
+      links[slug] = {
+        url: targetUrl,
+        createdAt: new Date().toISOString(),
+        clicks: 0,
+        domain: 'aiappsy.com'
+      };
+      saveLinks(links, slug);
+      return res.json({
+        success: true,
+        reply: `🔗 **Kortlenke opprettet!**\n- **Kort URL:** https://aiappsy.com/${slug}\n- **Mål:** ${targetUrl}\n\nKlikktelling og 302-omdirigering er aktiv.`,
+        actionTaken: { type: 'shorten_link', data: { slug, url: targetUrl } }
+      });
+    }
+
+    // Intent: Helsesjekk / Status oversikt
+    if (qLower.includes('status') || qLower.includes('oversikt') || qLower.includes('helsesjekk') || qLower.includes('audit')) {
+      const links = typeof loadLinks === 'function' ? loadLinks() : {};
+      const leads = typeof loadLeadsSafe === 'function' ? loadLeadsSafe() : [];
+      const bookings = typeof loadBookings === 'function' ? loadBookings() : [];
+      const vouchers = typeof loadVouchers === 'function' ? loadVouchers() : [];
+      const campaign = typeof loadCampaign === 'function' ? loadCampaign() : {};
+      const payments = typeof loadPaymentsConfig === 'function' ? loadPaymentsConfig() : DEFAULT_PAYMENTS_CONFIG;
+      const uncontacted = leads.filter(l => !l.status || l.status === 'new' || l.status === 'received').length;
+
+      return res.json({
+        success: true,
+        reply: `📊 **Systemstatus & Nøkkeltall:**\n\n` +
+               `• **Kortlenker:** ${Object.keys(links).length} aktive lenker\n` +
+               `• **Leads i CRM:** ${leads.length} totalt (${uncontacted} venter på oppfølging)\n` +
+               `• **Møtebookinger:** ${bookings.length} registrert\n` +
+               `• **Rabattkoder:** ${vouchers.filter(v => v.active !== false).length} aktive koder\n` +
+               `• **Kampanjebanner:** ${campaign.enabled ? '🟢 AKTIVT' : '⚪ Ikke aktivt'}\n` +
+               `• **PayPal Gateway:** ${payments.gateways?.paypal?.enabled ? '🟢 På' : '🔴 Av'} (${payments.gateways?.paypal?.mode || 'sandbox'})\n\n` +
+               (uncontacted > 0 ? `⚠️ *Tips: Du har ${uncontacted} lead(s) som venter på tilbakemelding!*` : `✅ *Alt ser bra ut i systemet!*`),
+        actionTaken: null
+      });
+    }
+
+    // 2. ADVANCED GENERATIVE AI (Gemini) ELLER BUILT-IN KNOWLEDGE BASE
+    if (effectiveGeminiKey) {
+      const systemInstruction = `Du er AIAppsy Admin Copilot, en ekspert AI-assistent for eieren og administratoren av AIAppsy (https://aiappsy.com).
+Du har full kontroll og innsikt over alle administrative funksjoner:
+1. Kortlenker og omdirigeringer (slugs, klikksporing, 302 redirects)
+2. Markedsføringskampanjer og dynamisk bannermodal (overskrifter på norsk/engelsk, tidsbegrensede rabatter)
+3. Møtebooking og kalender (strategimøter, Google Meet-lenker)
+4. Rabattkoder og vouchers (prosent/fast kronebeløp, utløpsdatoer, kassevalidering)
+5. Artikler, SEO og publisering (genererer automatisk HTML, sitemap.xml oppdatering og sitemap-pinging til Google og Bing)
+6. B2B Tilbudsbygger (interaktiv modulpriser, PDF-tilbudsgenerering for nettside-agenter, WhatsApp, RAG og Voice AI)
+7. Leads & CRM (kundestatus: ny, kontaktet, tilbud sendt, vunnet, tapt, notater)
+8. Sporing & Webanalyse (Google Analytics 4, Microsoft Clarity)
+9. Betalinger & Finans (PayPal og Stripe, dual currency NOK og USD for månedlige SaaS-abonnementer).
+De 7 porteføljeappene er:
+- Upworkz (AI-anbudsarkitekt, kr 299/mnd / $29/mo)
+- Hubzoo (Mobiltilbud & CRM, kr 499/mnd / $49/mo)
+- SubSentry (Abonnementsvakt, kr 199/mnd / $19/mo)
+- MaxMotion AI (Videostudio, kr 799/mnd / $79/mo)
+- MediaBunny (WASM-mediebehandling, kr 149/mnd / $14/mo)
+- AppSave (Rabatt-utfylling SaaS, kr 99/mnd / $9/mo)
+- Manus AI Studio (Bok- og forfatterstudio, kr 599/mnd / $59/mo)
+- Skreddersydd AI-agent (engangsleveranse, kr 17 800 / $1 690).
+
+Vær proaktiv, hjelpsom, presis og profesjonell. Gi konkrete svar, anbefalinger og forslag til handlinger. Svar på norsk dersom brukeren skriver norsk.`;
+
+      try {
+        const geminiReply = await callGeminiApi(effectiveGeminiKey, systemInstruction, query, history);
+        return res.json({
+          success: true,
+          reply: geminiReply,
+          poweredBy: 'gemini-2.5-flash',
+          actionTaken: null
+        });
+      } catch (geminiErr) {
+        console.warn('Gemini API call failed, falling back to built-in KB:', geminiErr.message);
+      }
+    }
+
+    // Built-in intelligent fallback reply
+    let kbReply = `Jeg er din **AIAppsy Admin Copilot**. Jeg har full oversikt over alle systemer i kontrollpanelet og kan utføre handlinger direkte for deg!\n\n` +
+      `**Hva jeg kan gjøre for deg akkurat nå:**\n` +
+      `1. 🏷️ **Rabattkoder:** Skriv *"Lag rabattkode SOMMER20 på 20%"* så oppretter jeg den direkte.\n` +
+      `2. 🚀 **Kampanje:** Skriv *"Aktiver kampanjebanner"* for å slå på lanseringsbanneret.\n` +
+      `3. 💳 **Priser:** Skriv *"Sett pris på upworkz til 349 nok"* for å justere abonnementsprisen.\n` +
+      `4. 🔗 **Kortlenker:** Skriv *"Forkort https://lenke.no med slug min"* for å lage en kortlenke.\n` +
+      `5. 📊 **Status:** Skriv *"Status"* for en umiddelbar gjennomgang av leads, bookinger og betalinger.\n\n` +
+      `*Tips: Du kan også legge inn din egen Gemini API-nøkkel i Copilot-innstillingene for å aktivere full generativ AI for artikkelskriving, e-postsvar og markedsføringstekster.*`;
+
+    return res.json({
+      success: true,
+      reply: kbReply,
+      poweredBy: 'builtin-action-engine',
+      actionTaken: null
+    });
+  } catch (err) {
+    console.error('Feil i assistant chat:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ============================================================================
 // 302 Redirection Engine for short links
 app.get('/:slug', (req, res, next) => {
   let rawSlug = (req.params.slug || '').trim().replace(/^\/+|\/+$/g, '');

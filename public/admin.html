@@ -432,6 +432,276 @@
     .status-proposal_sent { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
     .status-won { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid #10b981; font-weight: 900; }
     .status-archived { background: rgba(255, 255, 255, 0.06); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+    /* =========================================================================
+       AI COPILOT & PROACTIVE ASSISTANT STYLES
+       ========================================================================= */
+    .copilot-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .copilot-hero {
+      background: linear-gradient(135deg, rgba(88, 28, 135, 0.35), rgba(30, 27, 75, 0.45));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .copilot-hero::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .copilot-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      color: #e9d5ff;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .copilot-insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .copilot-insight-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+    .copilot-insight-card:hover {
+      border-color: rgba(168, 85, 247, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .copilot-insight-card.level-warning {
+      border-left: 4px solid #f59e0b;
+    }
+    .copilot-insight-card.level-critical {
+      border-left: 4px solid #f43f5e;
+    }
+    .copilot-insight-card.level-tip {
+      border-left: 4px solid #38bdf8;
+    }
+    .copilot-insight-card.level-info {
+      border-left: 4px solid #a855f7;
+    }
+    .copilot-insight-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .copilot-insight-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .copilot-insight-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .copilot-insight-btn {
+      align-self: flex-start;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #e9d5ff;
+    }
+    .copilot-insight-btn:hover {
+      background: #9333ea;
+      color: #ffffff;
+      border-color: #9333ea;
+      box-shadow: 0 0 12px rgba(147, 51, 234, 0.4);
+    }
+
+    /* Chat Section */
+    .copilot-chat-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      height: 620px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .copilot-chat-header {
+      padding: 1rem 1.5rem;
+      background: #090e1a;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .copilot-chat-history {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .chat-bubble-wrap {
+      display: flex;
+      gap: 12px;
+      max-width: 85%;
+    }
+    .chat-bubble-wrap.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .chat-bubble-wrap.assistant {
+      align-self: flex-start;
+    }
+    .chat-avatar {
+      width: 36px; height: 36px; min-width: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      background: #1e293b;
+      border: 1px solid var(--border);
+    }
+    .chat-bubble-wrap.assistant .chat-avatar {
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+    }
+    .chat-bubble {
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .chat-bubble-wrap.user .chat-bubble {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #ffffff;
+      border-top-right-radius: 4px;
+    }
+    .chat-bubble-wrap.assistant .chat-bubble {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: #f1f5f9;
+      border-top-left-radius: 4px;
+    }
+    .copilot-action-card {
+      margin-top: 10px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
+    }
+    .copilot-quick-chips {
+      padding: 0.75rem 1.5rem;
+      background: #090e1a;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .copilot-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copilot-chip:hover {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: #a855f7;
+      color: #ffffff;
+    }
+    .copilot-input-area {
+      padding: 1rem 1.5rem;
+      background: #090e1a;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+    .copilot-input-area input {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #ffffff;
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .copilot-input-area input:focus {
+      border-color: #a855f7;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
+    }
+    .floating-copilot-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 998;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4), 0 4px 10px rgba(0,0,0,0.5);
+      transition: all 0.25s;
+    }
+    .floating-copilot-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(168, 85, 247, 0.6);
+    }
+    .floating-copilot-btn .badge-alert {
+      background: #f43f5e;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 2px solid #0b1120;
+    }
   </style>
 </head>
 <body>
@@ -477,6 +747,16 @@
 
       <!-- Scrollable Nav Modules -->
       <div class="sidebar-scroll-area">
+        <!-- Group 0: Intelligent AI Assistent -->
+        <div class="sidebar-group-title" style="color: #c084fc;">AI & Assistanse</div>
+        <nav class="sidebar-tabs" aria-label="AI Assistent Tabs" style="margin-bottom: 0.75rem;">
+          <button class="nav-tab" data-tab="assistant" data-title="AI Assistent (Copilot)">
+            <span class="tab-icon">🤖</span>
+            <span class="tab-label">AI Assistent</span>
+            <span class="tab-badge" id="badge-ai-assistant" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4);">LIVE</span>
+          </button>
+        </nav>
+
         <!-- Group 1: Kjerne & Trafikk -->
         <div class="sidebar-group-title">Trafikk & Kampanjer</div>
         <nav class="sidebar-tabs" aria-label="Trafikk Tabs">
@@ -571,6 +851,102 @@
 
       <!-- MAIN CONTAINER -->
       <main class="admin-container">
+
+    <!-- ================================================================= -->
+    <!-- TAB 0: AI ASSISTENT & PROACTIVE COPILOT -->
+    <!-- ================================================================= -->
+    <div class="tab-pane" id="pane-assistant">
+      <div class="copilot-container">
+        
+        <!-- Hero Header -->
+        <div class="copilot-hero">
+          <div class="copilot-hero-badge">⚡ AI COPILOT & PROACTIVE AGENT</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; color: #ffffff; margin: 0 0 6px 0;">
+                AIAppsy Intelligent Admin Copilot
+              </h2>
+              <p style="color: #cbd5e1; font-size: 0.9rem; max-width: 680px; margin: 0; line-height: 1.5;">
+                Din autonome administrator-assistent. Har full kontroll over kortlenker, rabattkoder, app-priser, kampanjebannere, møter og leads. Still spørsmål eller be assistenten utføre handlinger direkte.
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button id="btn-copilot-refresh-insights" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">
+                <span>🔄</span> Oppdater Innsikt
+              </button>
+              <button id="btn-copilot-toggle-settings" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">
+                <span>⚙️</span> Gemini API
+              </button>
+            </div>
+          </div>
+
+          <!-- Settings Bar (Collapsible) -->
+          <div id="copilot-settings-panel" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <label style="font-size: 0.82rem; font-weight: 700; color: #e9d5ff;">Gemini API-nøkkel (valgfritt):</label>
+              <input type="password" id="input-copilot-gemini-key" class="form-input" placeholder="AIzaSy..." style="max-width: 320px; font-size: 0.85rem; padding: 6px 12px;" />
+              <button id="btn-save-gemini-key" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.45rem 0.9rem;">Lagre Nøkkel</button>
+              <span id="gemini-key-status" style="font-size: 0.78rem; color: #34d399; font-weight: 700;"></span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">
+              * Uten API-nøkkel benyttes den innebygde autonome motoren med 100 % handlingsevne og systemkunnskap. Med nøkkel aktiveres Gemini 2.5 Flash for utvidet tekstproduksjon.
+            </div>
+          </div>
+        </div>
+
+        <!-- Proactive Insights Section -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.95rem; font-weight: 800; color: #f8fafc; display: flex; align-items: center; gap: 8px;">
+              <span>💡</span> Proaktive Anbefalinger & Systemstatus
+            </div>
+            <span id="copilot-insights-count" style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">0 forslag</span>
+          </div>
+          <div class="copilot-insights-grid" id="copilot-insights-container">
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 1.5rem; background: #0f172a; border-radius: 12px;">
+              Laster proaktive anbefalinger...
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Copilot Chat Box -->
+        <div class="copilot-chat-box">
+          <div class="copilot-chat-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="chat-avatar" style="width: 28px; height: 28px; min-width: 28px; font-size: 0.9rem;">🤖</div>
+              <div>
+                <div style="font-size: 0.9rem; font-weight: 800; color: #ffffff;">Admin Copilot Live Chat</div>
+                <div style="font-size: 0.72rem; color: #34d399; font-weight: 700;">● Klar for instruksjoner</div>
+              </div>
+            </div>
+            <button id="btn-clear-copilot-chat" class="btn btn-secondary" style="font-size: 0.75rem; padding: 3px 8px;">Tøm logg</button>
+          </div>
+
+          <div class="copilot-chat-history" id="copilot-chat-history">
+            <!-- Messages stream -->
+          </div>
+
+          <!-- Quick action chips -->
+          <div class="copilot-quick-chips">
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-right: 4px;">Forslag:</span>
+            <button class="copilot-chip" data-prompt="Lag en rabattkode på 20% som heter VELKOMMEN20">🏷️ Lag 20% rabattkode</button>
+            <button class="copilot-chip" data-prompt="Aktiver kampanjebanner">🚀 Aktiver kampanjebanner</button>
+            <button class="copilot-chip" data-prompt="Gi meg en status på hele systemet">📊 Systemstatus & Helse</button>
+            <button class="copilot-chip" data-prompt="Sett prisen på upworkz til 349 nok og 35 usd">💳 Sett Upworkz til kr 349</button>
+            <button class="copilot-chip" data-prompt="Vis ubesvarte leads og foreslå neste steg">📥 Sjekk leads</button>
+          </div>
+
+          <!-- Input bar -->
+          <div class="copilot-input-area">
+            <input type="text" id="copilot-chat-input" placeholder="Skriv en instruksjon eller spørsmål (f.eks. 'Lag en rabattkode på 25%', 'Endre pris på hubzoo')..." autocomplete="off" />
+            <button id="btn-copilot-send" class="btn btn-primary" style="padding: 0 1.25rem;">
+              <span>Send</span> ⚡
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- ================================================================= -->
     <!-- TAB 1: KORTLENKER (LINK ENGINE) -->
@@ -1542,6 +1918,7 @@
     const topbarTitle = document.getElementById('topbar-title');
 
     const tabMeta = {
+      assistant: { icon: '🤖', title: 'AI Assistent & Autonom Copilot' },
       links: { icon: '🔗', title: 'Kortlenker & Omdirigeringer' },
       campaigns: { icon: '🎯', title: 'Kampanjer & Pop-up Bannere' },
       meetings: { icon: '📅', title: 'Møter & Kalenderbooking' },
@@ -1624,7 +2001,19 @@
     let cachedBookings = [];
     let currentSelectedLead = null;
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     function initAdminData() {
+      initCopilot();
+      fetchCopilotInsights();
       fetchLinks();
       fetchCampaign();
       fetchMeetings();
@@ -1632,6 +2021,337 @@
       fetchLeads();
       fetchTracking();
       fetchPayments();
+    }
+
+    // =========================================================================
+    // 0. AI COPILOT & PROACTIVE ACTION CONTROLLER
+    // =========================================================================
+    const copilotInsightsContainer = document.getElementById('copilot-insights-container');
+    const copilotInsightsCount = document.getElementById('copilot-insights-count');
+    const copilotChatHistory = document.getElementById('copilot-chat-history');
+    const copilotChatInput = document.getElementById('copilot-chat-input');
+    const btnCopilotSend = document.getElementById('btn-copilot-send');
+    const btnCopilotRefreshInsights = document.getElementById('btn-copilot-refresh-insights');
+    const btnCopilotToggleSettings = document.getElementById('btn-copilot-toggle-settings');
+    const copilotSettingsPanel = document.getElementById('copilot-settings-panel');
+    const inputCopilotGeminiKey = document.getElementById('input-copilot-gemini-key');
+    const btnSaveGeminiKey = document.getElementById('btn-save-gemini-key');
+    const geminiKeyStatus = document.getElementById('gemini-key-status');
+    const btnClearCopilotChat = document.getElementById('btn-clear-copilot-chat');
+    const btnFloatingCopilot = document.getElementById('btn-floating-copilot');
+    const floatingCopilotBadge = document.getElementById('floating-copilot-badge');
+
+    let copilotHistoryList = [];
+
+    function initCopilot() {
+      // Restore gemini key if present
+      const savedKey = localStorage.getItem('aiappsy_gemini_key') || '';
+      if (inputCopilotGeminiKey) {
+        inputCopilotGeminiKey.value = savedKey;
+        if (savedKey) geminiKeyStatus.textContent = '✓ Nøkkel aktiv';
+      }
+
+      // Initial welcome message
+      if (copilotChatHistory && copilotChatHistory.children.length === 0) {
+        appendCopilotBubble('assistant', 
+          `Hei! 👋 Jeg er din **AIAppsy Admin Copilot**.\n\n` +
+          `Jeg overvåker systemet i sanntid og kan utføre handlinger direkte for deg:\n` +
+          `• **Opprette rabattkoder** (*f.eks. "Lag 20% rabattkode VELKOMMEN20"*)\n` +
+          `• **Aktivere/deaktivere kampanjebanner** (*f.eks. "Aktiver kampanjebanner"*)\n` +
+          `• **Justere app-priser** (*f.eks. "Sett Upworkz til kr 349"*)\n` +
+          `• **Lage kortlenker** (*f.eks. "Forkort https://lenke.no med slug min"*)\n` +
+          `• **Sjekke helse og leads** (*f.eks. "Status"*)\n\n` +
+          `Hva vil du ha hjelp til i dag?`
+        );
+      }
+
+      // Quick chips listener
+      document.querySelectorAll('.copilot-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const prompt = chip.getAttribute('data-prompt');
+          if (prompt) sendCopilotMessage(prompt);
+        });
+      });
+
+      // Send button
+      if (btnCopilotSend && copilotChatInput) {
+        btnCopilotSend.addEventListener('click', () => {
+          const text = copilotChatInput.value.trim();
+          if (text) {
+            sendCopilotMessage(text);
+            copilotChatInput.value = '';
+          }
+        });
+        copilotChatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            const text = copilotChatInput.value.trim();
+            if (text) {
+              sendCopilotMessage(text);
+              copilotChatInput.value = '';
+            }
+          }
+        });
+      }
+
+      // Refresh insights button
+      if (btnCopilotRefreshInsights) {
+        btnCopilotRefreshInsights.addEventListener('click', () => {
+          fetchCopilotInsights();
+          showToast('Innsikt og systemstatus oppdatert!');
+        });
+      }
+
+      // Toggle settings
+      if (btnCopilotToggleSettings && copilotSettingsPanel) {
+        btnCopilotToggleSettings.addEventListener('click', () => {
+          const isHidden = copilotSettingsPanel.style.display === 'none';
+          copilotSettingsPanel.style.display = isHidden ? 'block' : 'none';
+        });
+      }
+
+      // Save Gemini key
+      if (btnSaveGeminiKey && inputCopilotGeminiKey) {
+        btnSaveGeminiKey.addEventListener('click', () => {
+          const val = inputCopilotGeminiKey.value.trim();
+          localStorage.setItem('aiappsy_gemini_key', val);
+          geminiKeyStatus.textContent = val ? '✓ Nøkkel lagret!' : 'Nøkkel slettet (bruker autonom motor)';
+          setTimeout(() => { if (geminiKeyStatus) geminiKeyStatus.textContent = val ? '✓ Nøkkel aktiv' : ''; }, 3000);
+        });
+      }
+
+      // Clear chat
+      if (btnClearCopilotChat && copilotChatHistory) {
+        btnClearCopilotChat.addEventListener('click', () => {
+          copilotChatHistory.innerHTML = '';
+          copilotHistoryList = [];
+          appendCopilotBubble('assistant', 'Chat-historikk er tømt. Hva kan jeg hjelpe deg med?');
+        });
+      }
+
+      // Floating button
+      if (btnFloatingCopilot) {
+        btnFloatingCopilot.addEventListener('click', () => {
+          const tabBtn = document.querySelector('.nav-tab[data-tab="assistant"]');
+          if (tabBtn) tabBtn.click();
+          if (copilotChatInput) setTimeout(() => copilotChatInput.focus(), 150);
+        });
+      }
+    }
+
+    async function fetchCopilotInsights() {
+      try {
+        const res = await fetch('/api/assistant/insights?_t=' + Date.now(), {
+          headers: { 'x-admin-password': getPassword() }
+        });
+        if (res.status === 401) { checkAuth(); return; }
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && Array.isArray(data.insights)) {
+          renderCopilotInsights(data.insights);
+        }
+      } catch(e) {
+        console.error('Feil ved henting av copilot insights:', e);
+      }
+    }
+
+    function renderCopilotInsights(insights) {
+      if (!copilotInsightsContainer) return;
+      copilotInsightsCount.textContent = `${insights.length} aktive forslag`;
+
+      const alertCount = insights.filter(i => i.level === 'critical' || i.level === 'warning').length;
+      if (floatingCopilotBadge) {
+        if (alertCount > 0) {
+          floatingCopilotBadge.textContent = alertCount;
+          floatingCopilotBadge.style.display = 'inline-block';
+        } else {
+          floatingCopilotBadge.style.display = 'none';
+        }
+      }
+
+      if (insights.length === 0) {
+        copilotInsightsContainer.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; color: #34d399; padding: 1.5rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; font-weight: 700;">
+            ✓ Alt er optimalisert! Ingen advarsler eller kritiske oppgaver akkurat nå.
+          </div>`;
+        return;
+      }
+
+      copilotInsightsContainer.innerHTML = insights.map((item, idx) => {
+        const badgeColor = item.level === 'critical' ? '#f43f5e' :
+                           item.level === 'warning' ? '#f59e0b' :
+                           item.level === 'tip' ? '#38bdf8' : '#a855f7';
+        const badgeText = item.level === 'critical' ? 'KRITISK' :
+                          item.level === 'warning' ? 'ANBEFALING' :
+                          item.level === 'tip' ? 'TIPS' : 'INFO';
+        const payloadStr = encodeURIComponent(JSON.stringify(item.actionPayload || {}));
+
+        return `
+          <div class="copilot-insight-card level-${item.level}">
+            <div>
+              <div class="copilot-insight-header">
+                <span style="font-size: 0.7rem; font-weight: 800; color: ${badgeColor}; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px; border: 1px solid ${badgeColor}40;">
+                  ${badgeText}
+                </span>
+                <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">${item.category || 'System'}</span>
+              </div>
+              <div class="copilot-insight-title" style="margin-top: 8px;">${escapeHtml(item.title)}</div>
+              <div class="copilot-insight-desc" style="margin-top: 4px;">${escapeHtml(item.message)}</div>
+            </div>
+            ${item.actionLabel ? `
+              <button class="copilot-insight-btn" onclick="handleCopilotInsightAction('${payloadStr}', '${escapeHtml(item.title)}')">
+                <span>⚡</span> ${escapeHtml(item.actionLabel)}
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function handleCopilotInsightAction(encodedPayload, actionTitle) {
+      try {
+        const payload = JSON.parse(decodeURIComponent(encodedPayload));
+        if (!payload || !payload.type) return;
+
+        if (payload.type === 'open_tab') {
+          const tabBtn = document.querySelector(`.nav-tab[data-tab="${payload.tab}"]`);
+          if (tabBtn) tabBtn.click();
+          return;
+        }
+
+        const res = await fetch('/api/assistant/execute-action', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': getPassword()
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✓ ' + (data.message || 'Handling utført!'));
+          appendCopilotBubble('assistant', 
+            `⚡ **Handling utført automatisk:**\n` +
+            `*${data.message}*`
+          );
+          // Refresh caches
+          if (payload.type === 'create_voucher') fetchVouchers();
+          if (payload.type === 'update_campaign') fetchCampaign();
+          if (payload.type === 'shorten_link') fetchLinks();
+          if (payload.type === 'update_app_price') fetchPayments();
+          if (payload.type === 'update_tracking') fetchTracking();
+          if (payload.type === 'update_lead_status') fetchLeads();
+          fetchCopilotInsights();
+        } else {
+          alert('Feil ved kjøring av handling: ' + (data.error || 'Ukjent feil'));
+        }
+      } catch(err) {
+        alert('Kommunikasjonsfeil: ' + err.message);
+      }
+    }
+
+    async function sendCopilotMessage(userMessage) {
+      appendCopilotBubble('user', userMessage);
+      copilotHistoryList.push({ role: 'user', content: userMessage });
+
+      // Add thinking bubble
+      const thinkingId = 'copilot-thinking-' + Date.now();
+      const thinkingEl = document.createElement('div');
+      thinkingEl.id = thinkingId;
+      thinkingEl.className = 'chat-bubble-wrap assistant';
+      thinkingEl.innerHTML = `
+        <div class="chat-avatar">🤖</div>
+        <div class="chat-bubble" style="font-style: italic; color: var(--text-muted);">
+          Copilot tenker og analyserer...
+        </div>
+      `;
+      copilotChatHistory.appendChild(thinkingEl);
+      copilotChatHistory.scrollTop = copilotChatHistory.scrollHeight;
+
+      try {
+        const geminiKey = localStorage.getItem('aiappsy_gemini_key') || '';
+        const res = await fetch('/api/assistant/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': getPassword()
+          },
+          body: JSON.stringify({
+            message: userMessage,
+            history: copilotHistoryList.slice(-6),
+            geminiApiKey: geminiKey
+          })
+        });
+
+        const elToRemove = document.getElementById(thinkingId);
+        if (elToRemove) elToRemove.remove();
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          appendCopilotBubble('assistant', `⚠️ Feil fra assistenten: ${errData.error || res.statusText}`);
+          return;
+        }
+
+        const data = await res.json();
+        if (data.success) {
+          appendCopilotBubble('assistant', data.reply, data.actionTaken);
+          copilotHistoryList.push({ role: 'assistant', content: data.reply });
+
+          // If action was executed, refresh relevant admin views
+          if (data.actionTaken) {
+            if (data.actionTaken.type === 'create_voucher') fetchVouchers();
+            if (data.actionTaken.type === 'update_campaign') fetchCampaign();
+            if (data.actionTaken.type === 'shorten_link') fetchLinks();
+            if (data.actionTaken.type === 'update_app_price') fetchPayments();
+            fetchCopilotInsights();
+          }
+        } else {
+          appendCopilotBubble('assistant', `Beklager, det oppstod en feil: ${data.error}`);
+        }
+      } catch(err) {
+        const elToRemove = document.getElementById(thinkingId);
+        if (elToRemove) elToRemove.remove();
+        appendCopilotBubble('assistant', `Nettverksfeil: ${err.message}`);
+      }
+    }
+
+    function appendCopilotBubble(sender, markdownText, actionTaken = null) {
+      if (!copilotChatHistory) return;
+      const wrap = document.createElement('div');
+      wrap.className = `chat-bubble-wrap ${sender}`;
+
+      const avatar = document.createElement('div');
+      avatar.className = 'chat-avatar';
+      avatar.textContent = sender === 'user' ? '👤' : '🤖';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+      
+      // Simple markdown format converter
+      let formatted = escapeHtml(markdownText)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85em;">$1</code>')
+        .replace(/\n/g, '<br>');
+      
+      bubble.innerHTML = formatted;
+
+      if (actionTaken) {
+        const actDiv = document.createElement('div');
+        actDiv.className = 'copilot-action-card';
+        actDiv.innerHTML = `
+          <div style="font-weight: 800; color: #34d399; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <span>✓</span> Handling utført (${actionTaken.type})
+          </div>
+          <div style="font-size: 0.8rem; color: #cbd5e1;">Endringen er lagret og aktiv umiddelbart i systemet.</div>
+        `;
+        bubble.appendChild(actDiv);
+      }
+
+      wrap.appendChild(avatar);
+      wrap.appendChild(bubble);
+      copilotChatHistory.appendChild(wrap);
+      copilotChatHistory.scrollTop = copilotChatHistory.scrollHeight;
     }
 
     // =========================================================================
@@ -2889,5 +3609,12 @@
 
     checkAuth();
   </script>
+
+  <!-- Floating AI Copilot Quick Launcher -->
+  <button id="btn-floating-copilot" class="floating-copilot-btn" title="Åpne AI Copilot (Sanntidsassistent)">
+    <span>🤖</span>
+    <span>AI Copilot</span>
+    <span id="floating-copilot-badge" class="badge-alert" style="display: none;">0</span>
+  </button>
 </body>
 </html>
