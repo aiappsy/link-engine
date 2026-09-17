@@ -1,0 +1,28 @@
+[
+  {
+    "id": "lead_1789607163940",
+    "name": "Test Bedrift AS",
+    "email": "test@bedrift.no",
+    "projectType": "Proposal: WordPress AI Agent [kr 14 240] (AI2026)",
+    "message": "Konfigurert tilbud med AI2026 (-kr 3 560)",
+    "createdAt": "2026-09-17T01:06:03.940Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "lead_1789606542803",
+    "name": "Lars Holm",
+    "email": "lars@proffagency.no",
+    "projectType": "Møte: 30 min Gratis AI-Strategisamtale",
+    "message": "Booket tidspunkt: 2026-09-23 kl. 11:30. Notater: Vi ønsker vurdering av AI-agent for nettsiden vår.",
+    "createdAt": "2026-09-17T00:55:42.803Z",
+    "status": "meeting_booked",
+    "notes": [
+      {
+        "id": "note_1789606542803",
+        "text": "Møte opprettet via bookingportal (30 min Gratis AI-Strategisamtale)",
+        "createdAt": "2026-09-17T00:55:42.803Z"
+      }
+    ],
+    "communications": []
+  }
+]

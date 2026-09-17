@@ -1,0 +1,41 @@
+[
+  {
+    "code": "AI2026",
+    "discountType": "percent",
+    "discountValue": 20,
+    "currency": "NOK",
+    "maxUses": 100,
+    "usedCount": 0,
+    "expiresAt": "2026-12-31T23:59:59.000Z",
+    "active": true,
+    "appliesTo": "all",
+    "description": "20% introduksjonsrabatt på autonome AI-agenter og tilpasset utvikling",
+    "createdAt": "2026-09-17T02:50:00.000Z"
+  },
+  {
+    "code": "STARTUP25",
+    "discountType": "percent",
+    "discountValue": 25,
+    "currency": "NOK",
+    "maxUses": 50,
+    "usedCount": 0,
+    "expiresAt": "2026-12-31T23:59:59.000Z",
+    "active": true,
+    "appliesTo": "all",
+    "description": "25% vekstrabatt for startups og tidligfaseselskaper",
+    "createdAt": "2026-09-17T02:50:00.000Z"
+  },
+  {
+    "code": "VELKOMMEN",
+    "discountType": "fixed",
+    "discountValue": 2500,
+    "currency": "NOK",
+    "maxUses": 50,
+    "usedCount": 0,
+    "expiresAt": "2026-12-31T23:59:59.000Z",
+    "active": true,
+    "appliesTo": "all",
+    "description": "kr 2 500 i fast oppstartsrabatt på tilbud over kr 10 000",
+    "createdAt": "2026-09-17T02:50:00.000Z"
+  }
+]

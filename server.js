@@ -13,6 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.STUDIO_PASSWORD || 'aiappsy2026';
 const DATA_FILE = path.join(__dirname, 'links.json');
+const LEADS_FILE = path.join(__dirname, 'leads.json');
+const SETTINGS_FILE = path.join(__dirname, 'settings.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 app.use(express.json({ limit: '10mb' }));
@@ -428,6 +430,509 @@ app.post('/api/login', (req, res) => {
 });
 
 // Auth Status Ping
+
+// ============================================================================
+// VOUCHER & RABATTKUPONG ENGINE
+// ============================================================================
+const VOUCHERS_FILE = path.join(__dirname, 'vouchers.json');
+
+function loadVouchers() {
+  try {
+    if (fs.existsSync(VOUCHERS_FILE)) {
+      return JSON.parse(fs.readFileSync(VOUCHERS_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error('Feil ved lesing av vouchers:', e);
+  }
+  return [];
+}
+
+function saveVouchers(vouchers) {
+  try {
+    fs.writeFileSync(VOUCHERS_FILE, JSON.stringify(vouchers, null, 2), 'utf8');
+    return true;
+  } catch (e) {
+    console.error('Feil ved lagring av vouchers:', e);
+    return false;
+  }
+}
+
+// GET all vouchers (Admin protected)
+app.get('/api/vouchers', requireAdminAuth, (req, res) => {
+  const vouchers = loadVouchers();
+  res.json({ success: true, vouchers });
+});
+
+// POST create or update voucher (Admin protected)
+app.post('/api/vouchers', requireAdminAuth, (req, res) => {
+  const { code, discountType, discountValue, currency, maxUses, expiresAt, active, appliesTo, description } = req.body || {};
+  if (!code) {
+    return res.status(400).json({ success: false, error: 'Kupongkode er påkrevd.' });
+  }
+
+  const cleanCode = code.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+  const val = parseFloat(discountValue) || 0;
+  if (val <= 0) {
+    return res.status(400).json({ success: false, error: 'Rabattverdi må være større enn 0.' });
+  }
+
+  const vouchers = loadVouchers();
+  const existingIdx = vouchers.findIndex(v => v.code === cleanCode);
+
+  const voucherObj = {
+    code: cleanCode,
+    discountType: discountType === 'fixed' ? 'fixed' : 'percent',
+    discountValue: val,
+    currency: currency || 'NOK',
+    maxUses: maxUses ? parseInt(maxUses, 10) : null,
+    usedCount: existingIdx !== -1 ? (vouchers[existingIdx].usedCount || 0) : 0,
+    expiresAt: expiresAt || null,
+    active: typeof active === 'boolean' ? active : true,
+    appliesTo: appliesTo || 'all',
+    description: (description || '').trim(),
+    createdAt: existingIdx !== -1 ? vouchers[existingIdx].createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  if (existingIdx !== -1) {
+    vouchers[existingIdx] = voucherObj;
+  } else {
+    vouchers.unshift(voucherObj);
+  }
+
+  saveVouchers(vouchers);
+  res.json({
+    success: true,
+    message: existingIdx !== -1 ? `Kupong ${cleanCode} oppdatert!` : `Kupong ${cleanCode} opprettet!`,
+    voucher: voucherObj
+  });
+});
+
+// DELETE voucher (Admin protected)
+app.delete('/api/vouchers/:code', requireAdminAuth, (req, res) => {
+  const cleanCode = req.params.code.trim().toUpperCase();
+  const vouchers = loadVouchers();
+  const filtered = vouchers.filter(v => v.code !== cleanCode);
+  if (filtered.length === vouchers.length) {
+    return res.status(404).json({ success: false, error: 'Kupongen finnes ikke.' });
+  }
+  saveVouchers(filtered);
+  res.json({ success: true, message: `Kupong ${cleanCode} slettet.` });
+});
+
+// POST validate voucher (Public endpoint for generator and checkout)
+app.post('/api/vouchers/validate', (req, res) => {
+  const { code, amount } = req.body || {};
+  if (!code) {
+    return res.status(400).json({ success: false, error: 'Ingen kupongkode oppgitt.' });
+  }
+
+  const cleanCode = code.trim().toUpperCase();
+  const vouchers = loadVouchers();
+  const v = vouchers.find(item => item.code === cleanCode);
+
+  if (!v || !v.active) {
+    return res.status(404).json({ success: false, error: 'Ugyldig eller deaktivert kupongkode.' });
+  }
+
+  if (v.expiresAt && new Date(v.expiresAt).getTime() < Date.now()) {
+    return res.status(400).json({ success: false, error: 'Denne kupongkoden har utløpt.' });
+  }
+
+  if (v.maxUses && v.usedCount >= v.maxUses) {
+    return res.status(400).json({ success: false, error: 'Denne kupongkoden har nådd maksimalt antall bruk.' });
+  }
+
+  const baseAmount = parseFloat(amount) || 0;
+  let discountAmount = 0;
+
+  if (v.discountType === 'percent') {
+    discountAmount = Math.round(baseAmount * (v.discountValue / 100));
+  } else {
+    discountAmount = Math.min(baseAmount, v.discountValue);
+  }
+
+  const newTotal = Math.max(0, baseAmount - discountAmount);
+
+  res.json({
+    success: true,
+    valid: true,
+    code: v.code,
+    discountType: v.discountType,
+    discountValue: v.discountValue,
+    discountAmount,
+    newTotal,
+    description: v.description,
+    currency: v.currency || 'NOK'
+  });
+});
+
+// ============================================================================
+// LEAD CRM & COMMUNICATION ENGINE
+// ============================================================================
+function loadLeadsSafe() {
+  try {
+    if (fs.existsSync(LEADS_FILE)) {
+      return JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error('Feil ved lesing av leads:', e);
+  }
+  return [];
+}
+
+function saveLeadsSafe(leads) {
+  try {
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2), 'utf8');
+    return true;
+  } catch (e) {
+    console.error('Feil ved lagring av leads:', e);
+    return false;
+  }
+}
+
+// PUT /api/leads/:id/status (Update pipeline status)
+app.put('/api/leads/:id/status', requireAdminAuth, (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body || {};
+  const allowed = ['new', 'contacted', 'meeting_booked', 'proposal_sent', 'won', 'archived'];
+  if (!allowed.includes(status)) {
+    return res.status(400).json({ success: false, error: 'Ugyldig status.' });
+  }
+
+  const leads = loadLeadsSafe();
+  const lead = leads.find(l => l.id === id);
+  if (!lead) {
+    return res.status(404).json({ success: false, error: 'Lead ikke funnet.' });
+  }
+
+  lead.status = status;
+  lead.updatedAt = new Date().toISOString();
+  saveLeadsSafe(leads);
+
+  res.json({ success: true, message: `Status oppdatert til ${status}`, lead });
+});
+
+// POST /api/leads/:id/notes (Add internal note)
+app.post('/api/leads/:id/notes', requireAdminAuth, (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body || {};
+  if (!text || !text.trim()) {
+    return res.status(400).json({ success: false, error: 'Notattekst kan ikke være tom.' });
+  }
+
+  const leads = loadLeadsSafe();
+  const lead = leads.find(l => l.id === id);
+  if (!lead) {
+    return res.status(404).json({ success: false, error: 'Lead ikke funnet.' });
+  }
+
+  if (!lead.notes) lead.notes = [];
+  const note = {
+    id: 'note_' + Date.now(),
+    text: text.trim(),
+    createdAt: new Date().toISOString()
+  };
+  lead.notes.unshift(note);
+  lead.updatedAt = new Date().toISOString();
+  saveLeadsSafe(leads);
+
+  res.json({ success: true, message: 'Notat lagret!', note, lead });
+});
+
+// POST /api/leads/:id/reply (Log outbound communication / email response)
+app.post('/api/leads/:id/reply', requireAdminAuth, (req, res) => {
+  const { id } = req.params;
+  const { subject, body, voucherCode } = req.body || {};
+  if (!body || !body.trim()) {
+    return res.status(400).json({ success: false, error: 'Meldingsinnhold er påkrevd.' });
+  }
+
+  const leads = loadLeadsSafe();
+  const lead = leads.find(l => l.id === id);
+  if (!lead) {
+    return res.status(404).json({ success: false, error: 'Lead ikke funnet.' });
+  }
+
+  if (!lead.communications) lead.communications = [];
+  const comm = {
+    id: 'comm_' + Date.now(),
+    direction: 'outbound',
+    subject: (subject || 'Svar fra AIAPPSY').trim(),
+    body: body.trim(),
+    voucherCode: (voucherCode || '').trim() || null,
+    sentAt: new Date().toISOString()
+  };
+
+  lead.communications.unshift(comm);
+  if (lead.status === 'new') {
+    lead.status = voucherCode ? 'proposal_sent' : 'contacted';
+  }
+  lead.updatedAt = new Date().toISOString();
+  saveLeadsSafe(leads);
+
+  res.json({ success: true, message: 'Melding logget og status oppdatert!', comm, lead });
+});
+
+// ============================================================================
+// MEETING BOOKING & MANAGEMENT ENGINE
+// ============================================================================
+const BOOKINGS_FILE = path.join(__dirname, 'bookings.json');
+
+function loadBookings() {
+  try {
+    if (fs.existsSync(BOOKINGS_FILE)) {
+      return JSON.parse(fs.readFileSync(BOOKINGS_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error('Feil ved lesing av bookings:', e);
+  }
+  return [];
+}
+
+function saveBookings(bookings) {
+  try {
+    fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2), 'utf8');
+    return true;
+  } catch (e) {
+    console.error('Feil ved lagring av bookings:', e);
+    return false;
+  }
+}
+
+const STANDARD_TIME_SLOTS = ['09:00', '10:00', '11:30', '13:00', '14:30', '16:00'];
+
+// GET available slots for a given date (Public)
+app.get('/api/bookings/available-slots', (req, res) => {
+  const date = req.query.date;
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({ success: false, error: 'Ugyldig datoformat (YYYY-MM-DD).' });
+  }
+
+  const bookings = loadBookings();
+  const bookedSlots = bookings
+    .filter(b => b.date === date && b.status !== 'cancelled')
+    .map(b => b.time);
+
+  const available = STANDARD_TIME_SLOTS.filter(slot => !bookedSlots.includes(slot));
+  res.json({ success: true, date, availableSlots: available, bookedSlots });
+});
+
+// POST create booking (Public)
+app.post('/api/bookings', (req, res) => {
+  const { name, email, company, phone, type, date, time, notes } = req.body || {};
+  if (!name || !email || !email.includes('@') || !date || !time) {
+    return res.status(400).json({ success: false, error: 'Navn, gyldig e-post, dato og klokkeslett kreves.' });
+  }
+
+  const bookings = loadBookings();
+  const isConflict = bookings.some(b => b.date === date && b.time === time && b.status !== 'cancelled');
+  if (isConflict) {
+    return res.status(400).json({ success: false, error: 'Dette tidspunktet er dessverre allerede booket. Vennligst velg et annet.' });
+  }
+
+  let title = '30 min Gratis AI-Strategisamtale';
+  let duration = 30;
+  if (type === 'technical') {
+    title = '45 min Teknisk AI-Arkitekturgjennomgang';
+    duration = 45;
+  } else if (type === 'demo') {
+    title = '15 min AI-Demo & White-label Q&A';
+    duration = 15;
+  }
+
+  const meetId = 'aiappsy-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 6);
+  const meetUrl = `https://meet.google.com/${meetId}`;
+
+  const booking = {
+    id: 'meet_' + Date.now(),
+    title,
+    type: type || 'strategy',
+    name: name.trim(),
+    email: email.trim(),
+    company: (company || '').trim(),
+    phone: (phone || '').trim(),
+    date: date.trim(),
+    time: time.trim(),
+    duration,
+    meetUrl,
+    status: 'confirmed',
+    notes: (notes || '').trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  bookings.unshift(booking);
+  saveBookings(bookings);
+
+  // Automatically record as a lead in CRM
+  try {
+    const leads = loadLeadsSafe();
+    const existingLead = leads.find(l => l.email && l.email.toLowerCase() === booking.email.toLowerCase());
+    if (existingLead) {
+      existingLead.status = 'meeting_booked';
+      if (!existingLead.notes) existingLead.notes = [];
+      existingLead.notes.unshift({
+        id: 'note_' + Date.now(),
+        text: `Booket møte: ${booking.title} den ${booking.date} kl. ${booking.time}`,
+        createdAt: new Date().toISOString()
+      });
+      existingLead.updatedAt = new Date().toISOString();
+      saveLeadsSafe(leads);
+    } else {
+      const newLead = {
+        id: 'lead_' + Date.now(),
+        name: booking.name,
+        email: booking.email,
+        projectType: `Møte: ${booking.title}`,
+        message: `Booket tidspunkt: ${booking.date} kl. ${booking.time}. Notater: ${booking.notes || 'Ingen'}`,
+        createdAt: new Date().toISOString(),
+        status: 'meeting_booked',
+        notes: [{
+          id: 'note_' + Date.now(),
+          text: `Møte opprettet via bookingportal (${booking.title})`,
+          createdAt: new Date().toISOString()
+        }],
+        communications: []
+      };
+      leads.unshift(newLead);
+      saveLeadsSafe(leads);
+    }
+  } catch (err) {
+    console.error('Feil ved CRM-kobling av booking:', err);
+  }
+
+  console.log(`[Booking Opprettet] ${booking.name} <${booking.email}> - ${booking.title} (${booking.date} ${booking.time})`);
+  res.json({
+    success: true,
+    message: 'Møtet er bekreftet!',
+    booking
+  });
+});
+
+// GET all bookings (Admin protected)
+app.get('/api/bookings', requireAdminAuth, (req, res) => {
+  const bookings = loadBookings();
+  res.json({ success: true, bookings });
+});
+
+// PUT update booking (Admin protected)
+app.put('/api/bookings/:id', requireAdminAuth, (req, res) => {
+  const { id } = req.params;
+  const updates = req.body || {};
+  const bookings = loadBookings();
+  const booking = bookings.find(b => b.id === id);
+  if (!booking) {
+    return res.status(404).json({ success: false, error: 'Møtebooking ikke funnet.' });
+  }
+
+  if (updates.status) booking.status = updates.status;
+  if (updates.date) booking.date = updates.date;
+  if (updates.time) booking.time = updates.time;
+  if (updates.meetUrl) booking.meetUrl = updates.meetUrl;
+  if (updates.notes) booking.notes = updates.notes;
+  booking.updatedAt = new Date().toISOString();
+
+  saveBookings(bookings);
+  res.json({ success: true, message: 'Møtebooking oppdatert!', booking });
+});
+
+// DELETE booking (Admin protected)
+app.delete('/api/bookings/:id', requireAdminAuth, (req, res) => {
+  const { id } = req.params;
+  const bookings = loadBookings();
+  const filtered = bookings.filter(b => b.id !== id);
+  if (filtered.length === bookings.length) {
+    return res.status(404).json({ success: false, error: 'Møtebooking ikke funnet.' });
+  }
+  saveBookings(filtered);
+  res.json({ success: true, message: 'Møtebooking slettet.' });
+});
+
+// GET generate .ics calendar invite (Public)
+app.get('/api/bookings/:id/ics', (req, res) => {
+  const { id } = req.params;
+  const bookings = loadBookings();
+  const b = bookings.find(item => item.id === id);
+  if (!b) {
+    return res.status(404).send('Booking not found');
+  }
+
+  const [year, month, day] = b.date.split('-');
+  const [hour, minute] = b.time.split(':');
+  const startDt = `${year}${month}${day}T${hour}${minute}00`;
+  const durHours = Math.floor(b.duration / 60);
+  const durMins = b.duration % 60;
+  const endHour = String(parseInt(hour, 10) + durHours).padStart(2, '0');
+  const endMin = String(parseInt(minute, 10) + durMins).padStart(2, '0');
+  const endDt = `${year}${month}${day}T${endHour}${endMin}00`;
+
+  const icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//AIAPPSY//Meeting Scheduler//NO',
+    'CALSCALE:GREGORIAN',
+    'METHOD:REQUEST',
+    'BEGIN:VEVENT',
+    `UID:${b.id}@aiappsy.com`,
+    `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
+    `DTSTART:${startDt}`,
+    `DTEND:${endDt}`,
+    `SUMMARY:AIAPPSY: ${b.title}`,
+    `DESCRIPTION:${b.title}\\n\\nMøtelenke: ${b.meetUrl}\\nKontakt: paljuritzen@gmail.com\\nNotater: ${b.notes || 'Ingen'}`,
+    `LOCATION:${b.meetUrl}`,
+    'STATUS:CONFIRMED',
+    'ORGANIZER;CN=AIAPPSY Engineering:mailto:paljuritzen@gmail.com',
+    `ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=${b.name}:mailto:${b.email}`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="aiappsy-mote-${b.date}.ics"`);
+  res.send(icsContent);
+});
+
+// ============================================================================
+// TRACKING & ANALYTICS SETTINGS
+// ============================================================================
+const TRACKING_FILE = path.join(__dirname, 'tracking.json');
+
+function loadTrackingConfig() {
+  try {
+    if (fs.existsSync(TRACKING_FILE)) {
+      return JSON.parse(fs.readFileSync(TRACKING_FILE, 'utf8'));
+    }
+  } catch(e) {}
+  return { ga4_id: '', clarity_id: '' };
+}
+
+function saveTrackingConfig(cfg) {
+  try {
+    fs.writeFileSync(TRACKING_FILE, JSON.stringify(cfg, null, 2), 'utf8');
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+// GET tracking config (Public for client injection)
+app.get('/api/settings/tracking', (req, res) => {
+  res.json({ success: true, tracking: loadTrackingConfig() });
+});
+
+// POST save tracking config (Admin protected)
+app.post('/api/settings/tracking', requireAdminAuth, (req, res) => {
+  const { ga4_id, clarity_id } = req.body || {};
+  const cfg = {
+    ga4_id: (ga4_id || '').trim(),
+    clarity_id: (clarity_id || '').trim(),
+    updatedAt: new Date().toISOString()
+  };
+  saveTrackingConfig(cfg);
+  res.json({ success: true, message: 'Sporingsinnstillinger lagret!', tracking: cfg });
+});
+
+
 app.get('/api/auth-check', requireAdminAuth, (req, res) => {
   res.json({ success: true, authorized: true });
 });
@@ -594,96 +1099,6 @@ app.use(express.static(PUBLIC_DIR, {
   maxAge: '1h'
 }));
 
-// ============================================================================
-// LINK REDIRECT ENGINE (RUNS AFTER STATIC FILES)
-// ============================================================================
-
-// 1. Single Segment Redirect: /:slug
-app.get('/:slug', (req, res, next) => {
-  const slug = req.params.slug.toLowerCase().trim();
-  const links = loadLinks();
-
-  if (links[slug]) {
-    links[slug].clicks = (links[slug].clicks || 0) + 1;
-    scheduleSaveLinks();
-
-    try {
-      const targetUrl = new URL(links[slug].url);
-      for (const [k, v] of Object.entries(req.query)) {
-        targetUrl.searchParams.set(k, v);
-      }
-      return res.redirect(302, targetUrl.toString());
-    } catch (err) {
-      let fallback = links[slug].url;
-      const qIdx = req.url.indexOf('?');
-      if (qIdx !== -1) {
-        const qs = req.url.slice(qIdx + 1);
-        fallback += (fallback.includes('?') ? '&' : '?') + qs;
-      }
-      return res.redirect(302, fallback);
-    }
-  }
-
-  next();
-});
-
-// 2. Subpath Redirect: /:slug/* (Forwards subpaths to destination)
-app.get('/:slug/*', (req, res, next) => {
-  const slug = req.params.slug.toLowerCase().trim();
-  const links = loadLinks();
-
-  if (links[slug]) {
-    links[slug].clicks = (links[slug].clicks || 0) + 1;
-    scheduleSaveLinks();
-
-    try {
-      const subpath = req.params[0];
-      const targetUrl = new URL(links[slug].url);
-      targetUrl.pathname = path.posix.join(targetUrl.pathname, subpath);
-      for (const [k, v] of Object.entries(req.query)) {
-        targetUrl.searchParams.set(k, v);
-      }
-      return res.redirect(302, targetUrl.toString());
-    } catch (err) {
-      return res.redirect(302, links[slug].url);
-    }
-  }
-
-  next();
-});
-
-// 3. Fallback 404 Page
-app.use((req, res) => {
-  res.status(404).send(`
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <title>404 — Page Not Found | AIAPPSY</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #0b0f19; color: #f8fafc; }
-          .card { background: #131d35; padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 440px; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-          h1 { margin: 0 0 0.5rem; font-size: 2.2rem; color: #f43f5e; }
-          p { color: #94a3b8; line-height: 1.5; margin-bottom: 1.5rem; }
-          a { display: inline-block; background: #6366f1; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; }
-          a:hover { background: #4f46e5; }
-        </style>
-      </head>
-      <body>
-        <div class="card">
-          <h1>404</h1>
-          <p>The requested page or shortlink <strong>${req.path}</strong> was not found.</p>
-          <a href="/">Return to AIAPPSY Home</a>
-        </div>
-      </body>
-    </html>
-  `);
-});
-
-
-const LEADS_FILE = path.join(__dirname, 'leads.json');
-
 // API: Motta henvendelse / lead capture
 app.post('/api/inquiry', (req, res) => {
   const { name, email, projectType, message } = req.body || {};
@@ -823,6 +1238,94 @@ app.post('/api/campaign', (req, res) => {
   console.log('[Campaign Engine] Kampanje oppdatert. Aktiv status:', updated.active);
   res.json({ success: true, message: 'Kampanjeoppsett lagret!', campaign: updated });
 });
+
+// ============================================================================
+// LINK REDIRECT ENGINE (RUNS AFTER STATIC FILES)
+// ============================================================================
+
+// 1. Single Segment Redirect: /:slug
+app.get('/:slug', (req, res, next) => {
+  const slug = req.params.slug.toLowerCase().trim();
+  const links = loadLinks();
+
+  if (links[slug]) {
+    links[slug].clicks = (links[slug].clicks || 0) + 1;
+    scheduleSaveLinks();
+
+    try {
+      const targetUrl = new URL(links[slug].url);
+      for (const [k, v] of Object.entries(req.query)) {
+        targetUrl.searchParams.set(k, v);
+      }
+      return res.redirect(302, targetUrl.toString());
+    } catch (err) {
+      let fallback = links[slug].url;
+      const qIdx = req.url.indexOf('?');
+      if (qIdx !== -1) {
+        const qs = req.url.slice(qIdx + 1);
+        fallback += (fallback.includes('?') ? '&' : '?') + qs;
+      }
+      return res.redirect(302, fallback);
+    }
+  }
+
+  next();
+});
+
+// 2. Subpath Redirect: /:slug/* (Forwards subpaths to destination)
+app.get('/:slug/*', (req, res, next) => {
+  const slug = req.params.slug.toLowerCase().trim();
+  const links = loadLinks();
+
+  if (links[slug]) {
+    links[slug].clicks = (links[slug].clicks || 0) + 1;
+    scheduleSaveLinks();
+
+    try {
+      const subpath = req.params[0];
+      const targetUrl = new URL(links[slug].url);
+      targetUrl.pathname = path.posix.join(targetUrl.pathname, subpath);
+      for (const [k, v] of Object.entries(req.query)) {
+        targetUrl.searchParams.set(k, v);
+      }
+      return res.redirect(302, targetUrl.toString());
+    } catch (err) {
+      return res.redirect(302, links[slug].url);
+    }
+  }
+
+  next();
+});
+
+// 3. Fallback 404 Page
+app.use((req, res) => {
+  res.status(404).send(`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>404 — Page Not Found | AIAPPSY</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #0b0f19; color: #f8fafc; }
+          .card { background: #131d35; padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 440px; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+          h1 { margin: 0 0 0.5rem; font-size: 2.2rem; color: #f43f5e; }
+          p { color: #94a3b8; line-height: 1.5; margin-bottom: 1.5rem; }
+          a { display: inline-block; background: #6366f1; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; }
+          a:hover { background: #4f46e5; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h1>404</h1>
+          <p>The requested page or shortlink <strong>${req.path}</strong> was not found.</p>
+          <a href="/">Return to AIAPPSY Home</a>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
 
 app.listen(PORT, () => {
   console.log(`======================================================`);

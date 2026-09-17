@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Møte & Gratis AI-Strategisamtale | AIAPPSY</title>
+  <meta name="description" content="Book en uforpliktende 30-minutters AI-strategisamtale med våre ingeniører. Vi kartlegger automatiseringspotensialet for din bedrift.">
+  <link rel="canonical" href="https://aiappsy.com/booking.html">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .booking-wrap {
+      max-width: 900px; margin: 3rem auto; padding: 0 1.5rem;
+    }
+    .booking-card {
+      background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px; padding: 2.5rem;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.12);
+    }
+    .meeting-type-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .type-card {
+      background: #131d35; border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s ease;
+      position: relative;
+    }
+    .type-card:hover { border-color: rgba(99, 102, 241, 0.5); transform: translateY(-2px); }
+    .type-card.selected {
+      border-color: #6366f1; background: rgba(99, 102, 241, 0.12);
+    }
+    .type-badge {
+      font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+      background: rgba(99, 102, 241, 0.25); color: #818cf8; display: inline-block; margin-bottom: 8px;
+    }
+    .time-slot-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .slot-pill {
+      background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff; padding: 0.65rem 0.5rem; border-radius: 8px; text-align: center;
+      font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: all 0.15s ease;
+    }
+    .slot-pill:hover { border-color: #6366f1; background: rgba(99, 102, 241, 0.15); }
+    .slot-pill.selected {
+      background: #6366f1; border-color: #6366f1; color: #ffffff;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+    }
+    .slot-pill.disabled {
+      background: rgba(255, 255, 255, 0.03); color: #64748b; cursor: not-allowed;
+      border-color: transparent; text-decoration: line-through;
+    }
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .booking-card { padding: 1.5rem; }
+    }
+    .b-input {
+      width: 100%; background: #090e1a; border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.95rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .b-input:focus {
+      border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .confirm-card {
+      text-align: center; padding: 2rem 1rem; display: none;
+    }
+    .confirm-icon {
+      font-size: 3.5rem; margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="site-nav">
+    <a href="/" class="brand-logo">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>aiappsy<span>.com</span></h1>
+        <p class="lang-en">Frontier AI Product Studio</p>
+        <p class="lang-no">Norsk AI-produktstudio</p>
+      </div>
+    </a>
+
+    <div class="nav-links">
+      <a href="/#apps" class="nav-link">
+        <span class="lang-en">Our Apps</span>
+        <span class="lang-no">Våre AI-apper</span>
+      </a>
+      <a href="/custom-development.html" class="nav-link">
+        <span class="lang-en">Custom Engineering</span>
+        <span class="lang-no">Skreddersøm</span>
+      </a>
+      <a href="/generator.html" class="nav-link">
+        <span class="lang-en">⚡ Proposal Generator</span>
+        <span class="lang-no">⚡ Tilbudsgenerator</span>
+      </a>
+      <a href="/articles/index.html" class="nav-link">
+        <span class="lang-en">Articles</span>
+        <span class="lang-no">Innsikt</span>
+      </a>
+      <button class="lang-switch-btn" id="btn-lang-toggle" title="Bytt språk / Switch language">
+        <span class="lang-flag">🇳🇴</span>
+        <span class="lang-label">Norsk</span>
+      </button>
+      <a href="/booking.html" class="btn-nav-cta" style="background: linear-gradient(135deg, #10b981, #059669);">
+        <span>📅</span>
+        <span class="lang-en">Book Meeting</span>
+        <span class="lang-no">Book Møte</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="booking-wrap">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div class="hero-pill-tag" style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span>📅</span>
+        <span class="lang-en">Direct Video Consultation</span>
+        <span class="lang-no">Direkte Videomøte med våre ingeniører</span>
+      </div>
+      <h1 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 10px;">
+        <span class="lang-en">Book a Strategy Session</span>
+        <span class="lang-no">Book en Uforpliktende AI-Strategisamtale</span>
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        <span class="lang-en">Select a meeting format, choose an open calendar slot, and discuss your workflow automation goals with our senior AI engineers.</span>
+        <span class="lang-no">Velg møteformat, plukk et tidspunkt som passer, og diskuter hvordan autonome agenter eller skreddersøm kan automatisere din bedrift.</span>
+      </p>
+    </div>
+
+    <div class="booking-card">
+
+      <!-- STEP 1: SELECT MEETING TYPE -->
+      <div id="booking-step-area">
+        <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem;">
+          <span class="lang-en">1. Select Meeting Format</span>
+          <span class="lang-no">1. Velg ønsket møteformat</span>
+        </h3>
+
+        <div class="meeting-type-grid">
+          <div class="type-card selected" data-type="strategy">
+            <span class="type-badge">30 MIN · GRATIS</span>
+            <h4 style="font-size: 1.05rem; margin-bottom: 6px;">AI-Strategisamtale</h4>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+              Kartlegging av manuelle flaskehalser, tidsbruk og hvilke AI-modeller som gir raskest ROI.
+            </p>
+          </div>
+
+          <div class="type-card" data-type="technical">
+            <span class="type-badge" style="background: rgba(16, 185, 129, 0.25); color: #10b981;">45 MIN · TEKNISK</span>
+            <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Arkitekturgjennomgang</h4>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+              For bedrifter som ønsker dypere integrasjon med interne databaser, ERP eller CRM (Fiken, HubSpot).
+            </p>
+          </div>
+
+          <div class="type-card" data-type="demo">
+            <span class="type-badge" style="background: rgba(56, 189, 248, 0.25); color: #38bdf8;">15 MIN · LYNRASK</span>
+            <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Produktdemo & Whitelabel</h4>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+              Rask gjennomgang av våre 7 ferdige AI-apper for byråer eller investorer som vil lansere egne merkevarer.
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 2: CHOOSE DATE & TIME -->
+        <h3 style="font-size: 1.15rem; font-weight: 800; margin: 2rem 0 0.5rem 0;">
+          <span class="lang-en">2. Choose Date & Time Slot (Oslo Time)</span>
+          <span class="lang-no">2. Velg dato og klokkeslett (Norsk tid)</span>
+        </h3>
+
+        <div class="form-row" style="margin-top: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase;">
+              Møtedato (Mandag–Fredag)
+            </label>
+            <input type="date" id="book-date" class="b-input" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase;">
+              Ledige tidspunkter
+            </label>
+            <div class="time-slot-grid" id="slots-container">
+              <span style="font-size: 0.85rem; color: #94a3b8;">Velg en dato først...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: ATTENDEE DETAILS -->
+        <h3 style="font-size: 1.15rem; font-weight: 800; margin: 2rem 0 1rem 0;">
+          <span class="lang-en">3. Your Contact Information</span>
+          <span class="lang-no">3. Dine kontaktopplysninger</span>
+        </h3>
+
+        <form id="meeting-booking-form">
+          <div class="form-row">
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Ditt Navn *</label>
+              <input type="text" id="b-name" class="b-input" placeholder="Ola Nordmann" required />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Arbeids-epost *</label>
+              <input type="email" id="b-email" class="b-input" placeholder="ola@bedrift.no" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Selskap / Bedrift</label>
+              <input type="text" id="b-company" class="b-input" placeholder="Bedrift AS" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">Telefonnummer</label>
+              <input type="tel" id="b-phone" class="b-input" placeholder="+47 000 00 000" />
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">
+              Hva ønsker du spesifikt å diskutere? (Valgfritt)
+            </label>
+            <textarea id="b-notes" class="b-input" style="min-height: 80px; resize: vertical;" placeholder="F.eks: Vi ønsker en AI-agent på nettsiden vår for å svare på prisspørsmål og booke befaringer..."></textarea>
+          </div>
+
+          <button type="submit" id="btn-submit-booking" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.05rem; font-weight: 800; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 10px; cursor: pointer;">
+            <span>📅</span> Bekreft og reserver møte nå
+          </button>
+        </form>
+      </div>
+
+      <!-- CONFIRMATION STATE -->
+      <div class="confirm-card" id="booking-confirm-area">
+        <div class="confirm-icon">🎉</div>
+        <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; color: #ffffff;">Møtet ditt er bekreftet!</h2>
+        <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 1.5rem;">
+          Vi gleder oss til samtalen. En kalenderinvitasjon er klargjort med Google Meet-videolenke.
+        </p>
+
+        <div style="background: #131d35; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 20px; max-width: 480px; margin: 0 auto 2rem auto; text-align: left;">
+          <div style="margin-bottom: 8px; font-size: 0.88rem; color: #94a3b8;">Møtetype: <strong id="res-title" style="color: #ffffff;"></strong></div>
+          <div style="margin-bottom: 8px; font-size: 0.88rem; color: #94a3b8;">Tidspunkt: <strong id="res-datetime" style="color: #10b981;"></strong></div>
+          <div style="margin-bottom: 8px; font-size: 0.88rem; color: #94a3b8;">Møtelenke: <a id="res-meet" href="#" target="_blank" style="color: #38bdf8; font-weight: 700; word-break: break-all;"></a></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a id="btn-dl-ics" href="#" class="btn btn-secondary" style="padding: 0.8rem 1.4rem;">
+            <span>📥</span> Last ned Kalenderfil (.ics)
+          </a>
+          <a href="/" class="btn btn-primary" style="padding: 0.8rem 1.4rem;">
+            <span>←</span> Tilbake til Forsiden
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; color: #64748b; font-size: 0.85rem;">
+    <p>© 2026 AIAPPSY. Built on Google Cloud Run & Frontier AI Models.</p>
+  </footer>
+
+  <script src="/i18n.js"></script>
+  <script>
+    let selectedType = 'strategy';
+    let selectedTime = null;
+
+    // 1. Select meeting type
+    const typeCards = document.querySelectorAll('.type-card');
+    typeCards.forEach(c => {
+      c.addEventListener('click', () => {
+        typeCards.forEach(tc => tc.classList.remove('selected'));
+        c.classList.add('selected');
+        selectedType = c.getAttribute('data-type');
+      });
+    });
+
+    // 2. Set default date to tomorrow / next weekday
+    const dateInput = document.getElementById('book-date');
+    const slotsContainer = document.getElementById('slots-container');
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    // If weekend, skip to Monday
+    if (tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 2);
+    if (tomorrow.getDay() === 0) tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const defaultDateStr = tomorrow.toISOString().split('T')[0];
+    dateInput.value = defaultDateStr;
+    dateInput.min = new Date().toISOString().split('T')[0];
+
+    async function loadAvailableSlots(dateStr) {
+      slotsContainer.innerHTML = '<span style="font-size: 0.85rem; color: #94a3b8;">Henter ledige tider...</span>';
+      selectedTime = null;
+
+      try {
+        const res = await fetch('/api/bookings/available-slots?date=' + dateStr);
+        const data = await res.json();
+        if (data.success && data.availableSlots) {
+          if (data.availableSlots.length === 0) {
+            slotsContainer.innerHTML = '<span style="color: #ef4444; font-size: 0.85rem;">Ingen ledige tider denne datoen. Velg en annen dag.</span>';
+            return;
+          }
+
+          slotsContainer.innerHTML = data.availableSlots.map(slot => {
+            return `<div class="slot-pill" data-slot="${slot}">${slot}</div>`;
+          }).join('');
+
+          // Auto-select first slot
+          const pills = slotsContainer.querySelectorAll('.slot-pill');
+          if (pills.length > 0) {
+            pills[0].classList.add('selected');
+            selectedTime = pills[0].getAttribute('data-slot');
+          }
+
+          pills.forEach(p => {
+            p.addEventListener('click', () => {
+              pills.forEach(x => x.classList.remove('selected'));
+              p.classList.add('selected');
+              selectedTime = p.getAttribute('data-slot');
+            });
+          });
+        }
+      } catch (err) {
+        slotsContainer.innerHTML = '<span style="color: #ef4444;">Kunne ikke hente tider.</span>';
+      }
+    }
+
+    dateInput.addEventListener('change', () => {
+      loadAvailableSlots(dateInput.value);
+    });
+
+    // Initial load
+    loadAvailableSlots(defaultDateStr);
+
+    // 3. Handle Booking Submission
+    const form = document.getElementById('meeting-booking-form');
+    const submitBtn = document.getElementById('btn-submit-booking');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!selectedTime) {
+        alert('Vennligst velg et ledig klokkeslett for møtet.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Reserverer møte...';
+
+      const payload = {
+        type: selectedType,
+        date: dateInput.value,
+        time: selectedTime,
+        name: document.getElementById('b-name').value.trim(),
+        email: document.getElementById('b-email').value.trim(),
+        company: document.getElementById('b-company').value.trim(),
+        phone: document.getElementById('b-phone').value.trim(),
+        notes: document.getElementById('b-notes').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success && data.booking) {
+          const b = data.booking;
+          document.getElementById('booking-step-area').style.display = 'none';
+          document.getElementById('booking-confirm-area').style.display = 'block';
+
+          document.getElementById('res-title').textContent = b.title;
+          document.getElementById('res-datetime').textContent = `${b.date} kl. ${b.time} (${b.duration} min)`;
+          document.getElementById('res-meet').textContent = b.meetUrl;
+          document.getElementById('res-meet').href = b.meetUrl;
+          document.getElementById('btn-dl-ics').href = `/api/bookings/${b.id}/ics`;
+
+          // Track in Clarity / GA if available
+          if (window.clarity) window.clarity('event', 'meeting_booked');
+          if (window.gtag) window.gtag('event', 'meeting_booked', { date: b.date, time: b.time });
+        } else {
+          alert('Feil: ' + (data.error || 'Kunne ikke reservere møtet'));
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>📅</span> Bekreft og reserver møte nå';
+        }
+      } catch (err) {
+        alert('Nettverksfeil: ' + err.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>📅</span> Bekreft og reserver møte nå';
+      }
+    });
+  </script>
+  <script src="/campaign-runner.js" defer></script>
+</body>
+</html>

@@ -883,6 +883,25 @@
               <div class="price-display-period lang-no">Fast Nøkkelferdig Pris · Levert på 7–14 dager</div>
             </div>
 
+            <!-- Voucher / Discount Code Box -->
+            <div class="voucher-box" style="margin: 1.1rem 0; padding: 0.85rem 1rem; background: rgba(255, 255, 255, 0.04); border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <label style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #a5b4fc;">
+                  <span class="lang-en">🏷️ Voucher / Promo Code</span>
+                  <span class="lang-no">🏷️ Rabattkode / Kupong</span>
+                </label>
+                <span id="voucher-badge-applied" style="display: none; font-size: 0.72rem; background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; padding: 2px 6px; border-radius: 4px; font-weight: 700;">AKTIV</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="voucher-code-input" class="editor-input" placeholder="F.EKS. AI2026" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; padding: 0.5rem 0.75rem; font-size: 0.88rem; flex: 1; margin: 0; background: #0f172a; border: 1px solid #334155;">
+                <button type="button" id="btn-apply-voucher" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: 8px; padding: 0.5rem 0.9rem; font-weight: 700; cursor: pointer; white-space: nowrap; font-size: 0.82rem; transition: all 0.2s;">
+                  <span class="lang-en">Apply</span>
+                  <span class="lang-no">Bruk</span>
+                </button>
+              </div>
+              <div id="voucher-feedback" style="display: none; font-size: 0.8rem; margin-top: 0.5rem; line-height: 1.4;"></div>
+            </div>
+
             <div class="roi-impact-grid">
               <div class="roi-box">
                 <div class="roi-val" id="calc-hours-saved">20 timer/uke</div>
@@ -1150,15 +1169,21 @@
       var hoursDisplay = document.getElementById('calc-hours-saved');
       var leadsDisplay = document.getElementById('calc-leads-increase');
 
+      var currentVoucher = null;
+      var voucherInput = document.getElementById('voucher-code-input');
+      var btnApplyVoucher = document.getElementById('btn-apply-voucher');
+      var voucherFeedback = document.getElementById('voucher-feedback');
+      var voucherBadge = document.getElementById('voucher-badge-applied');
+
       function calculateTotal() {
-        var total = 0;
+        var baseTotal = 0;
         var hours = 0;
         var leads = 30;
 
         // Selected core package
         var activePkg = document.querySelector('.selectable-box.selected');
         if (activePkg) {
-          total += parseInt(activePkg.getAttribute('data-price') || '0', 10);
+          baseTotal += parseInt(activePkg.getAttribute('data-price') || '0', 10);
           hours += parseInt(activePkg.getAttribute('data-hours') || '0', 10);
           leads = parseInt(activePkg.getAttribute('data-leads') || '30', 10);
         }
@@ -1166,18 +1191,105 @@
         // Addons
         addonCheckboxes.forEach(function(cb) {
           if (cb.checked) {
-            total += parseInt(cb.getAttribute('data-price') || '0', 10);
+            baseTotal += parseInt(cb.getAttribute('data-price') || '0', 10);
             hours += parseInt(cb.getAttribute('data-hours') || '0', 10);
           }
         });
 
+        // Calculate discount if voucher active
+        var discountAmount = 0;
+        var finalTotal = baseTotal;
+        if (currentVoucher) {
+          if (currentVoucher.discountType === 'percent') {
+            discountAmount = Math.round(baseTotal * (currentVoucher.discountValue / 100));
+          } else {
+            discountAmount = Math.min(baseTotal, currentVoucher.discountValue);
+          }
+          finalTotal = Math.max(0, baseTotal - discountAmount);
+        }
+
         // Format NOK
-        var formatted = 'kr ' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-        if (priceDisplay) priceDisplay.textContent = formatted;
+        var formattedBase = 'kr ' + baseTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        var formattedFinal = 'kr ' + finalTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+        if (priceDisplay) {
+          if (currentVoucher && discountAmount > 0) {
+            priceDisplay.innerHTML = '<span style="text-decoration: line-through; opacity: 0.45; font-size: 1.25rem; margin-right: 0.5rem;">' + formattedBase + '</span> ' + formattedFinal;
+          } else {
+            priceDisplay.textContent = formattedBase;
+          }
+        }
+
         if (hoursDisplay) hoursDisplay.textContent = hours + ' timer/uke';
         if (leadsDisplay) leadsDisplay.textContent = '+' + leads + ' %';
 
-        return { total: total, formatted: formatted, hours: hours, leads: leads };
+        return {
+          baseTotal: baseTotal,
+          finalTotal: finalTotal,
+          discountAmount: discountAmount,
+          formatted: formattedFinal,
+          formattedBase: formattedBase,
+          voucher: currentVoucher,
+          hours: hours,
+          leads: leads
+        };
+      }
+
+      if (btnApplyVoucher) {
+        btnApplyVoucher.addEventListener('click', async function() {
+          var code = (voucherInput.value || '').trim().toUpperCase();
+          if (!code) {
+            voucherFeedback.style.display = 'block';
+            voucherFeedback.style.color = '#ef4444';
+            voucherFeedback.textContent = document.documentElement.classList.contains('lang-no')
+              ? 'Vennligst oppgi en rabattkode.'
+              : 'Please enter a voucher code.';
+            return;
+          }
+
+          var uncalc = calculateTotal();
+          btnApplyVoucher.disabled = true;
+          btnApplyVoucher.textContent = '...';
+
+          try {
+            var res = await fetch('/api/vouchers/validate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ code: code, amount: uncalc.baseTotal })
+            });
+            var data = await res.json();
+
+            if (data.success && data.valid) {
+              currentVoucher = data;
+              if (voucherBadge) voucherBadge.style.display = 'inline-block';
+              if (voucherFeedback) {
+                voucherFeedback.style.display = 'block';
+                voucherFeedback.style.color = '#10b981';
+                var discountText = data.discountType === 'percent' ? data.discountValue + ' %' : ('kr ' + data.discountValue);
+                voucherFeedback.innerHTML = '✓ <strong>' + data.code + '</strong> aktivert: ' + discountText + ' rabatt!';
+              }
+              calculateTotal();
+            } else {
+              currentVoucher = null;
+              if (voucherBadge) voucherBadge.style.display = 'none';
+              if (voucherFeedback) {
+                voucherFeedback.style.display = 'block';
+                voucherFeedback.style.color = '#ef4444';
+                voucherFeedback.textContent = data.error || (document.documentElement.classList.contains('lang-no') ? 'Ugyldig eller utløpt kupongkode.' : 'Invalid or expired voucher code.');
+              }
+              calculateTotal();
+            }
+          } catch(e) {
+            if (voucherFeedback) {
+              voucherFeedback.style.display = 'block';
+              voucherFeedback.style.color = '#ef4444';
+              voucherFeedback.textContent = 'Feil ved validering av kupong.';
+            }
+          } finally {
+            btnApplyVoucher.disabled = false;
+            btnApplyVoucher.textContent = document.documentElement.classList.contains('lang-no') ? 'Bruk' : 'Apply';
+          }
+        });
       }
 
       pkgBoxes.forEach(function(box) {
@@ -1221,10 +1333,11 @@
             }
           });
 
+          var voucherNote = calc.voucher ? ('\nBrukt rabattkode: ' + calc.voucher.code + ' (-kr ' + calc.discountAmount.toLocaleString() + ')') : '';
           var payload = {
             name: name + (company ? ' (' + company + ')' : ''),
             email: email,
-            projectType: 'Proposal: ' + pkgTitle + ' [' + calc.formatted + ']',
+            projectType: 'Proposal: ' + pkgTitle + ' [' + calc.formatted + ']' + (calc.voucher ? ' (' + calc.voucher.code + ')' : ''),
             message: 'Konfigurert tilbud via aiappsy.com/generator.html\n' +
                      '--------------------------------------------------\n' +
                      'Hovedleveranse: ' + pkgTitle + '\n' +
@@ -1271,7 +1384,11 @@
           document.getElementById('print-client-name').textContent = name;
           document.getElementById('print-client-company').textContent = company;
           document.getElementById('print-client-email').textContent = email;
-          document.getElementById('print-total-price').textContent = calc.formatted + ' eks. mva';
+          if (calc.voucher && calc.discountAmount > 0) {
+            document.getElementById('print-total-price').innerHTML = '<span style="text-decoration:line-through; font-size:0.85em; opacity:0.6; margin-right:6px;">' + calc.formattedBase + '</span> ' + calc.formatted + ' eks. mva (' + calc.voucher.code + ')';
+          } else {
+            document.getElementById('print-total-price').textContent = calc.formatted + ' eks. mva';
+          }
           document.getElementById('print-date').textContent = 'Dato: ' + new Date().toLocaleDateString('no-NO');
           document.getElementById('print-signature-name').textContent = name + ' · ' + company;
 
@@ -1405,5 +1522,6 @@
     });
   </script>
 
+  <script src="/campaign-runner.js" defer></script>
 </body>
 </html>

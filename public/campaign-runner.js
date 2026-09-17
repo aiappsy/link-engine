@@ -1,19 +1,77 @@
 /**
- * AIAPPSY Dynamic Campaign Runner
- * Automatically checks /api/campaign and triggers active pop-up campaigns
- * with real-time settings configured from /admin/.
+ * AIAPPSY Dynamic Campaign Runner & Analytics Hub
+ * 1. Checks /api/campaign and triggers active pop-up campaigns configured from /admin/.
+ * 2. Checks /api/settings/tracking and auto-injects GA4 and Microsoft Clarity tags dynamically.
+ * 3. Exposes window.aiappsyTrack(eventName, eventParams) for unified conversion tracking.
  */
 (function() {
   // Prevent multiple injections
   if (window.__aiappsy_campaign_runner_loaded) return;
   window.__aiappsy_campaign_runner_loaded = true;
 
-  // Don't show modal if on admin pages
-  if (window.location.pathname.includes('/admin')) return;
+  // Global tracking helper
+  window.aiappsyTrack = function(eventName, params) {
+    params = params || {};
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', eventName, params);
+      }
+      if (typeof window.clarity === 'function') {
+        window.clarity('event', eventName);
+      }
+    } catch(e) {}
+  };
 
+  // --------------------------------------------------------------------------
+  // 1. DYNAMIC TRACKING & ANALYTICS LOADER
+  // --------------------------------------------------------------------------
+  async function initTracking() {
+    try {
+      const res = await fetch('/api/settings/tracking?_t=' + Date.now());
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.success || !data.tracking) return;
+
+      const { ga4_id, clarity_id } = data.tracking;
+
+      // Google Analytics 4 (gtag.js)
+      if (ga4_id && ga4_id.trim() && !window.__ga4_injected) {
+        window.__ga4_injected = true;
+        const gScript = document.createElement('script');
+        gScript.async = true;
+        gScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4_id.trim());
+        document.head.appendChild(gScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ window.dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', ga4_id.trim(), { send_page_view: true });
+      }
+
+      // Microsoft Clarity Heatmaps & Session Recording
+      if (clarity_id && clarity_id.trim() && !window.__clarity_injected) {
+        window.__clarity_injected = true;
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", clarity_id.trim());
+      }
+    } catch (e) {
+      // Quiet fail
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 2. DYNAMIC POP-UP CAMPAIGN ENGINE
+  // --------------------------------------------------------------------------
   const STORAGE_KEY = 'aiappsy_campaign_dismissed';
 
   async function initCampaignRunner() {
+    // Don't show modal if on admin pages
+    if (window.location.pathname.includes('/admin')) return;
+
     try {
       const res = await fetch('/api/campaign?_t=' + Date.now());
       if (!res.ok) return;
@@ -22,7 +80,7 @@
 
       const camp = data.campaign;
 
-      // Check if dismissed in this session or within last 24h
+      // Check if dismissed in this session or within last 12h
       const dismissed = sessionStorage.getItem(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY);
       if (dismissed && (Date.now() - parseInt(dismissed, 10) < 1000 * 60 * 60 * 12)) {
         return; // Respect user preference
@@ -41,6 +99,7 @@
       if (triggered) return;
       triggered = true;
       renderAndShowModal(camp);
+      window.aiappsyTrack('campaign_modal_view', { campaign_title: camp.title });
     }
 
     const triggerType = camp.trigger || 'exit-intent';
@@ -52,7 +111,6 @@
           fireModal();
         }
       };
-      // Only attach after 3 seconds on page to prevent accidental early trigger
       setTimeout(() => {
         document.addEventListener('mouseleave', onMouseLeave);
       }, 2500);
@@ -149,13 +207,13 @@
         box-shadow: 0 4px 16px ${themeColor}40;
       }
       .a-camp-btn:hover {
-        filter: brightness(1.1); transform: translateY(-1px);
+        opacity: 0.92; transform: translateY(-1px);
       }
-      .a-camp-success {
-        display: none; padding: 20px; text-align: center;
+      .a-camp-note {
+        font-size: 12px; color: #64748b; margin-top: 14px;
       }
-      .a-camp-success-icon {
-        font-size: 44px; margin-bottom: 12px;
+      .a-camp-badge-dot {
+        width: 6px; height: 6px; border-radius: 50%; background: ${themeColor};
       }
     `;
     document.head.appendChild(style);
@@ -164,38 +222,40 @@
     const backdrop = document.createElement('div');
     backdrop.className = 'a-camp-backdrop';
     backdrop.innerHTML = `
-      <div class="a-camp-card" role="dialog" aria-modal="true">
+      <div class="a-camp-card">
         <button class="a-camp-close" aria-label="Lukk">&times;</button>
         <div class="a-camp-content-area">
-          <div class="a-camp-pill">${escapeHtml(camp.badge || '⚡ TILBUD')}</div>
-          <h2 class="a-camp-title">${escapeHtml(camp.title || 'Spesialtilbud')}</h2>
-          <p class="a-camp-desc">${escapeHtml(camp.subtitle || '')}</p>
+          <div class="a-camp-pill">
+            <span class="a-camp-badge-dot"></span>
+            <span>${escapeHtml(camp.badge || 'KAMPANJE')}</span>
+          </div>
+          <h3 class="a-camp-title">${escapeHtml(camp.title || 'Spesialtilbud fra AIAPPSY')}</h3>
+          <p class="a-camp-desc">${escapeHtml(camp.desc || 'Få personlig oppfølging og skreddersydd tilbud levert direkte til din innboks.')}</p>
           <form class="a-camp-form">
-            <input type="email" class="a-camp-input" placeholder="${escapeHtml(camp.inputPlaceholder || 'Din e-postadresse...')}" required autocomplete="email" />
-            <button type="submit" class="a-camp-btn">${escapeHtml(camp.ctaText || 'Motta tilbud nå →')}</button>
+            <input type="email" class="a-camp-input" placeholder="Skriv inn din e-postadresse..." required autofocus />
+            <button type="submit" class="a-camp-btn">${escapeHtml(camp.buttonText || 'Motta tilbud nå →')}</button>
           </form>
+          <div class="a-camp-note">🔒 Ingen spam. Kun direkte kontakt fra senior AI-ingeniør.</div>
         </div>
-        <div class="a-camp-success">
-          <div class="a-camp-success-icon">🎉</div>
-          <h3 style="font-size: 20px; margin: 0 0 8px 0; color: #ffffff;">Takk! Sjekk innboksen din.</h3>
-          <p style="font-size: 14px; color: #94a3b8; margin: 0;">Vi har sendt informasjonen til din e-postadresse.</p>
+        <div class="a-camp-success" style="display: none; padding: 20px 0;">
+          <div style="font-size: 40px; margin-bottom: 12px;">🎉</div>
+          <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">Tusen takk!</h3>
+          <p style="color: #94a3b8; font-size: 14px;">Vi har mottatt din forespørsel og kontakter deg straks.</p>
         </div>
       </div>
     `;
 
     document.body.appendChild(backdrop);
 
-    // Trigger visible animation on next frame
+    // Trigger entrance animation
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        backdrop.classList.add('visible');
-      });
+      backdrop.classList.add('visible');
     });
 
+    // Close logic
     function closeModal() {
-      backdrop.classList.remove('visible');
       sessionStorage.setItem(STORAGE_KEY, Date.now().toString());
-      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+      backdrop.classList.remove('visible');
       setTimeout(() => {
         if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
         if (style.parentNode) style.parentNode.removeChild(style);
@@ -234,6 +294,8 @@
           })
         });
 
+        window.aiappsyTrack('campaign_lead_converted', { campaign_title: camp.title, email: email });
+
         contentArea.style.display = 'none';
         successArea.style.display = 'block';
 
@@ -253,9 +315,14 @@
     return div.innerHTML;
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCampaignRunner);
-  } else {
+  function startAll() {
+    initTracking();
     initCampaignRunner();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startAll);
+  } else {
+    startAll();
   }
 })();
