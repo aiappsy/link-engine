@@ -1045,6 +1045,8 @@ app.post('/api/payments/settings', requireAdminAuth, (req, res) => {
         current.apps[appKey] = {
           ...current.apps[appKey],
           ...apps[appKey],
+          price_nok: apps[appKey].price_nok !== undefined ? (parseFloat(apps[appKey].price_nok) || 0) : current.apps[appKey].price_nok,
+          price_usd: apps[appKey].price_usd !== undefined ? (parseFloat(apps[appKey].price_usd) || 0) : current.apps[appKey].price_usd,
           price: typeof apps[appKey].price === 'number' ? apps[appKey].price : (parseFloat(apps[appKey].price) || current.apps[appKey].price),
           enabled: typeof apps[appKey].enabled === 'boolean' ? apps[appKey].enabled : current.apps[appKey].enabled,
           acceptedMethods: Array.isArray(apps[appKey].acceptedMethods) ? apps[appKey].acceptedMethods : current.apps[appKey].acceptedMethods
