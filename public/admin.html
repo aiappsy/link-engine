@@ -1652,12 +1652,15 @@
         const res = await fetch('/api/links?_t=' + Date.now(), {
           headers: { 'x-admin-password': getPassword() }
         });
+        if (res.status === 401) { checkAuth(); return; }
         if (!res.ok) return;
         const data = await res.json();
         if (data.success && data.links) {
           renderLinksTable(data.links);
         }
-      } catch(e) {}
+      } catch(e) {
+        console.error('Feil ved henting av lenker:', e);
+      }
     }
 
     function renderLinksTable(links) {
@@ -2416,7 +2419,28 @@
     });
 
     function copyText(t) {
-      navigator.clipboard.writeText(t).then(() => showToast('Kopiert til utklippstavle!'));
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t)
+          .then(() => showToast('✓ Kopiert til utklippstavle!'))
+          .catch(() => fallbackCopy(t));
+      } else {
+        fallbackCopy(t);
+      }
+    }
+    function fallbackCopy(t) {
+      const ta = document.createElement('textarea');
+      ta.value = t;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('✓ Kopiert til utklippstavle!');
+      } catch(e) {
+        prompt('Kopier lenken manuelt:', t);
+      }
+      document.body.removeChild(ta);
     }
 
     function escapeHtml(s) {
@@ -2732,10 +2756,16 @@
 
         rows.forEach(r => {
           const key = r.getAttribute('data-app-key');
-          const enabled = r.querySelector('.app-status-toggle').checked;
-          const price = parseFloat(r.querySelector('.app-price-input').value) || 0;
-          const billingType = r.querySelector('.app-billing-select').value;
-          const methodVal = r.querySelector('.app-methods-select').value;
+          const toggleEl = r.querySelector('.app-status-toggle');
+          const enabled = toggleEl ? toggleEl.checked : true;
+          const nokEl = r.querySelector('.app-price-nok-input') || r.querySelector('.app-price-input');
+          const usdEl = r.querySelector('.app-price-usd-input');
+          const price_nok = nokEl ? (parseFloat(nokEl.value) || 0) : 0;
+          const price_usd = usdEl ? (parseFloat(usdEl.value) || 0) : 0;
+          const billingEl = r.querySelector('.app-billing-select');
+          const billingType = billingEl ? billingEl.value : 'monthly';
+          const methodEl = r.querySelector('.app-methods-select');
+          const methodVal = methodEl ? methodEl.value : 'both';
 
           let acceptedMethods = ['paypal', 'stripe'];
           if (methodVal === 'paypal') acceptedMethods = ['paypal'];
@@ -2743,7 +2773,9 @@
 
           appsPayload[key] = {
             enabled,
-            price,
+            price: price_nok,
+            price_nok,
+            price_usd,
             billingType,
             acceptedMethods
           };
