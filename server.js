@@ -1089,17 +1089,24 @@ app.get('/api/payments/public-config', (req, res) => {
     publicGateways.stripe = { enabled: false };
   }
 
-  // Filter only enabled apps for checkout
+  // Filter only enabled apps for checkout with dual currency (NOK/USD)
   const activeApps = {};
   Object.keys(cfg.apps || {}).forEach(k => {
     if (cfg.apps[k] && cfg.apps[k].enabled) {
+      const a = cfg.apps[k];
       activeApps[k] = {
-        name: cfg.apps[k].name,
-        price: cfg.apps[k].price,
-        currency: cfg.apps[k].currency,
-        billingType: cfg.apps[k].billingType,
-        planName: cfg.apps[k].planName,
-        acceptedMethods: cfg.apps[k].acceptedMethods
+        name: a.name,
+        price_nok: a.price_nok || a.price || 299,
+        price_usd: a.price_usd || Math.round((a.price_nok || a.price || 299) / 10),
+        billingType: a.billingType || 'monthly',
+        planName_no: a.planName_no || a.planName || (a.name + ' Pro'),
+        planName_en: a.planName_en || a.planName || (a.name + ' Pro'),
+        title_no: a.title_no || a.name,
+        title_en: a.title_en || a.name,
+        desc_no: a.desc_no || '',
+        desc_en: a.desc_en || '',
+        icon: a.icon || '⚡',
+        acceptedMethods: a.acceptedMethods || ['paypal', 'stripe']
       };
     }
   });
@@ -1127,13 +1134,30 @@ app.post('/api/payments/create-order', (req, res) => {
   }
 
   let amount = 0;
-  let curr = currency || gateway.defaultCurrency || 'NOK';
+  let curr = (currency || 'NOK').toUpperCase();
+  if (!['NOK', 'USD', 'EUR'].includes(curr)) curr = 'NOK';
   let appName = 'AIAPPSY Tilgang';
+  let billingType = 'monthly';
 
   if (appKey && cfg.apps[appKey]) {
-    amount = cfg.apps[appKey].price;
-    curr = cfg.apps[appKey].currency || curr;
-    appName = cfg.apps[appKey].name;
+    const a = cfg.apps[appKey];
+    appName = a.name;
+    billingType = a.billingType || 'monthly';
+    let basePrice = 299;
+    if (curr === 'USD') {
+      basePrice = a.price_usd || Math.round((a.price_nok || a.price || 299) / 10);
+    } else if (curr === 'EUR') {
+      basePrice = Math.round((a.price_usd || 29) * 0.95);
+    } else {
+      basePrice = a.price_nok || a.price || 299;
+      curr = 'NOK';
+    }
+
+    if (customAmount !== undefined && !isNaN(parseFloat(customAmount))) {
+      amount = Math.max(0, Math.min(basePrice, parseFloat(customAmount)));
+    } else {
+      amount = basePrice;
+    }
   } else if (customAmount && parseFloat(customAmount) > 0) {
     amount = parseFloat(customAmount);
   } else {

@@ -20,131 +20,155 @@
   "apps": {
     "upworkz": {
       "name": "Upworkz",
-      "title": "Autonomous Proposal Architect & Deal Closer",
-      "price": 299,
-      "currency": "NOK",
+      "planName_no": "Upworkz Pro",
+      "planName_en": "Upworkz Pro",
+      "title_no": "Anbudsarkitekt & Salgsavtaler på Upwork",
+      "title_en": "Autonomous Proposal Architect & Deal Closer",
+      "desc_no": "Vinn oppdrag på Upwork med automatiserte 220-tegns åpningskroker og risikovurderinger.",
+      "desc_en": "Convert job postings into winning proposals with high-converting 220-char hooks and scope audits.",
+      "price_nok": 299,
+      "price_usd": 29,
       "billingType": "monthly",
-      "planName": "Upworkz Pro",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://upworkz.ai.studio",
       "icon": "💼",
-      "desc": "Vinn oppdrag på Upwork med automatiserte 220-tegns åpningskroker og risikovurderinger."
+      "aiStudioUrl": "https://upworkz.ai.studio"
     },
     "hubzoo": {
       "name": "Hubzoo",
-      "title": "Mobile Quoting & Automated Lead Closer",
-      "price": 499,
-      "currency": "NOK",
+      "planName_no": "Hubzoo SMB",
+      "planName_en": "Hubzoo SMB",
+      "title_no": "Mobiltilbud på 60 sekunder & Automatisert CRM",
+      "title_en": "Mobile Quoting & Automated Lead Closer",
+      "desc_no": "Send profesjonelle tilbud på 60 sekunder fra mobilen med automatisk oppfølging på e-post og SMS.",
+      "desc_en": "Send professional client estimates in 60 seconds from your phone with automated follow-ups.",
+      "price_nok": 499,
+      "price_usd": 49,
       "billingType": "monthly",
-      "planName": "Hubzoo SMB",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://hubzoo.ai.studio",
       "icon": "👷",
-      "desc": "Send profesjonelle tilbud på 60 sekunder fra mobilen med automatisk oppfølging."
+      "aiStudioUrl": "https://hubzoo.ai.studio"
     },
     "subsentry": {
       "name": "SubSentry",
-      "title": "SaaS Watchdog & 1-Click Cancellation Shield",
-      "price": 199,
-      "currency": "NOK",
+      "planName_no": "SubSentry Shield",
+      "planName_en": "SubSentry Shield",
+      "title_no": "SaaS-abonnementsvakt & 1-klikks oppsigelse",
+      "title_en": "SaaS Watchdog & 1-Click Cancellation Shield",
+      "desc_no": "Avslør skjulte SaaS-trekk og stopp unødvendige abonnementer med ett klikk.",
+      "desc_en": "Stop recurring credit card bloat. Flag deceptive checkout traps and cancel unwanted subscriptions.",
+      "price_nok": 199,
+      "price_usd": 19,
       "billingType": "monthly",
-      "planName": "SubSentry Shield",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://subsentry.ai.studio",
       "icon": "🛡️",
-      "desc": "Avslør skjulte SaaS-trekk og stopp unødvendige abonnementer med ett klikk."
+      "aiStudioUrl": "https://subsentry.ai.studio"
     },
     "maxmotion": {
       "name": "MaxMotion AI",
-      "title": "Multi-Model Generative Video Studio",
-      "price": 799,
-      "currency": "NOK",
+      "planName_no": "MaxMotion Creator",
+      "planName_en": "MaxMotion Creator",
+      "title_no": "Multi-modell generativt videostudio",
+      "title_en": "Multi-Model Generative Video Studio",
+      "desc_no": "Kombiner Wan 2.1, Kling, Minimax og Seedance i ett felles videostudio.",
+      "desc_en": "Access leading generative video models (Wan 2.1, Kling 1.5, Minimax) under one unified roof.",
+      "price_nok": 799,
+      "price_usd": 79,
       "billingType": "monthly",
-      "planName": "MaxMotion Creator",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://maxmotion.ai.studio",
       "icon": "🎬",
-      "desc": "Kombiner Wan 2.1, Kling, Minimax og Seedance i ett felles videostudio."
+      "aiStudioUrl": "https://maxmotion.ai.studio"
     },
     "mediabunny": {
       "name": "MediaBunny",
-      "title": "Client-Side Media & Audio WASM Processing",
-      "price": 149,
-      "currency": "NOK",
+      "planName_no": "MediaBunny Pro",
+      "planName_en": "MediaBunny Pro",
+      "title_no": "WASM medie- og lydprosessering i nettleseren",
+      "title_en": "Client-Side Media & Audio WASM Processing",
+      "desc_no": "WASM bakgrunnsfjerning, EBU R128 lydnormalisering og tapsfri videokomprimering.",
+      "desc_en": "Lightning-fast browser audio normalization, background removal, and video compression.",
+      "price_nok": 149,
+      "price_usd": 14,
       "billingType": "monthly",
-      "planName": "MediaBunny Pro",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://mediabunny.ai.studio",
       "icon": "🐰",
-      "desc": "WASM bakgrunnsfjerning, EBU R128 lydnormalisering og tapsfri videokomprimering."
+      "aiStudioUrl": "https://mediabunny.ai.studio"
     },
     "appsave": {
       "name": "AppSave",
-      "title": "The Honey for SaaS & AI Cloud Subscriptions",
-      "price": 99,
-      "currency": "NOK",
+      "planName_no": "AppSave Premium",
+      "planName_en": "AppSave Premium",
+      "title_no": "Rabatt-utfylling for SaaS og AI-verktøy",
+      "title_en": "The Honey for SaaS & AI Cloud Subscriptions",
+      "desc_no": "Automatisk rabatt-utfylling for SaaS, API-kreditter og skytjenester.",
+      "desc_en": "Automated promo code tester and verified discounts for software, hosting, and API credits.",
+      "price_nok": 99,
+      "price_usd": 9,
       "billingType": "monthly",
-      "planName": "AppSave Premium",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://appsave.ai.studio",
       "icon": "🏷️",
-      "desc": "Automatisk rabatt-utfylling for SaaS, API-kreditter og skytjenester."
+      "aiStudioUrl": "https://appsave.ai.studio"
     },
     "manus": {
       "name": "Manus AI Studio",
-      "title": "Autonomous Book & Manuscript Studio",
-      "price": 599,
-      "currency": "NOK",
+      "planName_no": "Manus Forfatterutgave",
+      "planName_en": "Manus Author Edition",
+      "title_no": "Autonomt bok- og manuskriptstudio",
+      "title_en": "Autonomous Book & Manuscript Studio",
+      "desc_no": "Strukturer, skriv og klargjør komplette manuskripter og e-bøker på dager.",
+      "desc_en": "Conceive, structure, draft, and format full-length books and manuscripts in days.",
+      "price_nok": 599,
+      "price_usd": 59,
       "billingType": "monthly",
-      "planName": "Manus Author Edition",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://manus.ai.studio",
       "icon": "📚",
-      "desc": "Strukturer, skriv og klargjør komplette manuskripter og e-bøker på dager."
+      "aiStudioUrl": "https://manus.ai.studio"
     },
     "custom-agent": {
       "name": "Turnkey Custom AI Agent",
-      "title": "Skreddersydd Autonom AI-Agent for Bedrifter",
-      "price": 17800,
-      "currency": "NOK",
+      "planName_no": "Nøkkelferdig Leveranse",
+      "planName_en": "Turnkey Enterprise Delivery",
+      "title_no": "Skreddersydd Autonom AI-Agent for Bedrifter",
+      "title_en": "Bespoke Autonomous AI Action Agent for Enterprise",
+      "desc_no": "Nøkkelferdig AI-agent levert på 7–14 dager med 100 % kildekodeoverføring.",
+      "desc_en": "Custom production-grade AI agent delivered in 7–14 days with 100% IP handover.",
+      "price_nok": 17800,
+      "price_usd": 1690,
       "billingType": "one-time",
-      "planName": "Enterprise Delivery",
       "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
       ],
-      "aiStudioUrl": "https://aiappsy.com/generator.html",
       "icon": "⚡",
-      "desc": "Nøkkelferdig AI-agent levert på 7–14 dager med 100 % kildekodeoverføring."
+      "aiStudioUrl": "https://aiappsy.com/generator.html"
     }
   },
   "transactions": [
