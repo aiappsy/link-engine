@@ -20,75 +20,131 @@
   "apps": {
     "upworkz": {
       "name": "Upworkz",
-      "enabled": true,
+      "title": "Autonomous Proposal Architect & Deal Closer",
       "price": 299,
       "currency": "NOK",
       "billingType": "monthly",
       "planName": "Upworkz Pro",
+      "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
-      ]
+      ],
+      "aiStudioUrl": "https://upworkz.ai.studio",
+      "icon": "💼",
+      "desc": "Vinn oppdrag på Upwork med automatiserte 220-tegns åpningskroker og risikovurderinger."
     },
     "hubzoo": {
       "name": "Hubzoo",
-      "enabled": true,
+      "title": "Mobile Quoting & Automated Lead Closer",
       "price": 499,
       "currency": "NOK",
       "billingType": "monthly",
       "planName": "Hubzoo SMB",
+      "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
-      ]
+      ],
+      "aiStudioUrl": "https://hubzoo.ai.studio",
+      "icon": "👷",
+      "desc": "Send profesjonelle tilbud på 60 sekunder fra mobilen med automatisk oppfølging."
     },
     "subsentry": {
       "name": "SubSentry",
-      "enabled": true,
+      "title": "SaaS Watchdog & 1-Click Cancellation Shield",
       "price": 199,
       "currency": "NOK",
       "billingType": "monthly",
       "planName": "SubSentry Shield",
+      "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
-      ]
+      ],
+      "aiStudioUrl": "https://subsentry.ai.studio",
+      "icon": "🛡️",
+      "desc": "Avslør skjulte SaaS-trekk og stopp unødvendige abonnementer med ett klikk."
     },
     "maxmotion": {
       "name": "MaxMotion AI",
-      "enabled": true,
+      "title": "Multi-Model Generative Video Studio",
       "price": 799,
       "currency": "NOK",
       "billingType": "monthly",
       "planName": "MaxMotion Creator",
+      "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
-      ]
+      ],
+      "aiStudioUrl": "https://maxmotion.ai.studio",
+      "icon": "🎬",
+      "desc": "Kombiner Wan 2.1, Kling, Minimax og Seedance i ett felles videostudio."
     },
-    "aistudio-crm": {
-      "name": "AI Studio CRM",
-      "enabled": true,
-      "price": 1490,
+    "mediabunny": {
+      "name": "MediaBunny",
+      "title": "Client-Side Media & Audio WASM Processing",
+      "price": 149,
       "currency": "NOK",
       "billingType": "monthly",
-      "planName": "AI Studio CRM",
+      "planName": "MediaBunny Pro",
+      "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
-      ]
+      ],
+      "aiStudioUrl": "https://mediabunny.ai.studio",
+      "icon": "🐰",
+      "desc": "WASM bakgrunnsfjerning, EBU R128 lydnormalisering og tapsfri videokomprimering."
+    },
+    "appsave": {
+      "name": "AppSave",
+      "title": "The Honey for SaaS & AI Cloud Subscriptions",
+      "price": 99,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "AppSave Premium",
+      "enabled": true,
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ],
+      "aiStudioUrl": "https://appsave.ai.studio",
+      "icon": "🏷️",
+      "desc": "Automatisk rabatt-utfylling for SaaS, API-kreditter og skytjenester."
+    },
+    "manus": {
+      "name": "Manus AI Studio",
+      "title": "Autonomous Book & Manuscript Studio",
+      "price": 599,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "Manus Author Edition",
+      "enabled": true,
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ],
+      "aiStudioUrl": "https://manus.ai.studio",
+      "icon": "📚",
+      "desc": "Strukturer, skriv og klargjør komplette manuskripter og e-bøker på dager."
     },
     "custom-agent": {
       "name": "Turnkey Custom AI Agent",
-      "enabled": true,
+      "title": "Skreddersydd Autonom AI-Agent for Bedrifter",
       "price": 17800,
       "currency": "NOK",
       "billingType": "one-time",
-      "planName": "Turnkey Custom AI Agent",
+      "planName": "Enterprise Delivery",
+      "enabled": true,
       "acceptedMethods": [
         "paypal",
         "stripe"
-      ]
+      ],
+      "aiStudioUrl": "https://aiappsy.com/generator.html",
+      "icon": "⚡",
+      "desc": "Nøkkelferdig AI-agent levert på 7–14 dager med 100 % kildekodeoverføring."
     }
   },
   "transactions": [

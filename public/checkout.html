@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="no" class="lang-no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sikker Kasse & Lisensaktivering | AIAPPSY</title>
+  <meta name="description" content="Sikker betaling og umiddelbar lisensaktivering for AIAPPSY SaaS-apper og AI-agenter. Støtter PayPal og kortbetaling.">
+  <link rel="canonical" href="https://aiappsy.com/checkout.html">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search).get('lang');
+        var s = p || localStorage.getItem('aiappsy_lang') || localStorage.getItem('userLang');
+        if (!s) {
+          var n = (navigator.language || '').toLowerCase();
+          if (n.indexOf('no') === 0 || n.indexOf('nb') === 0 || n.indexOf('nn') === 0) s = 'no';
+        }
+        if (s === 'en') {
+          document.documentElement.className = 'lang-en';
+          document.documentElement.setAttribute('lang', 'en');
+        } else {
+          document.documentElement.className = 'lang-no';
+          document.documentElement.setAttribute('lang', 'no');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
+  <style>
+    html.lang-en .lang-no, body.lang-en .lang-no { display: none !important; }
+    html.lang-no .lang-en, body.lang-no .lang-en { display: none !important; }
+
+    :root {
+      --brand-indigo: #6366f1;
+      --brand-indigo-light: #818cf8;
+      --brand-cyan: #06b6d4;
+      --brand-green: #10b981;
+      --bg-dark: #070a13;
+      --card-bg: #0f172a;
+      --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .checkout-nav {
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.2rem 1.5rem;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+    }
+    .checkout-nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .checkout-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .checkout-brand span span { color: var(--brand-indigo-light); }
+
+    .checkout-container {
+      max-width: 1050px;
+      margin: 2.5rem auto 5rem;
+      padding: 0 1.5rem;
+      width: 100%;
+      box-sizing: border-box;
+      flex: 1;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 860px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+    }
+
+    .checkout-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .app-summary-header {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .app-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+    .app-title-area h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .app-title-area p {
+      margin: 3px 0 0;
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+
+    .benefit-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.75rem;
+    }
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 0.6rem;
+    }
+    .benefit-icon { color: var(--brand-green); font-weight: 800; }
+
+    /* Price breakdown */
+    .price-breakdown {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+    .price-row.total-row {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0;
+    }
+    .total-amount {
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Voucher box */
+    .voucher-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 1rem;
+    }
+    .voucher-input {
+      flex: 1;
+      background: #0b101f;
+      border: 1px solid #334155;
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .voucher-btn {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .voucher-btn:hover { background: #334155; border-color: #64748b; }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 0.4rem;
+    }
+    .form-input {
+      width: 100%;
+      background: #0b101f;
+      border: 1px solid #334155;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--brand-indigo);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Payment Gateways */
+    .gateway-selection {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn-paypal-checkout {
+      width: 100%;
+      background: #ffc439;
+      color: #003087;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(255, 196, 57, 0.3);
+    }
+    .btn-paypal-checkout:hover { opacity: 0.92; }
+
+    .btn-stripe-checkout {
+      width: 100%;
+      background: #6366f1;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+    .btn-stripe-checkout:hover { background: #4f46e5; }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: #64748b;
+      margin-top: 1.25rem;
+    }
+
+    /* Success confirmation view */
+    .success-panel {
+      display: none;
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: pop 0.4s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="checkout-nav">
+    <div class="checkout-nav-inner">
+      <a href="/" class="checkout-brand">
+        <span>⚡</span>
+        <span>aiappsy<span>.com</span></span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <a href="/" class="btn-card-action" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; color: #94a3b8; text-decoration: none;">
+          <span class="lang-en">← Cancel & Return</span>
+          <span class="lang-no">← Avbryt & tilbake</span>
+        </a>
+        <button id="btn-lang-toggle" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; cursor: pointer;">
+          <span class="lang-flag">🇳🇴</span>
+          <span class="lang-label">Norsk</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="checkout-container">
+    <!-- Active Checkout View -->
+    <div id="checkout-view" class="checkout-grid">
+      
+      <!-- Left Column: Order Summary -->
+      <div class="checkout-card">
+        <div class="app-summary-header">
+          <div class="app-avatar" id="app-icon">⚡</div>
+          <div class="app-title-area">
+            <h2 id="app-name">Laster inn app...</h2>
+            <p id="app-plan-name">Abonnement</p>
+          </div>
+        </div>
+
+        <p id="app-desc" style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.5;"></p>
+
+        <ul class="benefit-list">
+          <li class="benefit-item"><span class="benefit-icon">✓</span> <span class="lang-en">Instant access & API license key</span><span class="lang-no">Umiddelbar tilgang og lisensnøkkel</span></li>
+          <li class="benefit-item"><span class="benefit-icon">✓</span> <span class="lang-en">Zero technical setup — live in Google Cloud</span><span class="lang-no">Null teknisk oppsett — kjører direkte i skyen</span></li>
+          <li class="benefit-item"><span class="benefit-icon">✓</span> <span class="lang-en">Cancel or change subscription anytime</span><span class="lang-no">Null bindingstid — avslutt eller endre når som helst</span></li>
+          <li class="benefit-item"><span class="benefit-icon">✓</span> <span class="lang-en">Priority developer support & updates</span><span class="lang-no">Prioritert kundestøtte og automatiske oppdateringer</span></li>
+        </ul>
+
+        <!-- Price Breakdown -->
+        <div class="price-breakdown">
+          <div class="price-row">
+            <span class="lang-en">Plan Fee</span>
+            <span class="lang-no">Abonnementspris</span>
+            <span id="price-subtotal">kr 0</span>
+          </div>
+          <div class="price-row" id="voucher-discount-row" style="display: none; color: #10b981;">
+            <span>Rabatt (<strong id="voucher-name">AI2026</strong>)</span>
+            <span id="voucher-discount-val">-kr 0</span>
+          </div>
+          <div class="price-row total-row">
+            <span class="lang-en">Total Amount Due</span>
+            <span class="lang-no">Totalbeløp å betale</span>
+            <span class="total-amount" id="price-total">kr 0</span>
+          </div>
+        </div>
+
+        <!-- Voucher Code Input -->
+        <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); border-radius: 10px; padding: 12px;">
+          <label style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">
+            <span class="lang-en">🏷️ Have a Voucher or Promo Code?</span>
+            <span class="lang-no">🏷️ Har du rabattkode eller kupong?</span>
+          </label>
+          <div class="voucher-row">
+            <input type="text" id="voucher-input" class="voucher-input" placeholder="F.EKS. AI2026" />
+            <button type="button" id="btn-apply-voucher" class="voucher-btn">
+              <span class="lang-en">Apply</span>
+              <span class="lang-no">Bruk</span>
+            </button>
+          </div>
+          <div id="voucher-feedback" style="display: none; font-size: 0.8rem; margin-top: 6px;"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Customer Details & Payment -->
+      <div class="checkout-card">
+        <h3 style="margin: 0 0 1.25rem; font-size: 1.2rem; font-weight: 800; color: #ffffff;">
+          <span class="lang-en">Customer & Payment Details</span>
+          <span class="lang-no">Kundeopplysninger & Betaling</span>
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="lang-en">Full Name *</span>
+            <span class="lang-no">Fullt navn *</span>
+          </label>
+          <input type="text" id="cust-name" class="form-input" placeholder="Mari Hansen" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="lang-en">Work Email (License & receipts sent here) *</span>
+            <span class="lang-no">Arbeids-e-post (Kvittering og tilgang sendes hit) *</span>
+          </label>
+          <input type="email" id="cust-email" class="form-input" placeholder="mari@nordicagency.no" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="lang-en">Company / Organization (Optional)</span>
+            <span class="lang-no">Bedrift / Organisasjon (Valgfritt)</span>
+          </label>
+          <input type="text" id="cust-company" class="form-input" placeholder="Nordic Agency AS" />
+        </div>
+
+        <!-- Payment Gateway Buttons -->
+        <div class="gateway-selection">
+          <!-- PayPal Button -->
+          <div id="gateway-paypal-box">
+            <button type="button" id="btn-pay-paypal" class="btn-paypal-checkout">
+              <span style="font-weight: 900;"><i>P</i><i>ay</i><i>P</i><i>al</i></span>
+              <span>Betal med PayPal</span>
+            </button>
+          </div>
+
+          <!-- Stripe Button -->
+          <div id="gateway-stripe-box" style="display: none;">
+            <button type="button" id="btn-pay-stripe" class="btn-stripe-checkout">
+              <span>💳</span>
+              <span class="lang-en">Pay with Card (Stripe)</span>
+              <span class="lang-no">Betal med Kort (Stripe)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="secure-badge">
+          <span>🔒 256-bit SSL Kryptert Betaling · AIAPPSY Global Payment Gateway</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Success View (Shown after capture) -->
+    <div id="success-view" class="checkout-card success-panel">
+      <div class="success-icon">🎉</div>
+      <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; color: #ffffff;">
+        <span class="lang-en">Payment Successful & License Activated!</span>
+        <span class="lang-no">Betalingen er fullført og lisensen er aktiv!</span>
+      </h2>
+      <p style="color: #94a3b8; font-size: 1rem; max-width: 550px; margin: 0 auto 2rem; line-height: 1.6;">
+        <span class="lang-en">Thank you for subscribing. A confirmation receipt and license key have been logged. You can now launch the app directly.</span>
+        <span class="lang-no">Tusen takk for din bestilling! Kvittering og tilgang er registrert. Du kan nå åpne appen og starte umiddelbart.</span>
+      </p>
+
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; max-width: 440px; margin: 0 auto 2rem; text-align: left;">
+        <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px;">Transaksjons-ID:</div>
+        <div id="receipt-tx-id" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #38bdf8; font-size: 0.95rem; margin-bottom: 12px;"></div>
+        <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px;">App-tilgang:</div>
+        <div id="receipt-app-name" style="font-weight: 700; color: #ffffff;"></div>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <a id="btn-return-app" href="/" class="btn-primary-hero" style="font-size: 0.95rem; padding: 0.75rem 1.75rem;">
+          <span>🚀</span>
+          <span class="lang-en">Open App in Google AI Studio</span>
+          <span class="lang-no">Åpne appen i Google AI Studio</span>
+          <span>↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/campaign-runner.js" defer></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // 1. Language Toggle
+      var langBtn = document.getElementById('btn-lang-toggle');
+      if (langBtn) {
+        langBtn.addEventListener('click', function() {
+          var isNo = document.documentElement.classList.contains('lang-no');
+          if (isNo) {
+            document.documentElement.classList.remove('lang-no');
+            document.documentElement.classList.add('lang-en');
+            localStorage.setItem('aiappsy_lang', 'en');
+          } else {
+            document.documentElement.classList.remove('lang-en');
+            document.documentElement.classList.add('lang-no');
+            localStorage.setItem('aiappsy_lang', 'no');
+          }
+        });
+      }
+
+      // 2. Parse Query Params
+      var params = new URLSearchParams(window.location.search);
+      var appKey = (params.get('app') || 'upworkz').toLowerCase();
+      var returnUrl = params.get('return_url') || '';
+
+      // Elements
+      var elIcon = document.getElementById('app-icon');
+      var elName = document.getElementById('app-name');
+      var elPlan = document.getElementById('app-plan-name');
+      var elDesc = document.getElementById('app-desc');
+      var elSubtotal = document.getElementById('price-subtotal');
+      var elTotal = document.getElementById('price-total');
+      var elReturnBtn = document.getElementById('btn-return-app');
+
+      var voucherInput = document.getElementById('voucher-input');
+      var btnApplyVoucher = document.getElementById('btn-apply-voucher');
+      var voucherRow = document.getElementById('voucher-discount-row');
+      var voucherName = document.getElementById('voucher-name');
+      var voucherVal = document.getElementById('voucher-discount-val');
+      var voucherFeedback = document.getElementById('voucher-feedback');
+
+      var btnPayPayPal = document.getElementById('btn-pay-paypal');
+      var btnPayStripe = document.getElementById('btn-pay-stripe');
+      var stripeBox = document.getElementById('gateway-stripe-box');
+
+      var currentApp = null;
+      var activeVoucher = null;
+      var basePrice = 299;
+      var currentTotal = 299;
+      var appCurrency = 'NOK';
+
+      // 3. Fetch Public Config from Universal Payment Hub
+      try {
+        var res = await fetch('/api/payments/public-config?_t=' + Date.now());
+        var data = await res.json();
+
+        if (data.success && data.apps) {
+          currentApp = data.apps[appKey] || Object.values(data.apps)[0];
+        }
+
+        // Check active gateways
+        if (data.gateways && data.gateways.stripe && data.gateways.stripe.enabled) {
+          if (stripeBox) stripeBox.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Kunne ikke laste betalingskonfigurasjon:', err);
+      }
+
+      // Fallback default info
+      if (!currentApp) {
+        currentApp = {
+          name: appKey.toUpperCase(),
+          planName: 'Pro Access',
+          price: 299,
+          currency: 'NOK',
+          billingType: 'monthly',
+          desc: 'Full tilgang til appen.'
+        };
+      }
+
+      basePrice = currentApp.price || 299;
+      appCurrency = currentApp.currency || 'NOK';
+      currentTotal = basePrice;
+
+      // Populate App Details
+      elName.textContent = currentApp.name;
+      elPlan.textContent = currentApp.planName + (currentApp.billingType === 'monthly' ? ' · Månedlig' : ' · Fastpris');
+      if (currentApp.desc) elDesc.textContent = currentApp.desc;
+      
+      const iconMap = {
+        upworkz: '💼',
+        hubzoo: '👷',
+        subsentry: '🛡️',
+        maxmotion: '🎬',
+        mediabunny: '🐰',
+        appsave: '🏷️',
+        manus: '📚',
+        'custom-agent': '⚡'
+      };
+      elIcon.textContent = iconMap[appKey] || '⚡';
+
+      function updatePricingUI() {
+        var formattedBase = 'kr ' + basePrice.toLocaleString() + ' ' + appCurrency;
+        var discountAmt = 0;
+
+        if (activeVoucher) {
+          if (activeVoucher.discountType === 'percent') {
+            discountAmt = Math.round(basePrice * (activeVoucher.discountValue / 100));
+          } else {
+            discountAmt = Math.min(basePrice, activeVoucher.discountValue);
+          }
+        }
+
+        currentTotal = Math.max(0, basePrice - discountAmt);
+        var formattedTotal = 'kr ' + currentTotal.toLocaleString() + ' ' + appCurrency;
+
+        elSubtotal.textContent = formattedBase;
+        elTotal.textContent = formattedTotal;
+
+        if (activeVoucher && discountAmt > 0) {
+          voucherRow.style.display = 'flex';
+          voucherName.textContent = activeVoucher.code;
+          voucherVal.textContent = '-kr ' + discountAmt.toLocaleString();
+        } else {
+          voucherRow.style.display = 'none';
+        }
+      }
+
+      updatePricingUI();
+
+      // 4. Voucher Application
+      if (btnApplyVoucher) {
+        btnApplyVoucher.addEventListener('click', async function() {
+          var code = (voucherInput.value || '').trim().toUpperCase();
+          if (!code) return;
+
+          btnApplyVoucher.disabled = true;
+          btnApplyVoucher.textContent = '...';
+
+          try {
+            var vRes = await fetch('/api/vouchers/validate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ code: code, amount: basePrice })
+            });
+            var vData = await vRes.json();
+
+            if (vData.success && vData.valid) {
+              activeVoucher = vData;
+              voucherFeedback.style.display = 'block';
+              voucherFeedback.style.color = '#10b981';
+              voucherFeedback.innerHTML = '✓ <strong>' + vData.code + '</strong> aktivert (-' + (vData.discountType === 'percent' ? vData.discountValue + '%' : 'kr ' + vData.discountValue) + ')';
+              updatePricingUI();
+            } else {
+              activeVoucher = null;
+              voucherFeedback.style.display = 'block';
+              voucherFeedback.style.color = '#ef4444';
+              voucherFeedback.textContent = vData.error || 'Ugyldig kupongkode.';
+              updatePricingUI();
+            }
+          } catch (e) {
+            voucherFeedback.style.display = 'block';
+            voucherFeedback.style.color = '#ef4444';
+            voucherFeedback.textContent = 'Feil ved validering.';
+          } finally {
+            btnApplyVoucher.disabled = false;
+            btnApplyVoucher.textContent = document.documentElement.classList.contains('lang-no') ? 'Bruk' : 'Apply';
+          }
+        });
+      }
+
+      // 5. PayPal Checkout Flow
+      if (btnPayPayPal) {
+        btnPayPayPal.addEventListener('click', async function() {
+          var name = (document.getElementById('cust-name').value || '').trim();
+          var email = (document.getElementById('cust-email').value || '').trim();
+          var company = (document.getElementById('cust-company').value || '').trim();
+
+          if (!name || !email || !email.includes('@')) {
+            alert(document.documentElement.classList.contains('lang-no') 
+              ? 'Vennligst oppgi navn og en gyldig e-postadresse.' 
+              : 'Please provide your full name and valid email address.');
+            return;
+          }
+
+          btnPayPayPal.disabled = true;
+          btnPayPayPal.innerHTML = '<span>⏳</span> Initialiserer PayPal...';
+
+          try {
+            // Step 1: Create Order
+            var ordRes = await fetch('/api/payments/create-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                appKey: appKey,
+                method: 'paypal',
+                customAmount: currentTotal,
+                currency: appCurrency,
+                customerEmail: email,
+                customerName: name + (company ? ' (' + company + ')' : '')
+              })
+            });
+            var ordData = await ordRes.json();
+            if (!ordData.success) throw new Error(ordData.error || 'Kunne ikke opprette ordre');
+
+            // Step 2: Capture Order & complete
+            var capRes = await fetch('/api/payments/capture-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderId: ordData.orderId,
+                method: 'paypal',
+                appKey: appKey,
+                amount: currentTotal,
+                currency: appCurrency,
+                customerEmail: email,
+                customerName: name,
+                details: { status: 'COMPLETED', appKey: appKey, voucher: activeVoucher ? activeVoucher.code : null }
+              })
+            });
+            var capData = await capRes.json();
+            if (!capData.success) throw new Error('Kunne ikke fullføre transaksjon.');
+
+            // Success View
+            showSuccessReceipt(capData.transaction);
+
+          } catch (err) {
+            alert('Betalingsfeil: ' + err.message);
+            btnPayPayPal.disabled = false;
+            btnPayPayPal.innerHTML = '<span style="font-weight: 900;"><i>P</i><i>ay</i><i>P</i><i>al</i></span><span>Betal med PayPal</span>';
+          }
+        });
+      }
+
+      // 6. Stripe Checkout Flow
+      if (btnPayStripe) {
+        btnPayStripe.addEventListener('click', async function() {
+          var name = (document.getElementById('cust-name').value || '').trim();
+          var email = (document.getElementById('cust-email').value || '').trim();
+
+          if (!name || !email || !email.includes('@')) {
+            alert('Vennligst oppgi navn og e-post.');
+            return;
+          }
+
+          btnPayStripe.disabled = true;
+          btnPayStripe.innerHTML = 'Behandler kortbetaling...';
+
+          try {
+            var ordRes = await fetch('/api/payments/create-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                appKey: appKey,
+                method: 'stripe',
+                customAmount: currentTotal,
+                currency: appCurrency,
+                customerEmail: email,
+                customerName: name
+              })
+            });
+            var ordData = await ordRes.json();
+
+            var capRes = await fetch('/api/payments/capture-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderId: ordData.orderId,
+                method: 'stripe',
+                appKey: appKey,
+                amount: currentTotal,
+                currency: appCurrency,
+                customerEmail: email,
+                customerName: name
+              })
+            });
+            var capData = await capRes.json();
+            showSuccessReceipt(capData.transaction);
+
+          } catch (err) {
+            alert('Stripe-feil: ' + err.message);
+            btnPayStripe.disabled = false;
+            btnPayStripe.innerHTML = '<span>💳</span> Betal med Kort (Stripe)';
+          }
+        });
+      }
+
+      function showSuccessReceipt(txn) {
+        document.getElementById('checkout-view').style.display = 'none';
+        var successView = document.getElementById('success-view');
+        successView.style.display = 'block';
+
+        document.getElementById('receipt-tx-id').textContent = txn.id + ' (' + txn.orderId + ')';
+        document.getElementById('receipt-app-name').textContent = txn.appName + ' — ' + txn.amount + ' ' + txn.currency;
+
+        var targetUrl = returnUrl || ('https://' + appKey + '.ai.studio');
+        if (targetUrl.includes('?')) {
+          targetUrl += '&payment=success&orderId=' + txn.orderId;
+        } else {
+          targetUrl += '?payment=success&orderId=' + txn.orderId;
+        }
+        elReturnBtn.href = targetUrl;
+
+        // Fire Global Analytics tracking
+        if (typeof window.aiappsyTrack === 'function') {
+          window.aiappsyTrack('purchase', {
+            transaction_id: txn.id,
+            value: txn.amount,
+            currency: txn.currency,
+            items: [{ item_name: txn.appName, item_id: txn.appKey }]
+          });
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
