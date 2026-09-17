@@ -208,19 +208,27 @@ function saveLinks(links, modifiedSlug = null) {
 
 // Serve static assets from public folder with extensionless URL support
 const PUBLIC_DIR = path.join(__dirname, 'public');
+
+// Admin route with no-cache headers to ensure immediate freshness
+app.get(['/admin', '/admin/', '/admin/index.html', '/admin.html'], (req, res) => {
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  const adminFile = path.join(PUBLIC_DIR, 'admin.html');
+  if (fs.existsSync(adminFile)) {
+    return res.sendFile(adminFile);
+  }
+  const rootAdminFile = path.join(__dirname, 'admin.html');
+  if (fs.existsSync(rootAdminFile)) {
+    return res.sendFile(rootAdminFile);
+  }
+  res.sendFile(path.join(PUBLIC_DIR, 'admin', 'index.html'));
+});
+
 app.use(express.static(PUBLIC_DIR, {
   extensions: ['html', 'htm'],
   maxAge: '1h'
 }));
-
-// Admin route for the Link Engine Management Dashboard
-app.get(['/admin', '/admin/'], (req, res) => {
-  const adminFile = path.join(__dirname, 'admin.html');
-  if (fs.existsSync(adminFile)) {
-    return res.sendFile(adminFile);
-  }
-  res.sendFile(path.join(PUBLIC_DIR, 'admin', 'index.html'));
-});
 
 // Explicit shortcut routes
 app.get(['/portfolio', '/portfolio/'], (req, res) => {
