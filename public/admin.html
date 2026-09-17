@@ -53,55 +53,247 @@
       margin-bottom: 20px;
     }
 
-    /* Top Navbar */
-    .admin-navbar {
-      background: #0b1120; border-bottom: 1px solid var(--border);
-      padding: 0.85rem 1.75rem; display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 1000;
+    /* ================================================================= */
+    /* MODERN COLLAPSIBLE SIDEBAR & WORKSPACE LAYOUT                     */
+    /* ================================================================= */
+    .admin-app-layout {
+      display: flex; min-height: 100vh; width: 100%; position: relative;
+      background: var(--bg);
     }
-    .brand-group {
-      display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
+
+    /* SIDEBAR */
+    .admin-sidebar {
+      width: 260px; min-width: 260px; height: 100vh; position: sticky; top: 0;
+      background: #0b1120; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; z-index: 1000;
+      transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    /* Header in Sidebar */
+    .sidebar-header {
+      height: 64px; padding: 0 1.15rem; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+    .sidebar-brand {
+      display: flex; align-items: center; gap: 10px; text-decoration: none; color: #ffffff;
+      overflow: hidden; white-space: nowrap;
     }
     .brand-icon {
-      width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; box-shadow: 0 0 16px rgba(99,102,241,0.4);
+      width: 34px; height: 34px; min-width: 34px; background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 9px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem; box-shadow: 0 0 16px rgba(99,102,241,0.4);
+    }
+    .brand-title-wrap {
+      display: flex; flex-direction: column; overflow: hidden;
     }
     .brand-name {
-      font-size: 1.15rem; font-weight: 900; letter-spacing: -0.02em;
+      font-size: 1.05rem; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1;
     }
     .brand-name span { color: #6366f1; }
-    .nav-status-badge {
-      font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
-      background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);
+    .brand-sub {
+      font-size: 0.7rem; color: var(--text-muted); font-weight: 600;
     }
 
-    /* Tab Navigation */
-    .admin-nav-tabs {
-      background: #0d1527; border-bottom: 1px solid var(--border);
-      padding: 0 1.75rem; display: flex; gap: 0.4rem; overflow-x: auto;
+    /* Sidebar Collapse Toggle Button */
+    .sidebar-collapse-btn {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border);
+      color: var(--text-muted); width: 28px; height: 28px; min-width: 28px;
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; font-size: 0.75rem;
+    }
+    .sidebar-collapse-btn:hover {
+      background: rgba(99, 102, 241, 0.25); border-color: #6366f1; color: #ffffff;
+    }
+
+    /* Server Status pill */
+    .sidebar-status-box {
+      padding: 0.75rem 1.15rem 0.25rem; display: flex; align-items: center;
+    }
+    .nav-status-badge {
+      font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;
+    }
+
+    /* Navigation Sections */
+    .sidebar-scroll-area {
+      flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0.75rem 0.65rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .sidebar-scroll-area::-webkit-scrollbar { width: 4px; }
+    .sidebar-scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    .sidebar-group-title {
+      font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #64748b; padding: 0 0.65rem 0.35rem;
+      white-space: nowrap;
+    }
+
+    .sidebar-tabs {
+      display: flex; flex-direction: column; gap: 3px;
     }
     .nav-tab {
-      padding: 0.95rem 1.15rem; background: transparent; border: none; border-bottom: 2px solid transparent;
-      color: var(--text-muted); font-weight: 600; font-size: 0.88rem;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-      white-space: nowrap; transition: all 0.15s ease;
+      display: flex; align-items: center; gap: 10px; width: 100%;
+      padding: 0.6rem 0.75rem; border-radius: 8px; border: 1px solid transparent;
+      background: transparent; color: #94a3b8; font-weight: 600; font-size: 0.86rem;
+      cursor: pointer; text-align: left; transition: all 0.15s ease;
+      white-space: nowrap; position: relative;
     }
-    .nav-tab:hover { color: #ffffff; }
-    .nav-tab.active { color: #818cf8; border-bottom-color: #6366f1; }
+    .nav-tab:hover {
+      background: rgba(255, 255, 255, 0.05); color: #f8fafc;
+    }
+    .nav-tab.active {
+      background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.35);
+      color: #818cf8; font-weight: 700;
+    }
+    .nav-tab .tab-icon {
+      font-size: 1.15rem; width: 22px; text-align: center; flex-shrink: 0;
+    }
+    .nav-tab .tab-label {
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
     .tab-badge {
-      font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 999px;
-      background: rgba(255,255,255,0.08); color: var(--text-muted);
+      font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); color: #94a3b8;
     }
     .nav-tab.active .tab-badge {
-      background: rgba(99,102,241,0.25); color: #a5b4fc;
+      background: rgba(99,102,241,0.25); color: #c7d2fe;
     }
 
-    /* Main Container */
+    /* Sidebar Footer / Quick Actions */
+    .sidebar-footer {
+      border-top: 1px solid var(--border); padding: 0.75rem 0.65rem;
+      display: flex; flex-direction: column; gap: 5px; background: #090e1a;
+    }
+    .sidebar-link-btn {
+      display: flex; align-items: center; gap: 10px; padding: 0.5rem 0.75rem;
+      border-radius: 7px; color: #94a3b8; font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; transition: all 0.15s; white-space: nowrap;
+    }
+    .sidebar-link-btn:hover {
+      background: rgba(255,255,255,0.05); color: #ffffff;
+    }
+    .sidebar-logout-btn {
+      display: flex; align-items: center; gap: 10px; width: 100%; padding: 0.5rem 0.75rem;
+      border-radius: 7px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #f87171; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      transition: all 0.15s; white-space: nowrap; margin-top: 3px;
+    }
+    .sidebar-logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2); color: #fca5a5;
+    }
+
+    /* ================================================================= */
+    /* COLLAPSED SIDEBAR STATE (Slim 68px mode)                          */
+    /* ================================================================= */
+    .admin-sidebar.collapsed {
+      width: 68px; min-width: 68px;
+    }
+    .admin-sidebar.collapsed .brand-title-wrap,
+    .admin-sidebar.collapsed .sidebar-status-box,
+    .admin-sidebar.collapsed .sidebar-group-title,
+    .admin-sidebar.collapsed .tab-label,
+    .admin-sidebar.collapsed .tab-badge,
+    .admin-sidebar.collapsed .sidebar-link-btn span:last-child,
+    .admin-sidebar.collapsed .sidebar-logout-btn span:last-child {
+      display: none !important;
+    }
+    .admin-sidebar.collapsed .sidebar-header {
+      padding: 0; justify-content: center; position: relative;
+    }
+    .admin-sidebar.collapsed .sidebar-brand {
+      justify-content: center;
+    }
+    .admin-sidebar.collapsed .sidebar-collapse-btn {
+      position: absolute; right: -12px; top: 18px; z-index: 1001;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #6366f1; color: #ffffff; border: 2px solid #0b1120;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .admin-sidebar.collapsed .nav-tab {
+      justify-content: center; padding: 0.75rem 0;
+    }
+    .admin-sidebar.collapsed .sidebar-link-btn,
+    .admin-sidebar.collapsed .sidebar-logout-btn {
+      justify-content: center; padding: 0.65rem 0;
+    }
+    .admin-sidebar.collapsed .sidebar-collapse-btn .collapse-arrow {
+      transform: rotate(180deg); display: inline-block;
+    }
+
+    /* Tooltip on hover in collapsed mode */
+    .admin-sidebar.collapsed .nav-tab:hover::after {
+      content: attr(data-title);
+      position: absolute; left: 74px; top: 50%; transform: translateY(-50%);
+      background: #1e293b; color: #f8fafc; font-size: 0.78rem; font-weight: 700;
+      padding: 6px 12px; border-radius: 6px; white-space: nowrap; z-index: 1002;
+      border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      pointer-events: none; animation: fadeIn 0.15s ease;
+    }
+
+    /* MAIN VIEWPORT & TOPBAR */
+    .admin-main-viewport {
+      flex: 1; min-width: 0; display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+    .admin-topbar {
+      height: 64px; background: rgba(11, 17, 32, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 500;
+    }
+    .topbar-left {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .topbar-title-wrap {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .topbar-current-icon {
+      font-size: 1.3rem;
+    }
+    .topbar-current-title {
+      font-size: 1.1rem; font-weight: 800; color: #f8fafc; margin: 0;
+    }
+    .mobile-menu-btn {
+      display: none; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: #ffffff; width: 34px; height: 34px; border-radius: 8px;
+      font-size: 1.1rem; cursor: pointer; align-items: center; justify-content: center;
+    }
+
+    /* Container for Panes */
     .admin-container {
       max-width: 1400px; width: 100%; margin: 0 auto;
-      padding: 2rem 1.75rem; flex: 1;
+      padding: 2rem 2rem; flex: 1;
     }
+
+    /* Mobile Drawer */
+    .sidebar-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px); z-index: 999;
+    }
+
+    @media (max-width: 991px) {
+      .mobile-menu-btn { display: flex; }
+      .admin-sidebar {
+        position: fixed; left: -280px; width: 260px; min-width: 260px;
+        box-shadow: 15px 0 40px rgba(0,0,0,0.7);
+      }
+      .admin-sidebar.sidebar-mobile-open {
+        left: 0;
+      }
+      .sidebar-backdrop.active {
+        display: block;
+      }
+      .admin-container {
+        padding: 1.25rem 1rem;
+      }
+      .admin-topbar {
+        padding: 0 1rem;
+      }
+    }
+
     .tab-pane { display: none; }
     .tab-pane.active { display: block; animation: fadeIn 0.2s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -260,68 +452,127 @@
     </div>
   </div>
 
-  <!-- TOP NAVBAR -->
-  <header class="admin-navbar">
-    <div style="display: flex; align-items: center; gap: 20px;">
-      <a href="/" class="brand-group">
-        <div class="brand-icon">⚡</div>
-        <div class="brand-name">aiappsy<span>.com</span> <small style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">/ admin</small></div>
-      </a>
-      <span class="nav-status-badge">🟢 Cloud Run Online</span>
-    </div>
+  <!-- ADMIN WORKSPACE LAYOUT -->
+  <div class="admin-app-layout">
+    <!-- COLLAPSIBLE SIDEBAR -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <!-- Sidebar Header & Toggle -->
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="brand-icon">⚡</div>
+          <div class="brand-title-wrap">
+            <div class="brand-name">aiappsy<span>.com</span></div>
+            <div class="brand-sub">/ admin hub</div>
+          </div>
+        </a>
+        <button type="button" id="btn-toggle-sidebar" class="sidebar-collapse-btn" title="Skjul/Vis sidemeny (Collapse/Expand)" aria-label="Toggle sidebar">
+          <span class="collapse-arrow">◀</span>
+        </button>
+      </div>
 
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="/booking.html" target="_blank" class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.82rem;">
-        <span>📅</span> Bookingside
-      </a>
-      <a href="/generator.html" target="_blank" class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.82rem;">
-        <span>⚡</span> Tilbudsgenerator
-      </a>
-      <button id="btn-admin-logout" class="btn btn-danger" style="padding: 0.45rem 0.85rem; font-size: 0.82rem;">
-        Logg ut
-      </button>
-    </div>
-  </header>
+      <!-- Online Status Badge -->
+      <div class="sidebar-status-box">
+        <span class="nav-status-badge">🟢 Cloud Run Online</span>
+      </div>
 
-  <!-- MASTER TAB NAVIGATION -->
-  <nav class="admin-nav-tabs" aria-label="Admin Tabs">
-    <button class="nav-tab active" data-tab="links">
-      <span>🔗</span> Kortlenker
-      <span class="tab-badge" id="badge-link-count">0</span>
-    </button>
-    <button class="nav-tab" data-tab="campaigns">
-      <span>🎯</span> Kampanjer & Pop-ups
-      <span class="tab-badge" id="badge-camp-status">Av</span>
-    </button>
-    <button class="nav-tab" data-tab="meetings">
-      <span>📅</span> Møter & Kalender
-      <span class="tab-badge" id="badge-meeting-count">0</span>
-    </button>
-    <button class="nav-tab" data-tab="vouchers">
-      <span>🏷️</span> Rabattkoder & Vouchers
-      <span class="tab-badge" id="badge-voucher-count">0</span>
-    </button>
-    <button class="nav-tab" data-tab="articles">
-      <span>📰</span> Artikler & SEO
-    </button>
-    <button class="nav-tab" data-tab="proposals">
-      <span>💼</span> Tilbudsbygger
-    </button>
-    <button class="nav-tab" data-tab="leads">
-      <span>📥</span> Leads & CRM
-      <span class="tab-badge" id="badge-lead-count">0</span>
-    </button>
-    <button class="nav-tab" data-tab="tracking">
-      <span>⚙️</span> Sporing & Analytics
-    </button>
-    <button class="nav-tab" data-tab="payments">
-      <span>💳</span> Betalinger & Finans
-      <span class="tab-badge" id="badge-payments-tx-count">0</span>
-    </button>
-  </nav>
+      <!-- Scrollable Nav Modules -->
+      <div class="sidebar-scroll-area">
+        <!-- Group 1: Kjerne & Trafikk -->
+        <div class="sidebar-group-title">Trafikk & Kampanjer</div>
+        <nav class="sidebar-tabs" aria-label="Trafikk Tabs">
+          <button class="nav-tab active" data-tab="links" data-title="Kortlenker & Omdirigeringer">
+            <span class="tab-icon">🔗</span>
+            <span class="tab-label">Kortlenker</span>
+            <span class="tab-badge" id="badge-link-count">0</span>
+          </button>
+          <button class="nav-tab" data-tab="campaigns" data-title="Kampanjer & Pop-ups">
+            <span class="tab-icon">🎯</span>
+            <span class="tab-label">Kampanjer & Pop-ups</span>
+            <span class="tab-badge" id="badge-camp-status">Av</span>
+          </button>
+          <button class="nav-tab" data-tab="meetings" data-title="Møter & Kalender">
+            <span class="tab-icon">📅</span>
+            <span class="tab-label">Møter & Kalender</span>
+            <span class="tab-badge" id="badge-meeting-count">0</span>
+          </button>
+          <button class="nav-tab" data-tab="vouchers" data-title="Rabattkoder & Vouchers">
+            <span class="tab-icon">🏷️</span>
+            <span class="tab-label">Rabattkoder & Vouchers</span>
+            <span class="tab-badge" id="badge-voucher-count">0</span>
+          </button>
+        </nav>
 
-  <!-- MAIN CONTAINER -->
-  <main class="admin-container">
+        <!-- Group 2: Salg & CRM -->
+        <div class="sidebar-group-title">Salg & Vekst</div>
+        <nav class="sidebar-tabs" aria-label="Salg Tabs">
+          <button class="nav-tab" data-tab="articles" data-title="Artikler & SEO">
+            <span class="tab-icon">📰</span>
+            <span class="tab-label">Artikler & SEO</span>
+          </button>
+          <button class="nav-tab" data-tab="proposals" data-title="B2B Tilbudsbygger">
+            <span class="tab-icon">💼</span>
+            <span class="tab-label">Tilbudsbygger</span>
+          </button>
+          <button class="nav-tab" data-tab="leads" data-title="Leads & CRM Pipeline">
+            <span class="tab-icon">📥</span>
+            <span class="tab-label">Leads & CRM</span>
+            <span class="tab-badge" id="badge-lead-count">0</span>
+          </button>
+          <button class="nav-tab" data-tab="tracking" data-title="Sporing & Webanalyse">
+            <span class="tab-icon">⚙️</span>
+            <span class="tab-label">Sporing & Analytics</span>
+          </button>
+          <button class="nav-tab" data-tab="payments" data-title="Betalinger, Priser & Transaksjoner">
+            <span class="tab-icon">💳</span>
+            <span class="tab-label">Betalinger & Finans</span>
+            <span class="tab-badge" id="badge-payments-tx-count">0</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <a href="/booking.html" target="_blank" class="sidebar-link-btn" title="Åpne kundens bookingside">
+          <span>📅</span> <span>Bookingside ↗</span>
+        </a>
+        <a href="/generator.html" target="_blank" class="sidebar-link-btn" title="Åpne B2B tilbudsgenerator">
+          <span>⚡</span> <span>Tilbudsgenerator ↗</span>
+        </a>
+        <button id="btn-admin-logout" class="sidebar-logout-btn" title="Logg ut">
+          <span>🚪</span> <span>Logg ut</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile Backdrop -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- MAIN VIEWPORT -->
+    <div class="admin-main-viewport">
+      <!-- Topbar Header -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button type="button" id="btn-mobile-sidebar-toggle" class="mobile-menu-btn" aria-label="Meny">
+            ☰
+          </button>
+          <div class="topbar-title-wrap">
+            <span class="topbar-current-icon" id="topbar-icon">🔗</span>
+            <h2 class="topbar-current-title" id="topbar-title">Kortlenker & Omdirigeringer</h2>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="/" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">
+            <span>🌐</span> Forside ↗
+          </a>
+          <a href="/checkout.html?app=upworkz" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">
+            <span>🛒</span> Kasse ↗
+          </a>
+        </div>
+      </header>
+
+      <!-- MAIN CONTAINER -->
+      <main class="admin-container">
 
     <!-- ================================================================= -->
     <!-- TAB 1: KORTLENKER (LINK ENGINE) -->
@@ -1044,6 +1295,8 @@
     </div>
 
   </main>
+    </div>
+  </div>
 
   <!-- ================================================================= -->
   <!-- MODAL: LEAD DETALJER & KOMMUNIKASJONSSENTER [UPGRADED!] -->
@@ -1295,6 +1548,62 @@
     const tabs = document.querySelectorAll('.nav-tab');
     const panes = document.querySelectorAll('.tab-pane');
 
+
+    // Sidebar Collapse & State Persistence
+    const adminSidebar = document.getElementById('admin-sidebar');
+    const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+    const btnMobileSidebarToggle = document.getElementById('btn-mobile-sidebar-toggle');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    const topbarIcon = document.getElementById('topbar-icon');
+    const topbarTitle = document.getElementById('topbar-title');
+
+    const tabMeta = {
+      links: { icon: '🔗', title: 'Kortlenker & Omdirigeringer' },
+      campaigns: { icon: '🎯', title: 'Kampanjer & Pop-up Bannere' },
+      meetings: { icon: '📅', title: 'Møter & Kalenderbooking' },
+      vouchers: { icon: '🏷️', title: 'Rabattkoder & Kampanjekuponger' },
+      articles: { icon: '📰', title: 'Artikler, Guider & SEO-innhold' },
+      proposals: { icon: '💼', title: 'B2B Tilbudsbygger & Kalkulator' },
+      leads: { icon: '📥', title: 'Leads & CRM Salgspipeline' },
+      tracking: { icon: '⚙️', title: 'Sporing, Pixels & Webanalyse' },
+      payments: { icon: '💳', title: 'Universal Payment Hub & Finans' }
+    };
+
+    function setSidebarCollapsed(collapsed) {
+      if (!adminSidebar) return;
+      if (collapsed) {
+        adminSidebar.classList.add('collapsed');
+        localStorage.setItem('aiappsy_sidebar_collapsed', 'true');
+      } else {
+        adminSidebar.classList.remove('collapsed');
+        localStorage.setItem('aiappsy_sidebar_collapsed', 'false');
+      }
+    }
+
+    if (btnToggleSidebar) {
+      btnToggleSidebar.addEventListener('click', () => {
+        const isCollapsed = adminSidebar.classList.contains('collapsed');
+        setSidebarCollapsed(!isCollapsed);
+      });
+    }
+
+    // Restore saved sidebar state
+    if (localStorage.getItem('aiappsy_sidebar_collapsed') === 'true') {
+      setSidebarCollapsed(true);
+    }
+
+    // Mobile drawer toggle
+    if (btnMobileSidebarToggle && adminSidebar && sidebarBackdrop) {
+      btnMobileSidebarToggle.addEventListener('click', () => {
+        adminSidebar.classList.toggle('sidebar-mobile-open');
+        sidebarBackdrop.classList.toggle('active');
+      });
+      sidebarBackdrop.addEventListener('click', () => {
+        adminSidebar.classList.remove('sidebar-mobile-open');
+        sidebarBackdrop.classList.remove('active');
+      });
+    }
+
     tabs.forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.getAttribute('data-tab');
@@ -1304,6 +1613,18 @@
         const pane = document.getElementById('pane-' + target);
         if (pane) pane.classList.add('active');
         window.location.hash = target;
+
+        // Update Topbar Title & Icon
+        if (tabMeta[target]) {
+          if (topbarIcon) topbarIcon.textContent = tabMeta[target].icon;
+          if (topbarTitle) topbarTitle.textContent = tabMeta[target].title;
+        }
+
+        // Close mobile drawer if open
+        if (adminSidebar && adminSidebar.classList.contains('sidebar-mobile-open')) {
+          adminSidebar.classList.remove('sidebar-mobile-open');
+          if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        }
       });
     });
 
