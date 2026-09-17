@@ -586,9 +586,7 @@ app.get(['/admin', '/admin/'], (req, res) => {
 });
 
 // Studio shortcut route
-app.get(['/studio', '/studio/'], (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'studio.html'));
-});
+app.get(['/studio', '/studio/'], (req, res) => res.redirect(302, '/admin#articles'));
 
 // Static Assets & Webpages (Serves index.html on /, custom-development, articles, apps)
 app.use(express.static(PUBLIC_DIR, {
@@ -749,6 +747,81 @@ app.get('/api/leads', (req, res) => {
     }
   } catch (e) {}
   return res.json({ success: true, leads: [] });
+});
+
+
+// ============================================================================
+// DYNAMIC CAMPAIGN & MODAL POP-UP ENGINE
+// ============================================================================
+const CAMPAIGN_FILE = path.join(__dirname, 'campaign.json');
+
+const DEFAULT_CAMPAIGN = {
+  active: false,
+  type: 'lead-magnet',
+  badge: '⚡ EKSKLUSIVT TILBUD',
+  title: 'Vil du automatisere kundeservicen din med AI?',
+  subtitle: 'Få vår sjekkliste over hvordan ledende bedrifter sparer 20 timer ukentlig med autonome agenter.',
+  ctaText: 'Send meg guiden nå →',
+  ctaLink: '#contact',
+  inputPlaceholder: 'Din e-postadresse...',
+  trigger: 'exit-intent',
+  delaySeconds: 5,
+  scrollPercent: 50,
+  themeColor: '#6366f1',
+  updatedAt: new Date().toISOString()
+};
+
+function loadCampaign() {
+  try {
+    if (fs.existsSync(CAMPAIGN_FILE)) {
+      return JSON.parse(fs.readFileSync(CAMPAIGN_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error('Error reading campaign file:', e.message);
+  }
+  return { ...DEFAULT_CAMPAIGN };
+}
+
+function saveCampaign(camp) {
+  try {
+    fs.writeFileSync(CAMPAIGN_FILE, JSON.stringify(camp, null, 2), 'utf8');
+    return true;
+  } catch (e) {
+    console.error('Error saving campaign file:', e.message);
+    return false;
+  }
+}
+
+// GET active campaign configuration (Public for website runner)
+app.get('/api/campaign', (req, res) => {
+  const camp = loadCampaign();
+  res.json({ success: true, campaign: camp });
+});
+
+// POST update campaign configuration (Protected)
+app.post('/api/campaign', (req, res) => {
+  const customHeader = req.headers['x-admin-password'];
+  const authHeader = req.headers['authorization'];
+  const cookieStr = req.headers.cookie || '';
+  const hasCookie = cookieStr.includes('admin_auth=') || cookieStr.includes('aiappsy2026');
+  const pwd = customHeader || (authHeader ? authHeader.replace(/^Bearer\s+/i, '').trim() : '');
+
+  if (pwd !== ADMIN_PASSWORD && !hasCookie && req.body.password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ success: false, error: 'Uautorisert: Feil admin-passord' });
+  }
+
+  const newConfig = req.body || {};
+  const current = loadCampaign();
+  const updated = {
+    ...current,
+    ...newConfig,
+    active: typeof newConfig.active === 'boolean' ? newConfig.active : current.active,
+    updatedAt: new Date().toISOString()
+  };
+
+  saveCampaign(updated);
+  console.log('[Campaign Engine] Kampanje oppdatert. Aktiv status:', updated.active);
+  res.json({ success: true, message: 'Kampanjeoppsett lagret!', campaign: updated });
 });
 
 app.listen(PORT, () => {

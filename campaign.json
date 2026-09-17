@@ -1,0 +1,15 @@
+{
+  "active": false,
+  "type": "lead-magnet",
+  "badge": "⚡ EKSKLUSIVT TILBUD",
+  "title": "Prøv AI-Kundeservice Gratis",
+  "subtitle": "Få vår sjekkliste over hvordan ledende bedrifter sparer 20 timer ukentlig med autonome agenter.",
+  "ctaText": "Send meg guiden nå →",
+  "ctaLink": "#contact",
+  "inputPlaceholder": "Din e-postadresse...",
+  "trigger": "exit-intent",
+  "delaySeconds": 5,
+  "scrollPercent": 50,
+  "themeColor": "#6366f1",
+  "updatedAt": "2026-09-17T00:27:44.212Z"
+}
