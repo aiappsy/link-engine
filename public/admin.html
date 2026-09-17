@@ -314,6 +314,10 @@
     <button class="nav-tab" data-tab="tracking">
       <span>⚙️</span> Sporing & Analytics
     </button>
+    <button class="nav-tab" data-tab="payments">
+      <span>💳</span> Betalinger & Finans
+      <span class="tab-badge" id="badge-payments-tx-count">0</span>
+    </button>
   </nav>
 
   <!-- MAIN CONTAINER -->
@@ -844,6 +848,201 @@
       </div>
     </div>
 
+  
+    <!-- ================================================================= -->
+    <!-- TAB 9: BETALINGER & FINANS HUB (PAYPAL & STRIPE MULTI-GATEWAY) -->
+    <!-- ================================================================= -->
+    <div class="tab-pane" id="pane-payments">
+      <!-- Section 1: Gateways -->
+      <div class="grid-2" style="margin-bottom: 1.5rem;">
+        <!-- PayPal Card -->
+        <div class="card" id="card-paypal">
+          <div class="card-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.4rem;">🅿️</span>
+              <div>
+                <div class="card-title">PayPal Gateway</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">PayPal REST API & Smart Buttons</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span id="pp-status-badge" class="status-badge status-won">Aktiv (Sandbox)</span>
+              <label class="switch">
+                <input type="checkbox" id="pp-toggle-enabled" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Driftsmodus</label>
+            <div style="display: flex; gap: 1.25rem; margin-top: 6px;">
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem;">
+                <input type="radio" name="pp-mode" value="sandbox" id="pp-mode-sandbox" checked> 🟡 Sandbox (Test)
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem;">
+                <input type="radio" name="pp-mode" value="live" id="pp-mode-live"> 🟢 Live (Produksjon)
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">PayPal Client ID</label>
+            <input type="text" id="pp-client-id" class="form-input" placeholder="AXXXXXXXXX..." style="font-family: var(--font-mono); font-size: 0.85rem;" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">PayPal Secret Key</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="password" id="pp-client-secret" class="form-input" placeholder="E••••••••••••••••" style="font-family: var(--font-mono); font-size: 0.85rem;" />
+              <button type="button" class="btn btn-secondary" id="btn-toggle-pp-secret" style="padding: 0 12px; font-size: 0.85rem;">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Standardvaluta</label>
+            <select id="pp-default-currency" class="form-select">
+              <option value="NOK">NOK (Norske kroner)</option>
+              <option value="USD">USD (US Dollars)</option>
+              <option value="EUR">EUR (Euro)</option>
+            </select>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+            ℹ️ <strong>Webhook URL:</strong> <code style="color: #38bdf8; font-family: var(--font-mono);">https://aiappsy.com/api/payments/webhook</code>
+          </div>
+        </div>
+
+        <!-- Stripe Card -->
+        <div class="card" id="card-stripe">
+          <div class="card-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.4rem;">💳</span>
+              <div>
+                <div class="card-title">Stripe Gateway</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Kredittkort, Apple Pay & Google Pay (Klargjort)</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span id="stripe-status-badge" class="status-badge status-archived">Deaktivert</span>
+              <label class="switch">
+                <input type="checkbox" id="stripe-toggle-enabled">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Driftsmodus</label>
+            <div style="display: flex; gap: 1.25rem; margin-top: 6px;">
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem;">
+                <input type="radio" name="stripe-mode" value="test" id="stripe-mode-test" checked> 🟡 Testmodus (pk_test_...)
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem;">
+                <input type="radio" name="stripe-mode" value="live" id="stripe-mode-live"> 🟢 Live (pk_live_...)
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Publishable Key</label>
+            <input type="text" id="stripe-pub-key" class="form-input" placeholder="pk_test_..." style="font-family: var(--font-mono); font-size: 0.85rem;" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Secret Key</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="password" id="stripe-secret-key" class="form-input" placeholder="sk_test_..." style="font-family: var(--font-mono); font-size: 0.85rem;" />
+              <button type="button" class="btn btn-secondary" id="btn-toggle-stripe-secret" style="padding: 0 12px; font-size: 0.85rem;">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Webhook Signing Secret</label>
+            <input type="text" id="stripe-webhook-secret" class="form-input" placeholder="whsec_..." style="font-family: var(--font-mono); font-size: 0.85rem;" />
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+            ℹ️ Skru bryteren til <strong>Aktiv</strong> når du legger inn Stripe-nøklene dine for å aktivere kortkasse.
+          </div>
+        </div>
+      </div>
+
+      <!-- Save Gateways Button -->
+      <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem 1.5rem;">
+        <div style="font-size: 0.88rem; color: var(--text-muted);">
+          Nøklene lagres sikkert på serveren og hemmeligheter skjermes alltid mot nettlesere.
+        </div>
+        <button id="btn-save-gateways" class="btn btn-primary">
+          <span>💾</span> Lagre Betalingsnøkler
+        </button>
+      </div>
+
+      <!-- Section 2: App- & Priskatalog Matrix -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span>🛒</span> App- & Priskatalog (Salgsinnstillinger)</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">Konfigurer priser, fakturering og tillatte betalingsmetoder for hver app.</div>
+          </div>
+          <button id="btn-save-app-matrix" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.45rem 0.9rem;">
+            <span>💾</span> Lagre App-Priser
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>App / Tjeneste</th>
+                <th>Salgsstatus</th>
+                <th>Pris (eks. mva)</th>
+                <th>Fakturering</th>
+                <th>Aksepterte Metoder</th>
+                <th>Kasse-lenke</th>
+              </tr>
+            </thead>
+            <tbody id="app-matrix-tbody">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 3: Transactions Log -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span>📜</span> Samlet Salgs- & Transaksjonslogg</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">Oversikt over alle fullførte kjøp på tvers av PayPal og Stripe.</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="tx-search-input" class="form-input" placeholder="Søk kunde, app, ordre..." style="width: 220px; font-size: 0.82rem; padding: 0.4rem 0.75rem;" />
+            <button id="btn-refresh-tx" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.4rem 0.75rem;">Oppdater</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Dato</th>
+                <th>Kunde</th>
+                <th>App / Tjeneste</th>
+                <th>Beløp</th>
+                <th>Metode</th>
+                <th>Ordre-ID</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tx-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- ================================================================= -->
@@ -1034,6 +1233,7 @@
       fetchVouchers();
       fetchLeads();
       fetchTracking();
+      fetchPayments();
     }
 
     // =========================================================================
@@ -1826,6 +2026,341 @@
       d.textContent = s;
       return d.innerHTML;
     }
+
+
+    // =========================================================================
+    // 9. BETALINGER & FINANS HUB (PAYPAL & STRIPE MULTI-GATEWAY)
+    // =========================================================================
+    let cachedPayments = null;
+
+    // Elements
+    const ppToggle = document.getElementById('pp-toggle-enabled');
+    const ppStatusBadge = document.getElementById('pp-status-badge');
+    const ppModeSandbox = document.getElementById('pp-mode-sandbox');
+    const ppModeLive = document.getElementById('pp-mode-live');
+    const ppClientId = document.getElementById('pp-client-id');
+    const ppClientSecret = document.getElementById('pp-client-secret');
+    const ppCurrency = document.getElementById('pp-default-currency');
+    const btnTogglePpSecret = document.getElementById('btn-toggle-pp-secret');
+
+    const stripeToggle = document.getElementById('stripe-toggle-enabled');
+    const stripeStatusBadge = document.getElementById('stripe-status-badge');
+    const stripeModeTest = document.getElementById('stripe-mode-test');
+    const stripeModeLive = document.getElementById('stripe-mode-live');
+    const stripePubKey = document.getElementById('stripe-pub-key');
+    const stripeSecKey = document.getElementById('stripe-secret-key');
+    const stripeWebhookSec = document.getElementById('stripe-webhook-secret');
+    const btnToggleStripeSecret = document.getElementById('btn-toggle-stripe-secret');
+
+    const btnSaveGateways = document.getElementById('btn-save-gateways');
+    const btnSaveAppMatrix = document.getElementById('btn-save-app-matrix');
+    const appMatrixTbody = document.getElementById('app-matrix-tbody');
+    const txTbody = document.getElementById('tx-tbody');
+    const txSearchInput = document.getElementById('tx-search-input');
+    const btnRefreshTx = document.getElementById('btn-refresh-tx');
+    const badgeTxCount = document.getElementById('badge-payments-tx-count');
+
+    // Toggle Secret Visibility
+    if (btnTogglePpSecret) {
+      btnTogglePpSecret.addEventListener('click', () => {
+        ppClientSecret.type = ppClientSecret.type === 'password' ? 'text' : 'password';
+      });
+    }
+    if (btnToggleStripeSecret) {
+      btnToggleStripeSecret.addEventListener('click', () => {
+        stripeSecKey.type = stripeSecKey.type === 'password' ? 'text' : 'password';
+      });
+    }
+
+    // Toggle Badges
+    function updateGatewayBadges() {
+      if (ppToggle && ppStatusBadge) {
+        const isLive = ppModeLive.checked;
+        if (ppToggle.checked) {
+          ppStatusBadge.className = 'status-badge status-won';
+          ppStatusBadge.textContent = isLive ? 'Aktiv (Live)' : 'Aktiv (Sandbox)';
+        } else {
+          ppStatusBadge.className = 'status-badge status-archived';
+          ppStatusBadge.textContent = 'Deaktivert';
+        }
+      }
+      if (stripeToggle && stripeStatusBadge) {
+        const isLive = stripeModeLive.checked;
+        if (stripeToggle.checked) {
+          stripeStatusBadge.className = 'status-badge status-won';
+          stripeStatusBadge.textContent = isLive ? 'Aktiv (Live)' : 'Aktiv (Test)';
+        } else {
+          stripeStatusBadge.className = 'status-badge status-archived';
+          stripeStatusBadge.textContent = 'Deaktivert';
+        }
+      }
+    }
+
+    [ppToggle, ppModeSandbox, ppModeLive, stripeToggle, stripeModeTest, stripeModeLive].forEach(el => {
+      if (el) el.addEventListener('change', updateGatewayBadges);
+    });
+
+    // Fetch Payments Configuration
+    async function fetchPayments() {
+      try {
+        const res = await fetch('/api/payments/settings?_t=' + Date.now(), {
+          headers: { 'x-admin-password': getPassword() }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.payments) {
+          cachedPayments = data.payments;
+          populatePaymentsUI(data.payments);
+        }
+      } catch (err) {
+        console.error('Feil ved henting av betalingsdata:', err);
+      }
+    }
+
+    function populatePaymentsUI(cfg) {
+      const gw = cfg.gateways || {};
+      const pp = gw.paypal || {};
+      const st = gw.stripe || {};
+
+      // PayPal
+      if (ppToggle) ppToggle.checked = !!pp.enabled;
+      if (pp.mode === 'live') {
+        if (ppModeLive) ppModeLive.checked = true;
+      } else {
+        if (ppModeSandbox) ppModeSandbox.checked = true;
+      }
+      if (ppClientId) ppClientId.value = pp.clientId || '';
+      if (ppClientSecret) ppClientSecret.value = pp.clientSecret || '';
+      if (ppCurrency && pp.defaultCurrency) ppCurrency.value = pp.defaultCurrency;
+
+      // Stripe
+      if (stripeToggle) stripeToggle.checked = !!st.enabled;
+      if (st.mode === 'live') {
+        if (stripeModeLive) stripeModeLive.checked = true;
+      } else {
+        if (stripeModeTest) stripeModeTest.checked = true;
+      }
+      if (stripePubKey) stripePubKey.value = st.publishableKey || '';
+      if (stripeSecKey) stripeSecKey.value = st.secretKey || '';
+      if (stripeWebhookSec) stripeWebhookSec.value = st.webhookSecret || '';
+
+      updateGatewayBadges();
+      renderAppMatrix(cfg.apps || {});
+      renderTransactionsTable(cfg.transactions || []);
+    }
+
+    function renderAppMatrix(apps) {
+      if (!appMatrixTbody) return;
+      const keys = Object.keys(apps);
+      if (keys.length === 0) {
+        appMatrixTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Ingen apper funnet i katalogen.</td></tr>';
+        return;
+      }
+
+      appMatrixTbody.innerHTML = keys.map(appKey => {
+        const app = apps[appKey];
+        const isEnabled = app.enabled !== false;
+        const methods = app.acceptedMethods || ['paypal', 'stripe'];
+        let methodVal = 'both';
+        if (methods.includes('paypal') && !methods.includes('stripe')) methodVal = 'paypal';
+        if (!methods.includes('paypal') && methods.includes('stripe')) methodVal = 'stripe';
+
+        const checkoutLink = window.location.origin + '/apps/' + appKey + '.html';
+
+        return `
+          <tr data-app-key="${appKey}">
+            <td>
+              <div style="font-weight: 700; color: #f8fafc;">${app.name || appKey}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono);">${app.planName || appKey}</div>
+            </td>
+            <td>
+              <label class="switch">
+                <input type="checkbox" class="app-status-toggle" ${isEnabled ? 'checked' : ''}>
+                <span class="slider"></span>
+              </label>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="font-weight: 700; font-size: 0.85rem; color: var(--text-muted);">kr</span>
+                <input type="number" class="form-input app-price-input" value="${app.price || 0}" style="width: 105px; padding: 4px 8px; font-weight: 700;" />
+              </div>
+            </td>
+            <td>
+              <select class="form-select app-billing-select" style="padding: 4px 8px; font-size: 0.82rem;">
+                <option value="monthly" ${app.billingType === 'monthly' ? 'selected' : ''}>Månedlig</option>
+                <option value="one-time" ${app.billingType === 'one-time' ? 'selected' : ''}>Engangspris</option>
+                <option value="yearly" ${app.billingType === 'yearly' ? 'selected' : ''}>Årlig</option>
+              </select>
+            </td>
+            <td>
+              <select class="form-select app-methods-select" style="padding: 4px 8px; font-size: 0.82rem;">
+                <option value="both" ${methodVal === 'both' ? 'selected' : ''}>Både PayPal & Stripe</option>
+                <option value="paypal" ${methodVal === 'paypal' ? 'selected' : ''}>Kun PayPal</option>
+                <option value="stripe" ${methodVal === 'stripe' ? 'selected' : ''}>Kun Stripe</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn btn-secondary" onclick="copyText('${checkoutLink}')" style="font-size: 0.76rem; padding: 3px 8px;" title="Kopier salgsside-lenke">Kopier URL</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderTransactionsTable(transactions) {
+      if (!txTbody) return;
+      if (badgeTxCount) badgeTxCount.textContent = transactions.length;
+
+      const q = (txSearchInput ? txSearchInput.value : '').toLowerCase().trim();
+      const filtered = transactions.filter(t => {
+        if (!q) return true;
+        return (t.customerEmail || '').toLowerCase().includes(q) ||
+               (t.customerName || '').toLowerCase().includes(q) ||
+               (t.appName || '').toLowerCase().includes(q) ||
+               (t.orderId || '').toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        txTbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen transaksjoner registrert ennå.</td></tr>';
+        return;
+      }
+
+      txTbody.innerHTML = filtered.map(t => {
+        const d = new Date(t.createdAt).toLocaleString('no-NO', { dateStyle: 'short', timeStyle: 'short' });
+        const methodBadge = t.method === 'stripe'
+          ? '<span style="background: rgba(99,102,241,0.2); color: #818cf8; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">💳 Stripe</span>'
+          : '<span style="background: rgba(56,189,248,0.2); color: #38bdf8; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">🅿️ PayPal</span>';
+
+        return `
+          <tr>
+            <td style="font-size: 0.82rem; color: var(--text-muted); font-family: var(--font-mono);">${d}</td>
+            <td>
+              <div style="font-weight: 700; color: #f8fafc;">${t.customerName || 'Kunde'}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">${t.customerEmail || ''}</div>
+            </td>
+            <td>${t.appName || 'AI Tjeneste'}</td>
+            <td style="font-weight: 700; font-family: var(--font-mono); color: #34d399;">kr ${(t.amount || 0).toLocaleString()} ${t.currency || 'NOK'}</td>
+            <td>${methodBadge}</td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">${t.orderId || t.id}</td>
+            <td><span class="status-badge status-won">${t.status || 'COMPLETED'}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    if (txSearchInput) {
+      txSearchInput.addEventListener('input', () => {
+        if (cachedPayments) renderTransactionsTable(cachedPayments.transactions || []);
+      });
+    }
+    if (btnRefreshTx) {
+      btnRefreshTx.addEventListener('click', fetchPayments);
+    }
+
+    // Save Gateways
+    if (btnSaveGateways) {
+      btnSaveGateways.addEventListener('click', async () => {
+        btnSaveGateways.disabled = true;
+        btnSaveGateways.innerHTML = 'Lagrer...';
+
+        const payload = {
+          gateways: {
+            paypal: {
+              enabled: ppToggle.checked,
+              mode: ppModeLive.checked ? 'live' : 'sandbox',
+              clientId: ppClientId.value.trim(),
+              clientSecret: ppClientSecret.value.trim(),
+              defaultCurrency: ppCurrency.value
+            },
+            stripe: {
+              enabled: stripeToggle.checked,
+              mode: stripeModeLive.checked ? 'live' : 'test',
+              publishableKey: stripePubKey.value.trim(),
+              secretKey: stripeSecKey.value.trim(),
+              webhookSecret: stripeWebhookSec.value.trim(),
+              defaultCurrency: ppCurrency.value
+            }
+          }
+        };
+
+        try {
+          const res = await fetch('/api/payments/settings', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getPassword()
+            },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('✓ Betalingsnøkler og leverandører ble lagret!');
+            fetchPayments();
+          } else {
+            alert('Feil ved lagring: ' + (data.error || 'Ukjent feil'));
+          }
+        } catch(e) {
+          alert('Feil ved tilkobling til server.');
+        } finally {
+          btnSaveGateways.disabled = false;
+          btnSaveGateways.innerHTML = '<span>💾</span> Lagre Betalingsnøkler';
+        }
+      });
+    }
+
+    // Save App Matrix
+    if (btnSaveAppMatrix) {
+      btnSaveAppMatrix.addEventListener('click', async () => {
+        btnSaveAppMatrix.disabled = true;
+        btnSaveAppMatrix.innerHTML = 'Lagrer...';
+
+        const rows = appMatrixTbody.querySelectorAll('tr[data-app-key]');
+        const appsPayload = {};
+
+        rows.forEach(r => {
+          const key = r.getAttribute('data-app-key');
+          const enabled = r.querySelector('.app-status-toggle').checked;
+          const price = parseFloat(r.querySelector('.app-price-input').value) || 0;
+          const billingType = r.querySelector('.app-billing-select').value;
+          const methodVal = r.querySelector('.app-methods-select').value;
+
+          let acceptedMethods = ['paypal', 'stripe'];
+          if (methodVal === 'paypal') acceptedMethods = ['paypal'];
+          if (methodVal === 'stripe') acceptedMethods = ['stripe'];
+
+          appsPayload[key] = {
+            enabled,
+            price,
+            billingType,
+            acceptedMethods
+          };
+        });
+
+        try {
+          const res = await fetch('/api/payments/settings', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getPassword()
+            },
+            body: JSON.stringify({ apps: appsPayload })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('✓ App-katalog og priser ble oppdatert!');
+            fetchPayments();
+          } else {
+            alert('Feil ved lagring: ' + (data.error || 'Ukjent feil'));
+          }
+        } catch(e) {
+          alert('Feil ved tilkobling til server.');
+        } finally {
+          btnSaveAppMatrix.disabled = false;
+          btnSaveAppMatrix.innerHTML = '<span>💾</span> Lagre App-Priser';
+        }
+      });
+    }
+
 
     // Start
     checkAuth();

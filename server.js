@@ -892,6 +892,347 @@ app.get('/api/bookings/:id/ics', (req, res) => {
   res.send(icsContent);
 });
 
+
+// ============================================================================
+// PAYMENTS & BILLING HUB (PAYPAL & STRIPE MULTI-GATEWAY ENGINE)
+// ============================================================================
+const PAYMENTS_FILE = path.join(__dirname, 'payments.json');
+
+const DEFAULT_PAYMENTS_CONFIG = {
+  gateways: {
+    paypal: {
+      enabled: true,
+      mode: 'sandbox',
+      clientId: '',
+      clientSecret: '',
+      defaultCurrency: 'NOK',
+      webhookId: ''
+    },
+    stripe: {
+      enabled: false,
+      mode: 'test',
+      publishableKey: '',
+      secretKey: '',
+      webhookSecret: '',
+      defaultCurrency: 'NOK'
+    }
+  },
+  apps: {
+    upworkz: {
+      name: 'Upworkz',
+      enabled: true,
+      price: 299,
+      currency: 'NOK',
+      billingType: 'monthly',
+      planName: 'Upworkz Pro',
+      acceptedMethods: ['paypal', 'stripe']
+    },
+    hubzoo: {
+      name: 'Hubzoo',
+      enabled: true,
+      price: 499,
+      currency: 'NOK',
+      billingType: 'monthly',
+      planName: 'Hubzoo SMB',
+      acceptedMethods: ['paypal', 'stripe']
+    },
+    subsentry: {
+      name: 'SubSentry',
+      enabled: true,
+      price: 199,
+      currency: 'NOK',
+      billingType: 'monthly',
+      planName: 'SubSentry Shield',
+      acceptedMethods: ['paypal', 'stripe']
+    },
+    maxmotion: {
+      name: 'MaxMotion AI',
+      enabled: true,
+      price: 799,
+      currency: 'NOK',
+      billingType: 'monthly',
+      planName: 'MaxMotion Creator',
+      acceptedMethods: ['paypal', 'stripe']
+    },
+    'aistudio-crm': {
+      name: 'AI Studio CRM',
+      enabled: true,
+      price: 1490,
+      currency: 'NOK',
+      billingType: 'monthly',
+      planName: 'AI Studio CRM',
+      acceptedMethods: ['paypal', 'stripe']
+    },
+    'custom-agent': {
+      name: 'Turnkey Custom AI Agent',
+      enabled: true,
+      price: 17800,
+      currency: 'NOK',
+      billingType: 'one-time',
+      planName: 'Turnkey Custom AI Agent',
+      acceptedMethods: ['paypal', 'stripe']
+    }
+  },
+  transactions: []
+};
+
+function loadPaymentsConfig() {
+  try {
+    if (fs.existsSync(PAYMENTS_FILE)) {
+      const parsed = JSON.parse(fs.readFileSync(PAYMENTS_FILE, 'utf8'));
+      return {
+        gateways: { ...DEFAULT_PAYMENTS_CONFIG.gateways, ...(parsed.gateways || {}) },
+        apps: { ...DEFAULT_PAYMENTS_CONFIG.apps, ...(parsed.apps || {}) },
+        transactions: Array.isArray(parsed.transactions) ? parsed.transactions : []
+      };
+    }
+  } catch (e) {
+    console.error('Feil ved lesing av payments.json:', e.message);
+  }
+  return { ...DEFAULT_PAYMENTS_CONFIG };
+}
+
+function savePaymentsConfig(cfg) {
+  try {
+    fs.writeFileSync(PAYMENTS_FILE, JSON.stringify(cfg, null, 2), 'utf8');
+    return true;
+  } catch (e) {
+    console.error('Feil ved lagring av payments.json:', e.message);
+    return false;
+  }
+}
+
+// GET /api/payments/settings (Admin-protected: Full config with secrets)
+app.get('/api/payments/settings', requireAdminAuth, (req, res) => {
+  const cfg = loadPaymentsConfig();
+  res.json({ success: true, payments: cfg });
+});
+
+// POST /api/payments/settings (Admin-protected: Update gateways and app pricing)
+app.post('/api/payments/settings', requireAdminAuth, (req, res) => {
+  const { gateways, apps } = req.body || {};
+  const current = loadPaymentsConfig();
+
+  if (gateways) {
+    if (gateways.paypal) {
+      current.gateways.paypal = {
+        ...current.gateways.paypal,
+        ...gateways.paypal,
+        enabled: typeof gateways.paypal.enabled === 'boolean' ? gateways.paypal.enabled : current.gateways.paypal.enabled,
+        mode: gateways.paypal.mode === 'live' ? 'live' : 'sandbox',
+        clientId: (gateways.paypal.clientId || '').trim(),
+        clientSecret: gateways.paypal.clientSecret !== undefined ? gateways.paypal.clientSecret.trim() : current.gateways.paypal.clientSecret,
+        defaultCurrency: gateways.paypal.defaultCurrency || 'NOK'
+      };
+    }
+    if (gateways.stripe) {
+      current.gateways.stripe = {
+        ...current.gateways.stripe,
+        ...gateways.stripe,
+        enabled: typeof gateways.stripe.enabled === 'boolean' ? gateways.stripe.enabled : current.gateways.stripe.enabled,
+        mode: gateways.stripe.mode === 'live' ? 'live' : 'test',
+        publishableKey: (gateways.stripe.publishableKey || '').trim(),
+        secretKey: gateways.stripe.secretKey !== undefined ? gateways.stripe.secretKey.trim() : current.gateways.stripe.secretKey,
+        webhookSecret: (gateways.stripe.webhookSecret || '').trim(),
+        defaultCurrency: gateways.stripe.defaultCurrency || 'NOK'
+      };
+    }
+  }
+
+  if (apps && typeof apps === 'object') {
+    Object.keys(apps).forEach(appKey => {
+      if (current.apps[appKey]) {
+        current.apps[appKey] = {
+          ...current.apps[appKey],
+          ...apps[appKey],
+          price: typeof apps[appKey].price === 'number' ? apps[appKey].price : (parseFloat(apps[appKey].price) || current.apps[appKey].price),
+          enabled: typeof apps[appKey].enabled === 'boolean' ? apps[appKey].enabled : current.apps[appKey].enabled,
+          acceptedMethods: Array.isArray(apps[appKey].acceptedMethods) ? apps[appKey].acceptedMethods : current.apps[appKey].acceptedMethods
+        };
+      } else {
+        current.apps[appKey] = apps[appKey];
+      }
+    });
+  }
+
+  current.updatedAt = new Date().toISOString();
+  savePaymentsConfig(current);
+
+  console.log('[Payments Hub] Konfigurasjon oppdatert. PayPal aktiv:', current.gateways.paypal.enabled, 'Stripe aktiv:', current.gateways.stripe.enabled);
+  res.json({ success: true, message: 'Betalingsinnstillinger lagret!', payments: current });
+});
+
+// GET /api/payments/public-config (Public: Returns only enabled gateways and public keys, NO secrets)
+app.get('/api/payments/public-config', (req, res) => {
+  const cfg = loadPaymentsConfig();
+  const publicGateways = {};
+
+  if (cfg.gateways.paypal && cfg.gateways.paypal.enabled) {
+    publicGateways.paypal = {
+      enabled: true,
+      mode: cfg.gateways.paypal.mode,
+      clientId: cfg.gateways.paypal.clientId,
+      defaultCurrency: cfg.gateways.paypal.defaultCurrency
+    };
+  } else {
+    publicGateways.paypal = { enabled: false };
+  }
+
+  if (cfg.gateways.stripe && cfg.gateways.stripe.enabled) {
+    publicGateways.stripe = {
+      enabled: true,
+      mode: cfg.gateways.stripe.mode,
+      publishableKey: cfg.gateways.stripe.publishableKey,
+      defaultCurrency: cfg.gateways.stripe.defaultCurrency
+    };
+  } else {
+    publicGateways.stripe = { enabled: false };
+  }
+
+  // Filter only enabled apps for checkout
+  const activeApps = {};
+  Object.keys(cfg.apps || {}).forEach(k => {
+    if (cfg.apps[k] && cfg.apps[k].enabled) {
+      activeApps[k] = {
+        name: cfg.apps[k].name,
+        price: cfg.apps[k].price,
+        currency: cfg.apps[k].currency,
+        billingType: cfg.apps[k].billingType,
+        planName: cfg.apps[k].planName,
+        acceptedMethods: cfg.apps[k].acceptedMethods
+      };
+    }
+  });
+
+  res.json({
+    success: true,
+    gateways: publicGateways,
+    apps: activeApps
+  });
+});
+
+// POST /api/payments/create-order (Public: Initiate payment order)
+app.post('/api/payments/create-order', (req, res) => {
+  const { appKey, method, customAmount, currency, customerEmail, customerName } = req.body || {};
+  const cfg = loadPaymentsConfig();
+
+  const selectedMethod = (method || 'paypal').toLowerCase();
+  const gateway = cfg.gateways[selectedMethod];
+
+  if (!gateway || !gateway.enabled) {
+    return res.status(400).json({
+      success: false,
+      error: `Betalingsmetoden ${selectedMethod.toUpperCase()} er for øyeblikket ikke aktivert.`
+    });
+  }
+
+  let amount = 0;
+  let curr = currency || gateway.defaultCurrency || 'NOK';
+  let appName = 'AIAPPSY Tilgang';
+
+  if (appKey && cfg.apps[appKey]) {
+    amount = cfg.apps[appKey].price;
+    curr = cfg.apps[appKey].currency || curr;
+    appName = cfg.apps[appKey].name;
+  } else if (customAmount && parseFloat(customAmount) > 0) {
+    amount = parseFloat(customAmount);
+  } else {
+    return res.status(400).json({ success: false, error: 'Ugyldig app eller beløp.' });
+  }
+
+  const orderId = selectedMethod + '_ord_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+
+  res.json({
+    success: true,
+    orderId,
+    method: selectedMethod,
+    mode: gateway.mode,
+    amount,
+    currency: curr,
+    appName,
+    customerEmail: customerEmail || '',
+    customerName: customerName || '',
+    message: `Ordre opprettet for ${appName} (${amount} ${curr})`
+  });
+});
+
+// POST /api/payments/capture-order (Public: Confirm and record completed payment)
+app.post('/api/payments/capture-order', (req, res) => {
+  const { orderId, method, appKey, amount, currency, customerEmail, customerName, details } = req.body || {};
+  if (!orderId) {
+    return res.status(400).json({ success: false, error: 'Ordre-ID er påkrevd.' });
+  }
+
+  const cfg = loadPaymentsConfig();
+  const selectedMethod = (method || 'paypal').toLowerCase();
+
+  const txn = {
+    id: 'txn_' + Date.now(),
+    orderId,
+    method: selectedMethod,
+    appKey: appKey || 'general',
+    appName: (cfg.apps[appKey] && cfg.apps[appKey].name) || appKey || 'Custom Purchase',
+    customerEmail: (customerEmail || (details && details.payer && details.payer.email_address) || 'kunde@ukjent.no').trim(),
+    customerName: (customerName || (details && details.payer && details.payer.name && (details.payer.name.given_name + ' ' + details.payer.name.surname)) || 'Kunde').trim(),
+    amount: parseFloat(amount) || (cfg.apps[appKey] && cfg.apps[appKey].price) || 0,
+    currency: currency || (cfg.apps[appKey] && cfg.apps[appKey].currency) || 'NOK',
+    status: 'COMPLETED',
+    details: details || {},
+    createdAt: new Date().toISOString()
+  };
+
+  if (!Array.isArray(cfg.transactions)) cfg.transactions = [];
+  cfg.transactions.unshift(txn);
+  savePaymentsConfig(cfg);
+
+  // Sync to CRM Leads
+  try {
+    const leads = typeof loadLeadsSafe === 'function' ? loadLeadsSafe() : [];
+    const existing = leads.find(l => l.email && l.email.toLowerCase() === txn.customerEmail.toLowerCase());
+    if (existing) {
+      existing.status = 'won';
+      if (!existing.notes) existing.notes = [];
+      existing.notes.unshift({
+        id: 'note_' + Date.now(),
+        text: `Betaling fullført via ${txn.method.toUpperCase()}: ${txn.amount} ${txn.currency} for ${txn.appName} (Ordre: ${txn.orderId})`,
+        createdAt: new Date().toISOString()
+      });
+      existing.updatedAt = new Date().toISOString();
+      if (typeof saveLeadsSafe === 'function') saveLeadsSafe(leads);
+    } else {
+      const newLead = {
+        id: 'lead_' + Date.now(),
+        name: txn.customerName,
+        email: txn.customerEmail,
+        projectType: `Kunde: ${txn.appName} (${txn.amount} ${txn.currency})`,
+        message: `Gjennomført kjøp via ${txn.method.toUpperCase()} for ${txn.appName}. Transaksjon: ${txn.id}`,
+        createdAt: new Date().toISOString(),
+        status: 'won',
+        notes: [{
+          id: 'note_' + Date.now(),
+          text: `Kjøpte tilgang via ${txn.method.toUpperCase()} (Ordre: ${txn.orderId})`,
+          createdAt: new Date().toISOString()
+        }],
+        communications: []
+      };
+      leads.unshift(newLead);
+      if (typeof saveLeadsSafe === 'function') saveLeadsSafe(leads);
+    }
+  } catch(err) {
+    console.error('Feil ved CRM-kobling av transaksjon:', err.message);
+  }
+
+  console.log(`[Payments Hub] Betaling fullført: ${txn.customerName} <${txn.customerEmail}> - ${txn.amount} ${txn.currency} via ${txn.method.toUpperCase()}`);
+  res.json({ success: true, message: 'Betaling registrert!', transaction: txn });
+});
+
+// POST /api/payments/webhook (Webhook receiver for PayPal and Stripe)
+app.post('/api/payments/webhook', (req, res) => {
+  const event = req.body || {};
+  console.log('[Payments Webhook Mottatt]', event.event_type || event.type || 'Event');
+  res.json({ received: true });
+});
+
 // ============================================================================
 // TRACKING & ANALYTICS SETTINGS
 // ============================================================================

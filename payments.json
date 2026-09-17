@@ -1,0 +1,114 @@
+{
+  "gateways": {
+    "paypal": {
+      "enabled": true,
+      "mode": "sandbox",
+      "clientId": "",
+      "clientSecret": "",
+      "defaultCurrency": "NOK",
+      "webhookId": ""
+    },
+    "stripe": {
+      "enabled": false,
+      "mode": "test",
+      "publishableKey": "",
+      "secretKey": "",
+      "webhookSecret": "",
+      "defaultCurrency": "NOK"
+    }
+  },
+  "apps": {
+    "upworkz": {
+      "name": "Upworkz",
+      "enabled": true,
+      "price": 299,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "Upworkz Pro",
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ]
+    },
+    "hubzoo": {
+      "name": "Hubzoo",
+      "enabled": true,
+      "price": 499,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "Hubzoo SMB",
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ]
+    },
+    "subsentry": {
+      "name": "SubSentry",
+      "enabled": true,
+      "price": 199,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "SubSentry Shield",
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ]
+    },
+    "maxmotion": {
+      "name": "MaxMotion AI",
+      "enabled": true,
+      "price": 799,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "MaxMotion Creator",
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ]
+    },
+    "aistudio-crm": {
+      "name": "AI Studio CRM",
+      "enabled": true,
+      "price": 1490,
+      "currency": "NOK",
+      "billingType": "monthly",
+      "planName": "AI Studio CRM",
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ]
+    },
+    "custom-agent": {
+      "name": "Turnkey Custom AI Agent",
+      "enabled": true,
+      "price": 17800,
+      "currency": "NOK",
+      "billingType": "one-time",
+      "planName": "Turnkey Custom AI Agent",
+      "acceptedMethods": [
+        "paypal",
+        "stripe"
+      ]
+    }
+  },
+  "transactions": [
+    {
+      "id": "txn_1789608146117",
+      "orderId": "paypal_ord_1789608146114_hp5fx",
+      "method": "paypal",
+      "appKey": "upworkz",
+      "appName": "Upworkz",
+      "customerEmail": "mari.hansen@nordicagency.no",
+      "customerName": "Mari Hansen",
+      "amount": 299,
+      "currency": "NOK",
+      "status": "COMPLETED",
+      "details": {
+        "id": "paypal_ord_1789608146114_hp5fx",
+        "status": "COMPLETED"
+      },
+      "createdAt": "2026-09-17T01:22:26.117Z"
+    }
+  ],
+  "updatedAt": "2026-09-17T01:22:26.122Z"
+}
