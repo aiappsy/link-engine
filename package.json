@@ -1,15 +1,17 @@
 {
-  "name": "tinyurl-clone",
+  "name": "aiappsy-link-engine",
   "version": "1.0.0",
-  "description": "Production-ready custom URL shortener & redirect engine for Cloud Run",
+  "description": "AIAppsy Enterprise Short Link Engine on Google Cloud Run",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'No build step required'"
   },
   "dependencies": {
-    "express": "^4.19.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "@google-cloud/firestore": "^7.11.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "nodemailer": "^10.0.10"
   }
 }

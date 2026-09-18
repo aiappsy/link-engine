@@ -933,10 +933,22 @@
               </div>
             </div>
 
-            <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1.5rem;">
+            <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1.25rem;">
               <span class="lang-en">✓ Includes 100% source code and IP handover upon delivery. Zero lock-in. Optional monthly support & AI maintenance from kr 990/mo.</span>
               <span class="lang-no">✓ Inkluderer 100 % kildekode og overføring av rettigheter. Null binding. Valgfri månedlig drift og AI-trening fra kr 990/mnd.</span>
             </p>
+
+            <!-- Language Switcher for Formal Offer / PDF -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+              <span style="font-size: 0.8rem; font-weight: 700; color: #cbd5e1;">
+                <span class="lang-no">Språk på tilbud / PDF:</span>
+                <span class="lang-en">Proposal & PDF Language:</span>
+              </span>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" id="btn-prop-lang-no" class="btn-prop-lang active" style="padding: 4px 10px; font-size: 0.78rem; font-weight: 700; border-radius: 6px; border: 1px solid #6366f1; background: rgba(99,102,241,0.25); color: #fff; cursor: pointer; transition: all 0.2s;">🇳🇴 Norsk</button>
+                <button type="button" id="btn-prop-lang-en" class="btn-prop-lang" style="padding: 4px 10px; font-size: 0.78rem; font-weight: 700; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: #94a3b8; cursor: pointer; transition: all 0.2s;">🇬🇧 English</button>
+              </div>
+            </div>
 
             <button class="btn-action-quote" id="btn-submit-proposal">
               <span>📄</span>
@@ -1082,7 +1094,7 @@
     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 1.5rem; margin-bottom: 2rem;">
       <div>
         <h1 style="font-size: 1.8rem; margin: 0 0 0.4rem; color: #0f172a;">AIAPPSY STUDIO</h1>
-        <p style="margin: 0; font-size: 0.9rem; color: #475569;">Enterprise AI Software & Autonomous Agents · aiappsy.com</p>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;" id="print-doc-sub">Enterprise AI Software & Autonomous Agents · aiappsy.com</p>
       </div>
       <div style="text-align: right;">
         <div style="font-size: 1.2rem; font-weight: 800; color: #6366f1;" id="print-doc-id">PROSJEKTFORSLAG #2026-AI</div>
@@ -1091,45 +1103,45 @@
     </div>
 
     <div style="margin-bottom: 2rem; background: #f8fafc; border-radius: 8px; padding: 1.25rem;">
-      <h3 style="margin: 0 0 0.5rem; font-size: 1rem; color: #0f172a;">Tilbud utarbeidet for:</h3>
+      <h3 style="margin: 0 0 0.5rem; font-size: 1rem; color: #0f172a;" id="print-client-header">Tilbud utarbeidet for:</h3>
       <p style="margin: 0 0 0.25rem; font-size: 0.95rem; font-weight: 700;" id="print-client-name">Lars Hansen</p>
       <p style="margin: 0 0 0.25rem; font-size: 0.9rem; color: #475569;" id="print-client-company">Hansen Bygg AS</p>
       <p style="margin: 0; font-size: 0.9rem; color: #475569;" id="print-client-email">lars@hansenbygg.no</p>
     </div>
 
-    <h3 style="font-size: 1.15rem; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem;">Prosjektomfang & Leveranser</h3>
+    <h3 style="font-size: 1.15rem; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem;" id="print-scope-header">Prosjektomfang & Leveranser</h3>
     <div id="print-scope-list" style="margin-bottom: 2rem; line-height: 1.6; font-size: 0.92rem;">
       <!-- Populated dynamically -->
     </div>
 
-    <h3 style="font-size: 1.15rem; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem;">Kommersielle Betingelser</h3>
+    <h3 style="font-size: 1.15rem; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem;" id="print-terms-header">Kommersielle Betingelser</h3>
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem; font-size: 0.95rem;">
       <tr style="border-bottom: 1px solid #e2e8f0;">
-        <td style="padding: 0.75rem 0; font-weight: 600;">Fastpris nøkkelferdig implementering:</td>
+        <td style="padding: 0.75rem 0; font-weight: 600;" id="print-fixed-label">Fastpris nøkkelferdig implementering:</td>
         <td style="padding: 0.75rem 0; text-align: right; font-weight: 800; font-size: 1.2rem; color: #0f172a;" id="print-total-price">kr 17 800,- eks. mva</td>
       </tr>
       <tr style="border-bottom: 1px solid #e2e8f0;">
-        <td style="padding: 0.75rem 0;">Garantert leveransetid:</td>
-        <td style="padding: 0.75rem 0; text-align: right; font-weight: 700;">7–14 virkedager fra oppstart</td>
+        <td style="padding: 0.75rem 0;" id="print-delivery-label">Garantert leveransetid:</td>
+        <td style="padding: 0.75rem 0; text-align: right; font-weight: 700;" id="print-delivery-val">7–14 virkedager fra oppstart</td>
       </tr>
       <tr style="border-bottom: 1px solid #e2e8f0;">
-        <td style="padding: 0.75rem 0;">Eierskap & IP:</td>
-        <td style="padding: 0.75rem 0; text-align: right; font-weight: 700;">100 % overdragelse av kildekode og opphavsrett</td>
+        <td style="padding: 0.75rem 0;" id="print-ip-label">Eierskap & IP:</td>
+        <td style="padding: 0.75rem 0; text-align: right; font-weight: 700;" id="print-ip-val">100 % overdragelse av kildekode og opphavsrett</td>
       </tr>
       <tr>
-        <td style="padding: 0.75rem 0;">Valgfri månedlig driftsavtale:</td>
-        <td style="padding: 0.75rem 0; text-align: right;">kr 990,-/mnd (Inkl. modell-oppdatering og overvåkning)</td>
+        <td style="padding: 0.75rem 0;" id="print-maint-label">Valgfri månedlig driftsavtale:</td>
+        <td style="padding: 0.75rem 0; text-align: right;" id="print-maint-val">kr 990,-/mnd (Inkl. modell-oppdatering og overvåkning)</td>
       </tr>
     </table>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem;">
       <div>
-        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;">For AIAPPSY Studio:</p>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;" id="print-sign-agency-lbl">For AIAPPSY Studio:</p>
         <div style="border-bottom: 1px solid #0f172a; width: 80%; margin-bottom: 0.4rem;"></div>
         <p style="font-size: 0.85rem; font-weight: 700; margin: 0;">Pål Juritzen · AIAPPSY</p>
       </div>
       <div>
-        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;">Godkjent av oppdragsgiver:</p>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;" id="print-sign-client-lbl">Godkjent av oppdragsgiver:</p>
         <div style="border-bottom: 1px solid #0f172a; width: 80%; margin-bottom: 0.4rem;"></div>
         <p style="font-size: 0.85rem; font-weight: 700; margin: 0;" id="print-signature-name">Signatur / Dato</p>
       </div>
@@ -1390,39 +1402,146 @@
         });
       }
 
-      // 5. Print / PDF Proposal
+      // 5. Proposal Language & Print / PDF Engine (Bilingual: Norwegian + English)
+      var currentPropLang = document.documentElement.classList.contains('lang-en') ? 'en' : 'no';
+      var btnPropLangNo = document.getElementById('btn-prop-lang-no');
+      var btnPropLangEn = document.getElementById('btn-prop-lang-en');
+
+      function setProposalLang(lang) {
+        currentPropLang = lang;
+        if (btnPropLangNo && btnPropLangEn) {
+          if (lang === 'en') {
+            btnPropLangEn.classList.add('active');
+            btnPropLangEn.style.borderColor = '#6366f1';
+            btnPropLangEn.style.background = 'rgba(99,102,241,0.25)';
+            btnPropLangEn.style.color = '#fff';
+
+            btnPropLangNo.classList.remove('active');
+            btnPropLangNo.style.borderColor = 'rgba(255,255,255,0.2)';
+            btnPropLangNo.style.background = 'rgba(255,255,255,0.06)';
+            btnPropLangNo.style.color = '#94a3b8';
+          } else {
+            btnPropLangNo.classList.add('active');
+            btnPropLangNo.style.borderColor = '#6366f1';
+            btnPropLangNo.style.background = 'rgba(99,102,241,0.25)';
+            btnPropLangNo.style.color = '#fff';
+
+            btnPropLangEn.classList.remove('active');
+            btnPropLangEn.style.borderColor = 'rgba(255,255,255,0.2)';
+            btnPropLangEn.style.background = 'rgba(255,255,255,0.06)';
+            btnPropLangEn.style.color = '#94a3b8';
+          }
+        }
+      }
+
+      if (btnPropLangNo) btnPropLangNo.addEventListener('click', function() { setProposalLang('no'); });
+      if (btnPropLangEn) btnPropLangEn.addEventListener('click', function() { setProposalLang('en'); });
+
+      // Sync with global language switcher if present
+      if (btnLang) {
+        btnLang.addEventListener('click', function() {
+          setTimeout(function() {
+            setProposalLang(document.documentElement.classList.contains('lang-en') ? 'en' : 'no');
+          }, 50);
+        });
+      }
+
       var btnPrint = document.getElementById('btn-print-proposal');
       if (btnPrint) {
         btnPrint.addEventListener('click', function() {
-          var name = (document.getElementById('prop-contact-name').value || '').trim() || 'Kunde';
-          var company = (document.getElementById('prop-company-name').value || '').trim() || 'Bedrift AS';
-          var email = (document.getElementById('prop-email').value || '').trim() || 'post@bedrift.no';
+          var isEn = currentPropLang === 'en';
+          var name = (document.getElementById('prop-contact-name').value || '').trim() || (isEn ? 'Client' : 'Kunde');
+          var company = (document.getElementById('prop-company-name').value || '').trim() || (isEn ? 'Company Inc' : 'Bedrift AS');
+          var email = (document.getElementById('prop-email').value || '').trim() || 'contact@client.com';
           var calc = calculateTotal();
 
+          // Header fields
+          document.getElementById('print-doc-id').textContent = isEn ? 'PROJECT PROPOSAL & SCOPE #2026-AI' : 'PROSJEKTFORSLAG #2026-AI';
+          document.getElementById('print-doc-sub').textContent = 'Enterprise AI Software & Autonomous Agents · aiappsy.com';
+          document.getElementById('print-date').textContent = isEn 
+            ? 'Date: ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+            : 'Dato: ' + new Date().toLocaleDateString('no-NO');
+
+          // Client info
+          document.getElementById('print-client-header').textContent = isEn ? 'Proposal prepared for:' : 'Tilbud utarbeidet for:';
           document.getElementById('print-client-name').textContent = name;
           document.getElementById('print-client-company').textContent = company;
           document.getElementById('print-client-email').textContent = email;
-          if (calc.voucher && calc.discountAmount > 0) {
-            document.getElementById('print-total-price').innerHTML = '<span style="text-decoration:line-through; font-size:0.85em; opacity:0.6; margin-right:6px;">' + calc.formattedBase + '</span> ' + calc.formatted + ' eks. mva (' + calc.voucher.code + ')';
+
+          // Scope header
+          document.getElementById('print-scope-header').textContent = isEn ? 'Project Scope & Deliverables' : 'Prosjektomfang & Leveranser';
+
+          // Commercial terms headers
+          document.getElementById('print-terms-header').textContent = isEn ? 'Commercial Terms & Investment' : 'Kommersielle Betingelser';
+          document.getElementById('print-fixed-label').textContent = isEn ? 'Fixed-price turnkey implementation:' : 'Fastpris nøkkelferdig implementering:';
+          
+          if (isEn) {
+            var usdPrice = Math.round(calc.discountedTotal / 10);
+            if (calc.voucher && calc.discountAmount > 0) {
+              var baseUsd = Math.round(calc.baseTotal / 10);
+              document.getElementById('print-total-price').innerHTML = '<span style="text-decoration:line-through; font-size:0.85em; opacity:0.6; margin-right:6px;">$' + baseUsd.toLocaleString('en-US') + '</span> $' + usdPrice.toLocaleString('en-US') + ' USD / ' + calc.formatted + ' excl. VAT (' + calc.voucher.code + ')';
+            } else {
+              document.getElementById('print-total-price').textContent = '$' + usdPrice.toLocaleString('en-US') + ' USD / ' + calc.formatted + ' excl. VAT';
+            }
           } else {
-            document.getElementById('print-total-price').textContent = calc.formatted + ' eks. mva';
+            if (calc.voucher && calc.discountAmount > 0) {
+              document.getElementById('print-total-price').innerHTML = '<span style="text-decoration:line-through; font-size:0.85em; opacity:0.6; margin-right:6px;">' + calc.formattedBase + '</span> ' + calc.formatted + ' eks. mva (' + calc.voucher.code + ')';
+            } else {
+              document.getElementById('print-total-price').textContent = calc.formatted + ' eks. mva';
+            }
           }
-          document.getElementById('print-date').textContent = 'Dato: ' + new Date().toLocaleDateString('no-NO');
+
+          document.getElementById('print-delivery-label').textContent = isEn ? 'Guaranteed delivery timeline:' : 'Garantert leveransetid:';
+          document.getElementById('print-delivery-val').textContent = isEn ? '7–14 business days from kickoff' : '7–14 virkedager fra oppstart';
+
+          document.getElementById('print-ip-label').textContent = isEn ? 'Ownership & IP:' : 'Eierskap & IP:';
+          document.getElementById('print-ip-val').textContent = isEn ? '100% full transfer of source code & intellectual property' : '100 % overdragelse av kildekode og opphavsrett';
+
+          document.getElementById('print-maint-label').textContent = isEn ? 'Optional monthly maintenance & SLA:' : 'Valgfri månedlig driftsavtale:';
+          document.getElementById('print-maint-val').textContent = isEn ? '$99 / kr 990 per month (Includes continuous model updates & monitoring)' : 'kr 990,-/mnd (Inkl. modell-oppdatering og overvåkning)';
+
+          // Signatures
+          document.getElementById('print-sign-agency-lbl').textContent = isEn ? 'For AIAPPSY Studio:' : 'For AIAPPSY Studio:';
+          document.getElementById('print-sign-client-lbl').textContent = isEn ? 'Approved by Client:' : 'Godkjent av oppdragsgiver:';
           document.getElementById('print-signature-name').textContent = name + ' · ' + company;
 
+          // Scope items
           var activePkg = document.querySelector('.selectable-box.selected');
-          var pkgTitle = activePkg ? activePkg.querySelector('.selectable-title').textContent : 'Custom AI';
-          var pkgDesc = activePkg ? activePkg.querySelector('.selectable-desc').textContent : '';
+          var pkgTitle = 'AI Solution';
+          var pkgDesc = '';
+          if (activePkg) {
+            var titleEl = isEn ? (activePkg.querySelector('.lang-en') || activePkg.querySelector('.selectable-title')) : activePkg.querySelector('.selectable-title');
+            var descEl = isEn ? (activePkg.querySelector('.selectable-desc .lang-en') || activePkg.querySelector('.selectable-desc')) : activePkg.querySelector('.selectable-desc');
+            pkgTitle = titleEl ? titleEl.textContent.trim() : 'AI Solution';
+            pkgDesc = descEl ? descEl.textContent.trim() : '';
+          }
 
-          var scopeHtml = '<div style="margin-bottom: 1rem;"><strong>1. Hovedleveranse:</strong> ' + pkgTitle + '<br><span style="color:#475569;">' + pkgDesc + '</span></div>';
-          scopeHtml += '<div style="margin-bottom: 1rem;"><strong>2. Valgte integrasjoner:</strong><ul>';
+          var scopeHtml = '<div style="margin-bottom: 1rem;"><strong>' + (isEn ? '1. Core Deliverable:' : '1. Hovedleveranse:') + '</strong> ' + pkgTitle + '<br><span style="color:#475569;">' + pkgDesc + '</span></div>';
+          
+          var selectedAddonsList = [];
           addonCheckboxes.forEach(function(cb) {
             if (cb.checked) {
-              scopeHtml += '<li>' + cb.closest('.addon-item').querySelector('.addon-title-row span:first-child').textContent + '</li>';
+              var parent = cb.closest('.addon-item');
+              var addonTitleEl = isEn ? (parent.querySelector('.lang-en') || parent.querySelector('.addon-title-row span:first-child')) : parent.querySelector('.addon-title-row span:first-child');
+              if (addonTitleEl) selectedAddonsList.push(addonTitleEl.textContent.trim());
             }
           });
-          scopeHtml += '</ul></div>';
-          scopeHtml += '<div><strong>3. Gevinstmål:</strong> Estimert tidsbesparelse på ca. ' + calc.hours + ' timer per uke og ca. ' + calc.leads + ' % økning i kvalifiserte henvendelser.</div>';
+
+          scopeHtml += '<div style="margin-bottom: 1rem;"><strong>' + (isEn ? '2. Selected Integrations & Add-ons:' : '2. Valgte integrasjoner:') + '</strong>';
+          if (selectedAddonsList.length > 0) {
+            scopeHtml += '<ul>';
+            selectedAddonsList.forEach(function(item) { scopeHtml += '<li>' + item + '</li>'; });
+            scopeHtml += '</ul>';
+          } else {
+            scopeHtml += ' <em>' + (isEn ? 'None selected (Standard standalone architecture)' : 'Ingen valgt (Standard frittstående arkitektur)') + '</em>';
+          }
+          scopeHtml += '</div>';
+
+          scopeHtml += '<div><strong>' + (isEn ? '3. Target Outcomes & Velocity:' : '3. Gevinstmål:') + '</strong> ' + 
+            (isEn 
+              ? 'Estimated time savings of ~' + calc.hours + ' hours per week and a ~' + calc.leads + '% increase in qualified conversions.'
+              : 'Estimert tidsbesparelse på ca. ' + calc.hours + ' timer per uke og ca. ' + calc.leads + ' % økning i kvalifiserte henvendelser.') + 
+            '</div>';
 
           document.getElementById('print-scope-list').innerHTML = scopeHtml;
 

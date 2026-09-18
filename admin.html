@@ -702,6 +702,35 @@
       border-radius: 999px;
       border: 2px solid #0b1120;
     }
+
+    /* AI Article Writer Styles */
+    .art-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.79rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .art-chip:hover {
+      background: rgba(168, 85, 247, 0.18);
+      border-color: rgba(168, 85, 247, 0.5);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .art-chip.active {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(99, 102, 241, 0.35));
+      border-color: #a855f7;
+      color: #f3e8ff;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -1305,6 +1334,60 @@
         </div>
       </div>
 
+      <!-- Automated Email Reminders & Google Calendar Config Card -->
+      <div class="card" style="margin-bottom: 24px; border: 1px solid rgba(56, 189, 248, 0.25); background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);">
+        <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h2 style="font-size: 1.18rem; font-weight: 800; color: #ffffff;">
+                ✉️ Automatiske E-postpåminnelser & Google Kalender
+              </h2>
+              <span id="email-status-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; font-weight: 700;">
+                Aktiv Påminnelsesmotor
+              </span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.83rem; margin-top: 4px;">
+              Sender automatiske bekreftelser, Google Kalender-invitasjoner med RSVP, 24-timers påminnelser og 1-times urgent ping med Google Meet-lenke.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btn-test-email" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
+              🧪 Send Test-e-post
+            </button>
+            <button type="button" id="btn-save-email-cfg" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
+              💾 Lagre E-postoppsett
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-3" style="gap: 12px;">
+          <div>
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Avsender E-post / Gmail</label>
+            <input type="email" id="input-smtp-user" class="form-input" placeholder="paljuritzen@gmail.com" value="paljuritzen@gmail.com" style="font-size: 0.85rem; padding: 6px 10px;" />
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Gmail App-passord (16 tegn)</label>
+            <input type="password" id="input-smtp-pass" class="form-input" placeholder="Generert fra myaccount.google.com..." style="font-size: 0.85rem; padding: 6px 10px;" />
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Mottaker for Vertsvarsler</label>
+            <input type="email" id="input-smtp-notify" class="form-input" placeholder="paul@aiappsy.com" value="paul@aiappsy.com" style="font-size: 0.85rem; padding: 6px 10px;" />
+          </div>
+        </div>
+
+        <div style="margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.78rem; color: #94a3b8;">
+          <div style="display: flex; gap: 14px; align-items: center;">
+            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: #e2e8f0;">
+              <input type="checkbox" id="check-auto-reminders" checked style="accent-color: #10b981;">
+              <span>Automatiske 24-timers & 1-times påminnelser</span>
+            </label>
+            <span style="color: #64748b;">|</span>
+            <span>SMTP: <code>smtp.gmail.com:465 (SSL)</code></span>
+          </div>
+          <div id="email-cfg-status" style="color: #34d399; font-weight: 700;"></div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -1452,16 +1535,122 @@
     <!-- TAB 5: ARTIKLER & SEO STUDIO -->
     <!-- ================================================================= -->
     <div class="tab-pane" id="pane-articles">
+      <!-- AI Article Writer & Content Studio Card -->
+      <div class="card" style="margin-bottom: 24px; border: 1px solid rgba(168, 85, 247, 0.35); background: linear-gradient(135deg, rgba(168, 85, 247, 0.07) 0%, rgba(99, 102, 241, 0.07) 100%);">
+        <div class="card-header" style="border-bottom: 1px solid rgba(168, 85, 247, 0.2); padding-bottom: 14px; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h2 style="font-size: 1.25rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+                <span style="background: linear-gradient(135deg, #c084fc, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">✨ AI Article Writer & SEO Studio</span>
+              </h2>
+              <span id="ai-writer-model-badge" style="background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.72rem; padding: 3px 10px; border-radius: 999px; font-weight: 700;">AIAPPSY Domene-Modell</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.84rem; margin-top: 4px;">
+              Trent på AIAPPSYs 7 apper, full-stack app-utvikling (Cloud Run, Docker, WASM) og frontier AI-teknologi (Gemini, Claude, RAG, autonome action-agenter).
+            </p>
+          </div>
+          <div>
+            <button type="button" id="btn-ai-generate-art" class="btn btn-primary" style="background: linear-gradient(135deg, #9333ea, #4f46e5); border: none; font-weight: 700; font-size: 0.88rem; padding: 0.65rem 1.35rem; box-shadow: 0 4px 14px rgba(147, 51, 234, 0.35);">
+              ✨ Generer Full Artikkel med AI
+            </button>
+          </div>
+        </div>
+
+        <!-- Pre-made Topic Idea Chips -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #a5b4fc; margin-bottom: 8px;">
+            💡 Hurtigforslag & Forhåndstrente Temaer (Klikk for å fylle ut):
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="ai-art-topic-chips">
+            <button type="button" class="art-chip" data-app="hubzoo" data-topic="Hvorfor håndverkere taper 40% av jobber på treg tilbudsgiving – og hvordan sende tilbud på 60 sekunder" data-type="how-to">
+              🔨 Hubzoo: 60s Tilbud for Håndverkere
+            </button>
+            <button type="button" class="art-chip" data-app="upworkz" data-topic="220-tegns regelen: Slik dobler du svarprosenten på Upwork med AI-optimaliserte anbud" data-type="how-to">
+              💼 Upworkz: 220-tegns Anbudskroker
+            </button>
+            <button type="button" class="art-chip" data-app="subsentry" data-topic="SaaS Dark Patterns: Slik avdekker du skjulte fornyelser og kutter bedriftens programvarekostnader" data-type="case-study">
+              🛡️ SubSentry: Kutt SaaS-sløsing
+            </button>
+            <button type="button" class="art-chip" data-app="maxmotion" data-topic="Wan 2.1 vs Kling vs Minimax: Den ultimate sammenligningen av generative AI-videomodeller" data-type="comparison">
+              🎬 MaxMotion: AI-Video Benchmark
+            </button>
+            <button type="button" class="art-chip" data-app="mediabunny" data-topic="WebAssembly på klientsiden: Hvorfor fremtidens videoredigering og EBU R128-lyd skjer i nettleseren" data-type="deep-dive">
+              ⚡ MediaBunny: WASM i Nettleseren
+            </button>
+            <button type="button" class="art-chip" data-app="appsave" data-topic="SaaS-innkjøp på autopilot: Slik sparer du 15–40% på programvare med smarte rabattkoder" data-type="how-to">
+              🏷️ AppSave: Kutt SaaS-regningen
+            </button>
+            <button type="button" class="art-chip" data-app="manus" data-topic="Fra passive chatbots til autonome action-agenter: Hvorfor handling trumfer samtale i 2026" data-type="industry-trends">
+              🤖 Manus: Autonome Action-Agenter
+            </button>
+            <button type="button" class="art-chip" data-app="custom_dev" data-topic="Slik bygger du en produksjonsklar AI-mikrotjeneste på Google Cloud Run på 14 dager" data-type="deep-dive">
+              🚀 Skreddersydd AI på Cloud Run
+            </button>
+          </div>
+        </div>
+
+        <!-- Input Parameters Grid -->
+        <div class="grid-3" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px;">
+          <div>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Artikkelemne / Fokus / Spørsmål</label>
+            <input type="text" id="ai-art-topic" class="form-input" placeholder="f.eks. Hvordan automatisere kundetilbud og regnskapssynk for snekkere..." style="font-size: 0.88rem;" />
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Målprodukt / Trakt</label>
+            <select id="ai-art-target-app" class="form-select" style="font-size: 0.88rem;">
+              <option value="hubzoo" selected>Hubzoo (60s Tilbud & Salg)</option>
+              <option value="upworkz">Upworkz (Anbud & Forslag)</option>
+              <option value="subsentry">SubSentry (SaaS-kutt & Shield)</option>
+              <option value="maxmotion">MaxMotion AI (Videostudio)</option>
+              <option value="mediabunny">MediaBunny (WASM & Lyd)</option>
+              <option value="appsave">AppSave (SaaS Rabatter)</option>
+              <option value="manus">Manus AI Studio (Action-Agent)</option>
+              <option value="custom_dev">Skreddersydd AI-utvikling</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Artikkeltype</label>
+            <select id="ai-art-type" class="form-select" style="font-size: 0.88rem;">
+              <option value="how-to" selected>Praktisk Guide / How-To</option>
+              <option value="case-study">Case Study & ROI Analyse</option>
+              <option value="deep-dive">Teknisk Dybdedykk (Arkitektur)</option>
+              <option value="comparison">Sammenligning & Evaluering</option>
+              <option value="industry-trends">Bransjeanalyse & Trender 2026</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px;">
+          <div>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Språk</label>
+            <select id="ai-art-lang" class="form-select" style="font-size: 0.85rem;">
+              <option value="no" selected>🇳🇴 Norsk (Bokmål) – Optimalisert for norske SMB & marked</option>
+              <option value="en">🇬🇧 Engelsk (English) – Global Audience & Tech Readers</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Tone & Stil</label>
+            <select id="ai-art-tone" class="form-select" style="font-size: 0.85rem;">
+              <option value="tactical" selected>Taktisk & Handlingsrettet (Konkrete råd og tall)</option>
+              <option value="technical">Teknisk & Arkitekturorientert (Full-stack, Cloud Run, AI)</option>
+              <option value="executive">Strategisk B2B Ledelse (Bunnlinje og vekst)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="ai-art-status" style="display: none; margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem;"></div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <div>
-            <h2 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">AIAPPSY SEO & Article Studio</h2>
+            <h2 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">AIAPPSY Redaktør & Publisering</h2>
             <p style="color: var(--text-muted); font-size: 0.88rem;">
-              Publiser artikler direkte til <code>/articles/[slug].html</code> med automatisk sitemap-oppdatering og Google-ping.
+              Finpuss artikkelen, juster SEO-data og publiser direkte til <code>/articles/[slug].html</code> med automatisk sitemap-oppdatering og Google-ping.
             </p>
           </div>
           <div style="display: flex; gap: 10px;">
-            <button type="button" id="btn-load-art-preset" class="btn btn-secondary" style="font-size: 0.82rem;">📥 Last Mal</button>
+            <button type="button" id="btn-load-art-preset" class="btn btn-secondary" style="font-size: 0.82rem;">📥 Last Eksempel</button>
             <button type="button" id="btn-publish-art" class="btn btn-success" style="font-size: 0.82rem;">🚀 Publiser Live Nå</button>
           </div>
         </div>
@@ -1490,9 +1679,11 @@
               <select id="art-target-app" class="form-select">
                 <option value="hubzoo" selected>Hubzoo (60s Tilbud & Salg)</option>
                 <option value="upworkz">Upworkz (Anbud & Forslag)</option>
-                <option value="subsentry">SubSentry (SaaS-kutt)</option>
+                <option value="subsentry">SubSentry (SaaS-kutt & Shield)</option>
                 <option value="maxmotion">MaxMotion AI (Videostudio)</option>
-                <option value="manus">Manus AI Studio (Bok & Manuskript)</option>
+                <option value="mediabunny">MediaBunny (WASM & Lyd)</option>
+                <option value="appsave">AppSave (SaaS Rabatter)</option>
+                <option value="manus">Manus AI Studio (Action-Agent)</option>
                 <option value="custom_dev">Skreddersydd AI-utvikling</option>
               </select>
             </div>
@@ -2191,6 +2382,7 @@
       fetchCampaign();
       fetchMeetings();
       fetchCalendarConfig();
+      fetchEmailSettings();
       fetchVouchers();
       fetchLeads();
       fetchTracking();
@@ -2816,6 +3008,8 @@
             <td>
               <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <a href="/api/bookings/${b.id}/ics" class="btn btn-secondary" style="padding: 3px 6px; font-size: 0.75rem;" title="Last ned .ics kalenderfil">📅 .ics</a>
+                <a href="/api/bookings/${b.id}/google-calendar" target="_blank" class="btn btn-secondary" style="padding: 3px 6px; font-size: 0.75rem; background: rgba(66, 133, 244, 0.2); border-color: #4285f4; color: #93c5fd;" title="Legg til i Google Kalender direkte">📅 GCal</a>
+                <button class="btn btn-secondary" onclick="triggerBookingReminder('${b.id}')" style="padding: 3px 6px; font-size: 0.75rem; background: rgba(245, 158, 11, 0.2); border-color: #f59e0b; color: #fde047;" title="Send e-postpåminnelse / ping nå til gjest & vert">🔔 Ping</button>
                 ${b.status === 'confirmed' ? `<button class="btn btn-success" onclick="updateBookingStatus('${b.id}', 'completed')" style="padding: 3px 6px; font-size: 0.75rem;">✓ Fullført</button>` : ''}
                 <button class="btn btn-danger" onclick="deleteBooking('${b.id}')" style="padding: 3px 6px; font-size: 0.75rem;">🗑️</button>
               </div>
@@ -2934,9 +3128,157 @@
       } catch(e) {}
     }
 
+    window.triggerBookingReminder = async function(id) {
+      if (!confirm('Vil du sende en umiddelbar e-postpåminnelse og møtevarsel med Google Meet-lenke for denne samtalen?')) return;
+      try {
+        showToast('Sender påminnelse og møtevarsel...');
+        const res = await fetch(`/api/bookings/${id}/send-reminder`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() }
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✓ Påminnelse og kalenderinvitasjon sendt!');
+        } else {
+          alert('Feil ved sending: ' + (data.error || 'Ukjent feil'));
+        }
+      } catch (err) {
+        alert('Nettverksfeil: ' + err.message);
+      }
+    };
+
+    // =========================================================================
+    // 3.0 AUTOMATISKE E-POSTPÅMINNELSER & GOOGLE KALENDER OPPLENG
+    // =========================================================================
+    async function fetchEmailSettings() {
+      try {
+        const res = await fetch('/api/settings/email?_t=' + Date.now(), {
+          headers: { 'x-admin-password': getPassword() }
+        });
+        const data = await res.json();
+        if (data.success && data.config) {
+          const cfg = data.config;
+          const userEl = document.getElementById('input-smtp-user');
+          const passEl = document.getElementById('input-smtp-pass');
+          const notifyEl = document.getElementById('input-smtp-notify');
+          const remEl = document.getElementById('check-auto-reminders');
+          const badgeEl = document.getElementById('email-status-badge');
+
+          if (userEl) userEl.value = cfg.smtpUser || '';
+          if (passEl) passEl.value = cfg.smtpPass || '';
+          if (notifyEl) notifyEl.value = cfg.notifyHostEmail || '';
+          if (remEl) remEl.checked = cfg.autoRemindersEnabled !== false;
+
+          if (badgeEl) {
+            if (cfg.smtpPass) {
+              badgeEl.textContent = 'Aktiv Påminnelsesmotor (SMTP Klar)';
+              badgeEl.style.background = 'rgba(16, 185, 129, 0.2)';
+              badgeEl.style.color = '#34d399';
+              badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            } else {
+              badgeEl.textContent = 'Simulering / Logg-modus (Mangler App-passord)';
+              badgeEl.style.background = 'rgba(245, 158, 11, 0.2)';
+              badgeEl.style.color = '#fde047';
+              badgeEl.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Feil ved henting av e-postoppsett:', err);
+      }
+    }
+
+    async function saveEmailSettings() {
+      const btn = document.getElementById('btn-save-email-cfg');
+      const statusEl = document.getElementById('email-cfg-status');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Lagrer...';
+      }
+
+      const payload = {
+        smtpUser: document.getElementById('input-smtp-user')?.value.trim() || '',
+        smtpPass: document.getElementById('input-smtp-pass')?.value.trim() || '',
+        notifyHostEmail: document.getElementById('input-smtp-notify')?.value.trim() || '',
+        autoRemindersEnabled: document.getElementById('check-auto-reminders')?.checked ?? true
+      };
+
+      try {
+        const res = await fetch('/api/settings/email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': getPassword()
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✓ E-post og kalenderinnstillinger lagret!');
+          if (statusEl) {
+            statusEl.textContent = '✓ Innstillinger lagret';
+            setTimeout(() => { statusEl.textContent = ''; }, 3000);
+          }
+          fetchEmailSettings();
+        } else {
+          alert('Feil ved lagring: ' + (data.error || 'Ukjent feil'));
+        }
+      } catch (err) {
+        alert('Nettverksfeil ved lagring: ' + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '💾 Lagre E-postoppsett';
+        }
+      }
+    }
+
+    async function sendTestEmail() {
+      const btn = document.getElementById('btn-test-email');
+      const targetEmail = prompt('Skriv inn e-postadresse som skal motta test-epost og kalenderinvitasjon:', document.getElementById('input-smtp-notify')?.value || 'paul@aiappsy.com');
+      if (!targetEmail) return;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Sender test...';
+      }
+
+      try {
+        const res = await fetch('/api/test-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': getPassword()
+          },
+          body: JSON.stringify({ email: targetEmail })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✓ Test-epost og GCal-invitasjon sendt!');
+          alert('Test-epost og Google Kalender (.ics) ble sendt til ' + targetEmail + '!\n\nStatus: ' + (data.message || 'Sendt OK'));
+        } else {
+          alert('Feil ved sending: ' + (data.error || 'Ukjent feil'));
+        }
+      } catch (err) {
+        alert('Nettverksfeil: ' + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '🧪 Send Test-e-post';
+        }
+      }
+    }
+
+    const btnSaveEmailCfg = document.getElementById('btn-save-email-cfg');
+    if (btnSaveEmailCfg) btnSaveEmailCfg.addEventListener('click', saveEmailSettings);
+
+    const btnTestEmail = document.getElementById('btn-test-email');
+    if (btnTestEmail) btnTestEmail.addEventListener('click', sendTestEmail);
+
     document.getElementById('btn-refresh-meetings').addEventListener('click', () => {
       fetchMeetings();
       fetchCalendarConfig();
+      fetchEmailSettings();
     });
 
     // =========================================================================
@@ -3299,7 +3641,7 @@
     }
 
     // =========================================================================
-    // 5. ARTICLES & SEO STUDIO
+    // 5. ARTICLES & SEO STUDIO (WITH TRAINED AI ARTICLE WRITER)
     // =========================================================================
     const artTitle = document.getElementById('art-title');
     const artSlug = document.getElementById('art-slug');
@@ -3309,6 +3651,147 @@
     const artCharCount = document.getElementById('art-char-count');
     const artCanvas = document.getElementById('art-canvas');
     const btnPublishArt = document.getElementById('btn-publish-art');
+
+    // AI Article Writer Elements
+    const aiArtTopic = document.getElementById('ai-art-topic');
+    const aiArtTargetApp = document.getElementById('ai-art-target-app');
+    const aiArtType = document.getElementById('ai-art-type');
+    const aiArtLang = document.getElementById('ai-art-lang');
+    const aiArtTone = document.getElementById('ai-art-tone');
+    const btnAiGenerateArt = document.getElementById('btn-ai-generate-art');
+    const aiArtStatus = document.getElementById('ai-art-status');
+    const aiWriterModelBadge = document.getElementById('ai-writer-model-badge');
+
+    let cachedArticleFaqs = [];
+    let cachedArticleReadTime = '5 min read';
+
+    function updateAiWriterBadge() {
+      const key = localStorage.getItem('aiappsy_gemini_key') || '';
+      if (aiWriterModelBadge) {
+        if (key) {
+          aiWriterModelBadge.innerHTML = '⚡ Gemini 2.5 Flash + AIAPPSY Kunnskap';
+          aiWriterModelBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+          aiWriterModelBadge.style.color = '#34d399';
+          aiWriterModelBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        } else {
+          aiWriterModelBadge.innerHTML = 'AIAPPSY Domene-Modell';
+          aiWriterModelBadge.style.background = 'rgba(168, 85, 247, 0.2)';
+          aiWriterModelBadge.style.color = '#d8b4fe';
+          aiWriterModelBadge.style.borderColor = 'rgba(168, 85, 247, 0.4)';
+        }
+      }
+    }
+    updateAiWriterBadge();
+
+    // Wire pre-made topic idea chips
+    document.querySelectorAll('#ai-art-topic-chips .art-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#ai-art-topic-chips .art-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        if (chip.dataset.topic) aiArtTopic.value = chip.dataset.topic;
+        if (chip.dataset.app) {
+          aiArtTargetApp.value = chip.dataset.app;
+          if (artTargetApp) artTargetApp.value = chip.dataset.app;
+        }
+        if (chip.dataset.type) aiArtType.value = chip.dataset.type;
+      });
+    });
+
+    // Handle AI Article Generation
+    if (btnAiGenerateArt) {
+      btnAiGenerateArt.addEventListener('click', async () => {
+        const topic = aiArtTopic ? aiArtTopic.value.trim() : '';
+        const targetApp = aiArtTargetApp ? aiArtTargetApp.value : 'hubzoo';
+        const articleType = aiArtType ? aiArtType.value : 'how-to';
+        const language = aiArtLang ? aiArtLang.value : 'no';
+        const tone = aiArtTone ? aiArtTone.value : 'tactical';
+        const geminiApiKey = localStorage.getItem('aiappsy_gemini_key') || '';
+
+        btnAiGenerateArt.disabled = true;
+        const originalBtnText = btnAiGenerateArt.innerHTML;
+        btnAiGenerateArt.innerHTML = '✨ Skriver full artikkel...';
+
+        if (aiArtStatus) {
+          aiArtStatus.style.display = 'block';
+          aiArtStatus.style.background = 'rgba(168, 85, 247, 0.15)';
+          aiArtStatus.style.border = '1px solid rgba(168, 85, 247, 0.35)';
+          aiArtStatus.style.color = '#e9d5ff';
+          const targetName = aiArtTargetApp?.options[aiArtTargetApp.selectedIndex]?.text || targetApp;
+          aiArtStatus.innerHTML = `⏳ <strong>AI Article Writer arbeider:</strong> Henter arkitektur- og produktdata for ${targetName}, strukturerer H2-seksjoner, sitatbokser og FAQ-skjema...`;
+        }
+
+        try {
+          const res = await fetch('/api/articles/generate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getPassword()
+            },
+            body: JSON.stringify({
+              topic,
+              targetApp,
+              articleType,
+              language,
+              tone,
+              geminiApiKey
+            })
+          });
+
+          const data = await res.json();
+          if (res.ok && data.success && data.article) {
+            const art = data.article;
+            if (artTitle) artTitle.value = art.title || '';
+            if (artSlug) {
+              artSlug.value = art.slug || slugify(art.title || '');
+              artSlug.dataset.manual = 'true';
+            }
+            if (artCategory) artCategory.value = art.category || 'AI-Strategi & SMB';
+            if (artTargetApp) artTargetApp.value = art.targetApp || targetApp;
+            if (artDesc) {
+              artDesc.value = art.metaDesc || '';
+              artDesc.dispatchEvent(new Event('input'));
+            }
+            if (artCanvas) artCanvas.innerHTML = art.contentHtml || '';
+
+            cachedArticleFaqs = Array.isArray(art.faqs) ? art.faqs : [];
+            cachedArticleReadTime = art.readTime || '5 min read';
+
+            const engineName = data.generator === 'gemini-2.5-flash' ? 'Gemini 2.5 Flash' : 'AIAPPSY Autonom Kunnskapsmotor';
+            if (aiArtStatus) {
+              aiArtStatus.style.background = 'rgba(16, 185, 129, 0.15)';
+              aiArtStatus.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+              aiArtStatus.style.color = '#6ee7b7';
+              aiArtStatus.innerHTML = `✓ <strong>Artikkel generert (${engineName}):</strong> '${art.title}'. Innhold, SEO-metadata og ${cachedArticleFaqs.length} FAQ-spørsmål er fylt inn i redaktøren nedenfor.`;
+            }
+
+            showToast(`✨ Artikkel generert med ${engineName}!`);
+            setTimeout(() => {
+              if (artCanvas) artCanvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+          } else {
+            if (aiArtStatus) {
+              aiArtStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+              aiArtStatus.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+              aiArtStatus.style.color = '#fca5a5';
+              aiArtStatus.innerHTML = `❌ Feil under artikkelskriving: ${data.error || 'Ukjent feil'}`;
+            }
+            showToast('Artikkelgenerering feilet', true);
+          }
+        } catch (err) {
+          if (aiArtStatus) {
+            aiArtStatus.style.display = 'block';
+            aiArtStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+            aiArtStatus.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+            aiArtStatus.style.color = '#fca5a5';
+            aiArtStatus.innerHTML = `❌ Nettverksfeil: ${err.message}`;
+          }
+          showToast('Nettverksfeil: ' + err.message, true);
+        } finally {
+          btnAiGenerateArt.disabled = false;
+          btnAiGenerateArt.innerHTML = originalBtnText;
+        }
+      });
+    }
 
     function slugify(t) {
       return t.toLowerCase().trim().replace(/[\s\W-]+/g, '-').replace(/^-+|-+$/g, '');
@@ -3347,6 +3830,8 @@
         <p>Statistikk viser at kunden har 8 ganger høyere sannsynlighet for å velge leverandøren som svarer innen den første timen.</p>
         <blockquote>"Den raskeste leverandøren med et profesjonelt tilbud vinner oppdraget i 7 av 10 tilfeller."</blockquote>
       `;
+      cachedArticleFaqs = [];
+      cachedArticleReadTime = '5 min read';
       showToast('Artikkelmal lastet!');
     });
 
@@ -3365,7 +3850,9 @@
           headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
           body: JSON.stringify({
             title, slug, category: artCategory.value, targetApp: artTargetApp.value,
-            metaDesc: artDesc.value || title, contentHtml, readTime: '5 min read',
+            metaDesc: artDesc.value || title, contentHtml,
+            readTime: cachedArticleReadTime || '5 min read',
+            faqs: cachedArticleFaqs || [],
             publishDate: new Date().toISOString().split('T')[0]
           })
         });

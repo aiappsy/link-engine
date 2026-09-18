@@ -3,6 +3,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.json());
 const LINKS_FILE = path.join(__dirname, 'links.json');
 const SETTINGS_FILE = path.join(__dirname, 'settings.json');
 const LEADS_FILE = path.join(__dirname, 'leads.json');
+const EMAIL_LOGS_FILE = path.join(__dirname, 'email_logs.json');
 
 let firestoreDb = null;
 let isFirestoreReady = false;
@@ -606,6 +608,735 @@ app.post(['/api/publish', '/api/publish-article'], requireAdminAuth, async (req,
 // Apps list for studio dropdown
 app.get('/api/apps', (req, res) => {
   res.json(APP_CTAS);
+});
+
+// ============================================================================
+// AI ARTICLE WRITER & SEO CONTENT ENGINE
+// Trained on AIAPPSY's 7 Portfolio Apps, Cloud Dev & Frontier AI Tech
+// ============================================================================
+
+const AIAPPSY_KNOWLEDGE_BASE = `
+You are the Lead Technical Writer and AI Systems Architect for AIAPPSY (aiappsy.com), a premier frontier AI engineering house and micro-SaaS studio.
+You write authoritative, deeply informative, compelling, and actionable articles about modern cloud application development, frontier AI technologies, and AIAPPSY's proprietary portfolio of apps and engineering services.
+
+## AIAPPSY PORTFOLIO APPS & SERVICES:
+1. Hubzoo (Slug/key: hubzoo, URL: ../apps/hubzoo.html)
+   - Value Proposition: 60-Second Mobile Quotes & Automated Multi-Channel Follow-Up.
+   - Core Audience: Contractors, craftsmen (snekkere, elektrikere, rørleggere, malere), construction SMBs, field service professionals.
+   - Key Features: Fast estimate builder configured on mobile, automated SMS and email follow-up sequence, native 1-click accounting sync to Fiken and Tripletex, real-time client view notifications.
+   - Pain Point Solved: Eliminates the "lead black hole" where over 40% of inbound requests are lost because contractors spend evenings manually drafting PDFs.
+
+2. Upworkz (Slug/key: upworkz, URL: ../apps/upworkz.html)
+   - Value Proposition: 45-Second AI Proposal Architect for Upwork & B2B Freelancers.
+   - Core Audience: Top-rated freelancers, agency owners, independent software engineers, consultants.
+   - Key Features: Deconstructs client job postings, identifies hidden screening questions and gotchas, crafts high-converting 220-character opening hooks designed specifically to beat mobile inbox truncation, generates customized technical scopes.
+   - Metrics: Lifts proposal interview rates from average 8% to over 35%.
+
+3. SubSentry (Slug/key: subsentry, URL: ../apps/subsentry.html)
+   - Value Proposition: SaaS Dark Pattern Shield & Recurring Subscription Audit.
+   - Core Audience: Startup founders, SMB operations managers, finance directors, tech consumers.
+   - Key Features: Detects hidden auto-renewals, multi-step cancellation mazes, deceptive checkout tick-boxes, generates 1-click verified cancellation playbooks, provides cheaper or open-source alternatives.
+   - Pain Point Solved: Reclaims an average of $2,400 to $18,000 annually in zombie software licenses and shadow IT bloat.
+
+4. MaxMotion AI (Slug/key: maxmotion, URL: ../apps/maxmotion.html)
+   - Value Proposition: Multi-Model AI Video Production Studio on a Single Canvas.
+   - Core Audience: Video creators, marketing agencies, motion designers, social media managers.
+   - Key Features: Unifies premier video models (Wan 2.1, Kling 1.5, Minimax Hailuo AI) in a unified multi-track timeline canvas, permanent Google Cloud Storage assets that never expire (no 24h CDN expiry), direct camera control prompts, frame interpolation.
+   - Pain Point Solved: Ends vendor lock-in and juggling 4 different subscriptions with expiring download links.
+
+5. MediaBunny (Slug/key: mediabunny, URL: ../apps/mediabunny.html)
+   - Value Proposition: In-Browser WebAssembly Media Processor & Audio Normalizer.
+   - Core Audience: Content creators, podcasters, video editors, privacy-conscious enterprises.
+   - Key Features: 100% private on-device processing via WebAssembly (WASM) with zero data uploads to cloud servers, neural AI background removal, broadcast-standard EBU R128 loudness normalization (-23 LUFS / -14 LUFS), 75% CRF video compression.
+   - Advantage: Zero cloud server compute cost, total GDPR compliance, instant processing without network bottleneck.
+
+6. AppSave (Slug/key: appsave, URL: ../apps/appsave.html)
+   - Value Proposition: Chrome Extension (Manifest V3) for SaaS & Cloud Discounts.
+   - Core Audience: Small businesses, solo developers, procurement teams buying SaaS tools.
+   - Key Features: Auto-tests crowdsourced and verified coupon codes at checkout for SaaS, cloud hosting (AWS, GCP, DigitalOcean), AI API providers, and developer productivity tools.
+   - Impact: Saves 15% to 40% on SaaS subscriptions with zero user friction.
+
+7. Manus AI Studio (Slug/key: manus, URL: ../apps/manus.html)
+   - Value Proposition: Autonomous General-Purpose Action Agent for Business Automation.
+   - Core Audience: Enterprise tech leads, operations managers, developers.
+   - Key Features: Full browser automation (Playwright/Puppeteer), sandboxed code execution, dynamic API synthesis, end-to-end task execution (from raw prompt to compiled code, formatted reports, or scraped databases).
+   - Difference vs Chatbots: Executes real multi-step tool calls, browses the live web, repairs errors autonomously without waiting for human intervention.
+
+8. Custom AI Engineering (Slug/key: custom_dev, URL: ../custom-development.html)
+   - Value Proposition: Bespoke AI Systems Engineered in 7 to 14 Days.
+   - Offerings: Autonomous agent swarms, production RAG vector search engines, real-time Voice AI pipelines (<500ms latency), ERP/CRM bridges (Fiken, Tripletex, SAP), Google Cloud Run microservices.
+   - Delivery: Battle-tested production code with CI/CD, monitoring, and fixed-price scope.
+
+## APP DEVELOPMENT & ARCHITECTURE PRINCIPLES:
+- Serverless & Cloud-Native: Built on Google Cloud Run with Docker containers, zero-idle scale to zero, multi-zone failover, cold-start mitigation (<300ms).
+- Zero-Bloat Client Architecture: Modern Vanilla JS and high-performance Web Components instead of heavy single-page app frameworks, yielding sub-50ms TTFB and perfect 100 Lighthouse scores.
+- Client-Side WASM Compute: Offloading heavy media/neural workloads to client hardware using WebAssembly (MediaBunny), slashing cloud GPU bills to zero.
+- Enterprise Integrations: Direct REST and webhook bridges with Norwegian and European accounting ERPs (Fiken, Tripletex) and payment gateways (Stripe, Vipps, PayPal).
+
+## FRONTIER AI TECH STACK:
+- Hybrid RAG: Dense vector embeddings combined with sparse BM25 keyword matching and cross-encoder reranking.
+- Autonomous Action Agents: Multi-turn tool execution, reflection and self-correction loops, deterministic schema validation.
+- Next-Gen Generative Video: Wan 2.1, Kling 1.5, Minimax Hailuo AI.
+- Voice AI: WebRTC duplex streaming audio with ultra-low latency (<500ms voice turnarounds).
+`;
+
+function callGeminiArticleJson(apiKey, systemInstruction, userPrompt) {
+  return new Promise((resolve, reject) => {
+    const payload = JSON.stringify({
+      contents: [{
+        role: 'user',
+        parts: [{ text: userPrompt }]
+      }],
+      systemInstruction: {
+        parts: [{ text: systemInstruction }]
+      },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 4096,
+        responseMimeType: "application/json"
+      }
+    });
+
+    const options = {
+      hostname: 'generativelanguage.googleapis.com',
+      port: 443,
+      path: `/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.error) {
+            return reject(new Error(parsed.error.message || 'Gemini API Error'));
+          }
+          const rawText = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!rawText) return reject(new Error('Ingen tekst mottatt fra Gemini'));
+          
+          let cleaned = rawText.trim();
+          if (cleaned.startsWith('```json')) cleaned = cleaned.replace(/^```json\s*/i, '').replace(/\s*```$/, '');
+          else if (cleaned.startsWith('```')) cleaned = cleaned.replace(/^```\s*/i, '').replace(/\s*```$/, '');
+          
+          const articleJson = JSON.parse(cleaned);
+          resolve(articleJson);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.setTimeout(35000, () => {
+      req.destroy();
+      reject(new Error('Tidsavbrudd mot Gemini API (35s)'));
+    });
+    req.write(payload);
+    req.end();
+  });
+}
+
+function generateFallbackArticle({ topic = '', targetApp = 'hubzoo', articleType = 'how-to', language = 'no', tone = 'tactical' }) {
+  const isEn = language === 'en';
+  const appMeta = APP_CTAS[targetApp] || APP_CTAS['hubzoo'];
+  const appName = appMeta.name;
+  const cleanTopic = (topic || '').trim();
+
+  // Knowledge base templates by app
+  const templates = {
+    hubzoo: {
+      category_no: 'B2B Salg & AI-Automatisering',
+      category_en: 'B2B Sales & AI Automation',
+      defaultTitle_no: 'Hvordan sende profesjonelle håndverkertilbud på 60 sekunder og vinne 3x flere oppdrag',
+      defaultTitle_en: 'How 60-Second Mobile Quotes & Automated Follow-Up Triple Contractor Win Rates',
+      slug_no: '60-sekunders-tilbud-og-salgsautomatisering-handverkere',
+      slug_en: '60-second-mobile-quotes-contractor-win-rates',
+      metaDesc_no: 'Oppdag hvordan ledende håndverkere kutter tilbudstiden fra timer til sekunder med Hubzoo, integrerer med Fiken/Tripletex og sikrer 7 av 10 oppdrag.',
+      metaDesc_en: 'Discover how top contractors slash quoting time from hours to seconds with Hubzoo, sync with modern ERPs, and close 7 out of 10 incoming client jobs.',
+      h1_no: 'Den Usynlige Salgslekkasjen: Hvorfor Håndverkere Taper 40% av Innkommende Jobber',
+      h1_en: 'The Silent Sales Leak: Why Contractors Lose 40% of Inbound Inquiries',
+      contentHtml_no: `
+        <p class="lead">De fleste håndverkere, snekkere og elektrikere taper ikke oppdrag på pris eller faglig dyktighet – de taper fordi det tar for lang tid å sende pristilbudet. I 2026 forventer kunden svar samme dag.</p>
+        
+        <h2>Problemet med kveldsarbeid og manuelle PDF-tilbud</h2>
+        <p>En typisk håndverker bruker 6 til 10 timer hver uke på kontorarbeid etter at den fysiske arbeidsdagen er over. Målinger, notater på papirlapper og manuelle Excel-ark fører til forsinkelser på 3 til 7 dager før kunden mottar et tilbud. Forskning viser at <strong>over 80 % av kundene velger den første seriøse leverandøren</strong> som leverer et ryddig, spesifisert estimat.</p>
+
+        <blockquote>"Den raskeste leverandøren med et profesjonelt og transparent tilbud vinner oppdraget i 7 av 10 tilfeller. Å vente til søndag kveld med å skrive tilbud er en direkte oppskrift på tapt omsetning."</blockquote>
+
+        <h2>Slik fungerer 60-sekunders mobil arbeidsflyt med Hubzoo</h2>
+        <p>Med moderne mobile verktøy som <a href="../apps/hubzoo.html"><strong>Hubzoo</strong></a> kan du generere et komplett, kalkulert pristilbud rett fra mobilen mens du fortsatt står på befaringen hos kunden:</p>
+        <ul>
+          <li><strong>Maler for repeterende jobber:</strong> Standardiserte timepriser, materiellpåslag og vanlige oppdrag legges inn med få trykk.</li>
+          <li><strong>Automatisk flerkanals oppfølging:</strong> Systemet sender automatisk en høflig SMS og e-post etter 48 timer dersom kunden ikke har svart.</li>
+          <li><strong>Direkte regnskapssynk:</strong> Full 1-klikks overføring til Fiken og Tripletex, slik at du slipper dobbeltarbeid ved fakturering.</li>
+        </ul>
+
+        <h2>Målbare resultater etter 30 dager</h2>
+        <p>Bedrifter som har gått over til umiddelbar mobil tilbudsgiving rapporterer i gjennomsnitt en <strong>økning i tilslagsrate på 68 %</strong>, samtidig som administrasjonstiden kuttes med 8 timer per uke per prosjektleder.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">Contractors, craftsmen, and field service teams rarely lose projects due to craftsmanship or pricing—they lose them because drafting quotes takes too long. In 2026, speed to lead defines win rates.</p>
+
+        <h2>The Desk Trap: Why Evening PDF Invoicing is Killing Growth</h2>
+        <p>Contractors spend an average of 8 hours every weekend typing up estimates from crumpled job-site notes. By the time a proposal reaches a homeowner or property manager 5 days later, a competitor has already visited, quoted, and started work. Data proves that <strong>over 78% of service deals are awarded to the first responder</strong> providing a transparent breakdown.</p>
+
+        <blockquote>"Speed wins deals. In residential and commercial subcontracting, the business that provides a structured, mobile-first estimate within hours closes at triple the industry average."</blockquote>
+
+        <h2>The 60-Second Mobile Proposal Engine</h2>
+        <p>Using <a href="../apps/hubzoo.html"><strong>Hubzoo</strong></a>, project leads build, price, and deliver high-converting quotes directly from their smartphone before even leaving the client's driveway:</p>
+        <ul>
+          <li><strong>Pre-configured item matrices:</strong> Labor, materials, and margin calculations are locked into intelligent mobile templates.</li>
+          <li><strong>Multi-channel auto follow-up:</strong> Automated SMS and email nudges re-engage prospective clients after 48 hours without annoying pressure.</li>
+          <li><strong>Native ERP & accounting bridge:</strong> One-click synchronization into leading European accounting backends including Fiken and Tripletex.</li>
+        </ul>
+
+        <h2>Bottom-Line ROI</h2>
+        <p>Field teams adopting immediate on-site quoting achieve a <strong>68% increase in proposal close rates</strong> and recover up to 10 hours of billable or personal time every single week.</p>
+      `,
+      faqs_no: [
+        { q: 'Hvor raskt kan en ansatt lære å bruke Hubzoo?', a: 'Hubzoo er designet for mobilskjerm med store berøringsflater og null opplæringstid. De fleste oppretter sitt første tilbud på under 2 minutter.' },
+        { q: 'Fungerer Hubzoo med eksisterende regnskapsprogrammer?', a: 'Ja, Hubzoo har innebygget direkte integrasjon med ledende systemer som Fiken og Tripletex, samt eksportmuligheter via API.' },
+        { q: 'Hva skjer dersom kunden ikke svarer på tilbudet?', a: 'Hubzoos automatiserte oppfølgingsmotor sender automatisk tilpassede påminnelser via SMS og e-post til avtalte intervaller.' }
+      ],
+      faqs_en: [
+        { q: 'How long does it take for field crews to adopt Hubzoo?', a: 'Hubzoo is built mobile-first with zero learning curve. Crews generate their first compliant proposal in less than 2 minutes.' },
+        { q: 'Does Hubzoo integrate with our accounting software?', a: 'Yes, Hubzoo natively connects with leading European accounting platforms including Fiken and Tripletex with full API support.' },
+        { q: 'How does automated follow-up work?', a: 'The engine sends courteous SMS and email follow-ups at 48-hour intervals until the client approves or requests scope changes.' }
+      ]
+    },
+
+    upworkz: {
+      category_no: 'Frilans & B2B Salgsstrategi',
+      category_en: 'Freelance & B2B Proposal Strategy',
+      defaultTitle_no: '220-tegns regelen: Slik dobler du svarprosenten på Upwork med AI-optimaliserte anbud',
+      defaultTitle_en: 'The 220-Character Rule: How AI Bid Architecture Triples Proposal Interview Rates',
+      slug_no: '220-tegns-regelen-upwork-anbud-ai-arkitektur',
+      slug_en: '220-character-rule-upwork-proposals-ai-architecture',
+      metaDesc_no: 'Lær hvordan de første 220 tegnene i Upwork-søknaden avgjør om kunden klikker eller forkaster. Slik bruker Upworkz AI for å nå 35% svarprosent.',
+      metaDesc_en: 'Learn why the first 220 characters of an Upwork proposal determine whether a client reads or archives. See how Upworkz drives a 35%+ response rate.',
+      contentHtml_no: `
+        <p class="lead">Når en oppdragsgiver åpner Upwork på mobil, ser de kun de første 220 tegnene av søknaden din i innboksen før de må bestemme seg for å åpne eller arkivere. Generiske hilsener er dødsstøtet for anbudet ditt.</p>
+
+        <h2>Hvorfor "Dear Hiring Manager" garanterer avslag</h2>
+        <p>Gjennomsnittlige anbud på Upwork kaster bort de mest verdifulle tegnene på intetsigende innledninger som <em>"Hei, jeg leste oppdraget ditt med stor interesse..."</em>. Innen kunden har skumlest forbi høflighetsfrasene på sin iPhone, har de allerede trykket 'Archive' og gått videre til neste søker.</p>
+
+        <blockquote>"De første 220 tegnene er ikke en innledning – de er en spissformulert hypotese om kundens kjerneavvik og løsning."</blockquote>
+
+        <h2>Hvordan Upworkz dekonstruerer oppdragsbeskrivelser</h2>
+        <p>Med <a href="../apps/upworkz.html"><strong>Upworkz</strong></a> analyseres oppdragsannonsen på 45 sekunder for å avdekke:</p>
+        <ul>
+          <li><strong>Skjulte kontrollspørsmål:</strong> Mange kunder gjemmer kodeord i midten av teksten for å filtrere bort roboter.</li>
+          <li><strong>Arkitektur-gotchas:</strong> Identifiserer underliggende tekniske flaskehalser som kunden ikke selv har beskrevet nøyaktig.</li>
+          <li><strong>En skreddersydd åpningskrok:</strong> Genererer en 220-tegns åpning som beviser umiddelbar forståelse for det eksakte problemet.</li>
+        </ul>
+
+        <h2>Resultat: Fra 8 % til 35 % intervjurater</h2>
+        <p>Ved å fokusere på teknisk presisjon og eliminere fyllord, rapporterer Upworkz-brukere en dramatisk økning i intervjuer og oppdragsinntekter.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">When a hiring client reviews Upwork proposals on iOS or Android, the interface truncates each pitch to exactly 220 characters in the preview list. Generic openers are fatal to your win rate.</p>
+
+        <h2>The Death of "Dear Hiring Manager"</h2>
+        <p>Over 90% of submitted proposals squander the crucial preview window on filler: <em>"Hello! I saw your posting and have 10 years of experience..."</em>. The client never opens the full proposal because the preview failed to communicate domain mastery.</p>
+
+        <blockquote>"Your first 220 characters are not an introduction; they are an immediate technical thesis demonstrating you already understand the client's bottleneck."</blockquote>
+
+        <h2>Automated Job Deconstruction with Upworkz</h2>
+        <p>The <a href="../apps/upworkz.html"><strong>Upworkz</strong></a> bid architect deconstructs postings in under 45 seconds:</p>
+        <ul>
+          <li><strong>Audit screening traps:</strong> Instantly catches hidden verification words and client test questions.</li>
+          <li><strong>Scope flaw detection:</strong> Spots architectural contradictions or missing dependencies in the client's brief.</li>
+          <li><strong>High-converting mobile hook:</strong> Crafts a laser-focused opening paragraph engineered specifically to bypass mobile inbox truncation.</li>
+        </ul>
+
+        <h2>Proven Performance Metrics</h2>
+        <p>Engineers and agencies using Upworkz regularly report proposal interview rates jumping from the industry baseline of 8% to sustained rates above 35%.</p>
+      `,
+      faqs_no: [
+        { q: 'Hvorfor er akkurat 220 tegn så viktig?', a: 'Upworks mobilapp kutter forhåndsvisningen i klientens innboks ved ca. 220 tegn. Alt etter dette krever et aktivt klikk for å leses.' },
+        { q: 'Er anbudene ferdigskrevne eller bare kladder?', a: 'Upworkz leverer et komplett, teknisk presist forslag med milepæler, estimert tidsbruk og relevante spørsmål klar til sending på under 45 sekunder.' },
+        { q: 'Fungerer Upworkz også for andre frilansplattformer?', a: 'Ja, de samme prinsippene for dekonstruksjon og åpningskroker gjelder for direkte B2B e-postforslag og andre markedsplasser.' }
+      ],
+      faqs_en: [
+        { q: 'Why is the 220-character threshold so critical?', a: 'Upwork mobile clients preview roughly 220 characters in the inbox queue. If value is not established immediately, the pitch is archived without opening.' },
+        { q: 'Does Upworkz output full proposals or bullet points?', a: 'Upworkz generates complete, technically sound proposals with scope milestones and questions in 45 seconds.' },
+        { q: 'Can Upworkz be used for direct B2B cold outreach?', a: 'Yes, the underlying deconstruction methodology applies equally to cold email pitches and RFP responses.' }
+      ]
+    },
+
+    subsentry: {
+      category_no: 'SaaS & Kostnadsoptimalisering',
+      category_en: 'SaaS & Cost Optimization',
+      defaultTitle_no: 'SaaS Dark Patterns: Slik avdekker du skjulte fornyelser og kutter bedriftens programvarekostnader',
+      defaultTitle_en: 'SaaS Dark Patterns: How to Audit Shadow Subscriptions and Eliminate Recurring Software Waste',
+      slug_no: 'saas-dark-patterns-avdekk-skjulte-abonnementer',
+      slug_en: 'saas-dark-patterns-audit-shadow-subscriptions',
+      metaDesc_no: 'Lær hvordan moderne SaaS-selskaper låser bedriften din i dyre årsavtaler med mørke mønstre, og hvordan SubSentry sparer deg for tusenvis av kroner.',
+      metaDesc_en: 'Discover how SaaS companies use dark UX patterns to trap businesses in auto-renewals, and how SubSentry audits licenses to reclaim thousands annually.',
+      contentHtml_no: `
+        <p class="lead">Næringslivet mister årlig titalls milliarder kroner på "skygge-IT" og abonnementsfeller som fornyes i det stille. Mørke designmønstre gjør det nesten umulig å si opp uten assistanse.</p>
+
+        <h2>Hva er "Dark Patterns" i moderne programvare?</h2>
+        <p>Begrepet <em>Dark Patterns</em> betegner brukergrensesnitt som bevisst er konstruert for å manipulere brukere til handlinger de ellers ikke ville gjort. Eksempler inkluderer skjulte oppsigelsesknapper gjemt fem nivåer nede i innstillinger, krav om å ringe et amerikansk telefonnummer for å avbryte en prøveperiode, og forhåndsavkryssede bokser for årlig fakturering.</p>
+
+        <blockquote>"Den gjennomsnittlige bedriften med 10 til 50 ansatte betaler for mellom 4 og 12 programvarelisenser som ingen i selskapet har brukt de siste 90 dagene."</blockquote>
+
+        <h2>SubSentry: Ditt skjold mot uønskede trekk</h2>
+        <p>Gjennom <a href="../apps/subsentry.html"><strong>SubSentry</strong></a> får bedriften et intelligent varslingssystem og en dedikert oppsigelsesradar:</p>
+        <ul>
+          <li><strong>Varsel før automatisk binding:</strong> Få påminnelse 7 dager før gratis prøveperioder konverterer til bindende årsavtaler.</li>
+          <li><strong>Trinnvise oppsigelsesoppskrifter:</strong> Verifiserte guider som viser nøyaktig hvilke knapper du må trykke for å unnslippe oppsigelseslabyrinter.</li>
+          <li><strong>Kostnadseffektive alternativer:</strong> Finn rimeligere eller åpen kildekode-alternativer til overprisede enterprise-verktøy.</li>
+        </ul>
+
+        <h2>Konklusjon: Ta kontroll over kredittkortet</h2>
+        <p>Ved å gjennomføre en strukturert abonnementsrevisjon kan de fleste bedrifter umiddelbart redusere sine månedlige IT-utgifter med 20 % til 35 %.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">Companies waste tens of thousands of dollars each year on shadow IT and unattended auto-renewals. Deceptive checkout flows and obfuscated cancellation loops are deliberately engineered to bleed budgets.</p>
+
+        <h2>The Mechanics of SaaS Dark Patterns</h2>
+        <p>A dark pattern is a user experience engineered to manipulate users into taking actions contrary to their intent. In enterprise software, this includes burying the 'Cancel Subscription' toggle under four submenus, requiring telephone calls to account managers during US business hours, and converting monthly trials into non-refundable annual contracts.</p>
+
+        <blockquote>"The average SMB with 10 to 50 employees pays for between 4 and 12 SaaS seats that have not logged a single session in over 90 days."</blockquote>
+
+        <h2>SubSentry: The Subscription Shield</h2>
+        <p>Deploying <a href="../apps/subsentry.html"><strong>SubSentry</strong></a> establishes rigorous governance across corporate software spend:</p>
+        <ul>
+          <li><strong>Pre-conversion tripwires:</strong> Real-time alerts 7 days before trials roll over into annual obligations.</li>
+          <li><strong>Direct cancellation playbooks:</strong> Verified step-by-step click maps that bypass retention mazes.</li>
+          <li><strong>Rationalized alternatives:</strong> Automated discovery of cost-effective alternatives and self-hosted open-source counterparts.</li>
+        </ul>
+
+        <h2>Take Back Control</h2>
+        <p>A systematic audit of software recurring billing routinely claws back 20% to 35% of total annual software expenditure.</p>
+      `,
+      faqs_no: [
+        { q: 'Krever SubSentry tilgang til bedriftens bankkonto?', a: 'Nei, SubSentry analyserer kvitteringer, fakturaer og nettlesermønstre uten behov for direkte API-kobling til bedriftens bankkonto.' },
+        { q: 'Hvor mye sparer en typisk bedrift?', a: 'Bedrifter sparer i gjennomsnitt mellom 20 000 og 150 000 kroner i året ved å eliminere ubrukte seter og uoppdagede årsfornyelser.' },
+        { q: 'Kan SubSentry hjelpe med å forhandle lavere priser?', a: 'Ja, SubSentry tilbyr benchmark-data som viser hva andre bedrifter faktisk betaler for tilsvarende programvare.' }
+      ],
+      faqs_en: [
+        { q: 'Does SubSentry require corporate bank login credentials?', a: 'No, SubSentry operates via browser receipt recognition and invoice ingestion without requiring direct banking API credentials.' },
+        { q: 'What is the average savings realized?', a: 'Companies typically reclaim between $2,400 and $18,000 annually by eliminating inactive seats and zombie software.' },
+        { q: 'Does SubSentry assist with renewal negotiations?', a: 'Yes, SubSentry compiles real-world benchmark pricing data to strengthen your leverage during contract renewals.' }
+      ]
+    },
+
+    maxmotion: {
+      category_no: 'AI-Video & Multimodal Medieproduksjon',
+      category_en: 'AI Video & Multimodal Media Production',
+      defaultTitle_no: 'Wan 2.1 vs Kling vs Minimax: Den ultimate sammenligningen av generative AI-videomodeller',
+      defaultTitle_en: 'Wan 2.1 vs Kling vs Minimax: The Definitive Multi-Model AI Video Architecture Guide',
+      slug_no: 'wan-2-1-vs-kling-vs-minimax-ai-video-sammenligning',
+      slug_en: 'wan-2-1-vs-kling-vs-minimax-ai-video-comparison',
+      metaDesc_no: 'Vi tester Wan 2.1, Kling 1.5 og Minimax på fysikk, prompt-troskap og konsistens. Se hvordan MaxMotion AI samler modellene på ett lerret med permanent skylagring.',
+      metaDesc_en: 'Comprehensive benchmark of Wan 2.1, Kling 1.5, and Minimax across physics, prompt fidelity, and temporal consistency with MaxMotion AI studio.',
+      contentHtml_no: `
+        <p class="lead">Landskapet for generativ AI-video har eksplodert i 2026. Å låse seg til én enkelt leverandør fører til kompromisser på bildekvalitet og unødvendig høye abonnementskostnader.</p>
+
+        <h2>Felt-test: Fysikk, lyssetting og tidsmessig konsistens</h2>
+        <p>Vi har kjørt standardiserte prompts gjennom tre av markedets mest avanserte modeller:</p>
+        <ul>
+          <li><strong>Wan 2.1:</strong> Eksepsjonell på teksturbeskrivelser og komplekse kamerabevegelser. Svært sterk på fotorealistiske menneskeansikter og lysrefleksjoner.</li>
+          <li><strong>Kling 1.5:</strong> Markedsledende på fysiske interaksjoner – håndbevegelser, kollisjoner og væskedynamikk oppfører seg bemerkelsesverdig naturlig.</li>
+          <li><strong>Minimax Hailuo AI:</strong> Lynrask genereringstid og suveren på filmatiske scener med dramatiske fargegraderinger.</li>
+        </ul>
+
+        <blockquote>"Ingen enkelt AI-videomodell vinner i alle kategorier. De beste produksjonene kombinerer styrkene til flere modeller i samme tidslinje."</blockquote>
+
+        <h2>MaxMotion AI: Én felles tidslinje og permanent lagring</h2>
+        <p>I stedet for å betale for tre separate abonnementer med midlertidige 24-timers nedlastingslenker, lar <a href="../apps/maxmotion.html"><strong>MaxMotion AI</strong></a> deg orkestrere alle tre modellene direkte fra ett samlet lerret:</p>
+        <ul>
+          <li><strong>Permanent Google Cloud Storage:</strong> Genererte klipp slettes aldri etter et døgn – de lagres sikkert i din egen prosjektmappe.</li>
+          <li><strong>Sømløs klipping:</strong> Kombiner scener fra Wan 2.1 og Kling på samme spor med automatisk fargejustering og overganger.</li>
+          <li><strong>Kostnadseffektiv kredittbruk:</strong> Betal kun for sekundene du faktisk genererer, uten dyre månedlige låsninger.</li>
+        </ul>
+
+        <h2>Konklusjon for profesjonelle innholdsskapere</h2>
+        <p>Å orkestrere multimodal video gjennom et enhetlig studio gir høyere produksjonsverdi og sparer produksjonsteam for timevis med manuell filhåndtering.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">The generative AI video landscape in 2026 has fractured across multiple frontier models. Relying on a single vendor limits creative fidelity and inflates subscription overhead.</p>
+
+        <h2>The Head-to-Head Benchmark: Physics, Fidelity & Motion</h2>
+        <p>We executed standardized stress-test prompts across the premier video engines:</p>
+        <ul>
+          <li><strong>Wan 2.1:</strong> Unmatched rendering of subtle lighting nuances, skin shaders, and cinematic depth-of-field.</li>
+          <li><strong>Kling 1.5:</strong> The benchmark for believable physics—fluid dynamics, object permanence, and complex anatomical motion behave naturally.</li>
+          <li><strong>Minimax Hailuo AI:</strong> Ultra-rapid throughput with dramatic color grading ideal for commercial b-roll.</li>
+        </ul>
+
+        <blockquote>"No single video model dominates every scenario. Commercial production pipelines must orchestrate specialized models dynamically."</blockquote>
+
+        <h2>MaxMotion AI: The Unified Multi-Model Timeline</h2>
+        <p>Rather than juggling three disparate subscriptions with expiring 24-hour CDN links, <a href="../apps/maxmotion.html"><strong>MaxMotion AI</strong></a> unifies Wan 2.1, Kling, and Minimax on a singular timeline:</p>
+        <ul>
+          <li><strong>Permanent Cloud Storage:</strong> All render assets are persisted permanently to Google Cloud Storage.</li>
+          <li><strong>Unified Timeline Canvas:</strong> Splice and sequence generations across models with automated color normalization.</li>
+          <li><strong>Usage-based pricing:</strong> Zero subscription lock-in—pay solely for the compute seconds consumed.</li>
+        </ul>
+
+        <h2>The Future of Production Workflows</h2>
+        <p>Aggregating multimodal models into a cohesive studio timeline accelerates delivery times by up to 5x while slashing cloud asset management friction.</p>
+      `,
+      faqs_no: [
+        { q: 'Hvor lenge lagres videoklippene i MaxMotion AI?', a: 'Alle genererte videofiler lagres permanent i Google Cloud Storage og slettes aldri, i motsetning til standard 24-timers lenker.' },
+        { q: 'Støtter MaxMotion AI oppskalering til 4K?', a: 'Ja, plattformen har innebygget AI-oppskalering som øker oppløsningen til 4K uten tap av detaljer eller artefakter.' },
+        { q: 'Kan jeg eksportere tidslinjen til Premiere Pro eller DaVinci?', a: 'Ja, du kan eksportere prosjektet som standard XML/EDL eller ferdig sammensatt MP4-fil.' }
+      ],
+      faqs_en: [
+        { q: 'How long are generated videos stored in MaxMotion?', a: 'All media is permanently stored in Google Cloud Storage with no 24-hour expiration limits.' },
+        { q: 'Does MaxMotion support 4K upscaling?', a: 'Yes, integrated neural upscalers enhance render resolution to pristine 4K with edge preservation.' },
+        { q: 'Can project timelines be exported to Premiere or DaVinci?', a: 'Yes, export directly to industry-standard XML/EDL timeline formats or consolidated high-bitrate ProRes/MP4.' }
+      ]
+    },
+
+    mediabunny: {
+      category_no: 'WebAssembly & Nettleser-Teknologi',
+      category_en: 'WebAssembly & Browser Technology',
+      defaultTitle_no: 'WebAssembly på klientsiden: Hvorfor fremtidens videoredigering og EBU R128-lyd skjer i nettleseren',
+      defaultTitle_en: 'Client-Side WebAssembly: High-Throughput Media Processing and EBU R128 Normalization in the Browser',
+      slug_no: 'webassembly-klientside-videoredigering-ebu-r128',
+      slug_en: 'client-side-webassembly-media-processing-ebu-r128',
+      metaDesc_no: 'Hvordan WebAssembly flytter videokomprimering, AI-bakgrunnsfjerning og EBU R128 lydnormalisering til brukerens nettleser med null serverkostnader.',
+      metaDesc_en: 'How WebAssembly enables zero-upload video compression, AI background removal, and EBU R128 broadcast audio normalization entirely in the browser.',
+      contentHtml_no: `
+        <p class="lead">I over et tiår har tung videobehandling krevd opplasting til kostbare skyservere. Med WebAssembly (WASM) kan avansert medieprosessering nå kjøres 100 % lokalt i nettleseren.</p>
+
+        <h2>Slutt på gigabyte-opplastinger og sky-GPU-regninger</h2>
+        <p>Å laste opp 4K-opptak til skyservere for enkel redigering eller bakgrunnsfjerning skaper massive flaskehalser: treg opplastingsbåndbredde, personvernrisikoer (GDPR) og astronomiske skyserver-regninger for tjenesteleverandøren.</p>
+
+        <blockquote>"WebAssembly gjør nettleseren til en fullverdig virtuell maskin. Ved å utnytte brukerens egen CPU og GPU oppnås null serverkostnad og 100 % lokalt personvern."</blockquote>
+
+        <h2>MediaBunny: Kraftfull medieprosessering på klientsiden</h2>
+        <p>Med <a href="../apps/mediabunny.html"><strong>MediaBunny</strong></a> utføres tunge oppgaver direkte på brukerens maskinvare:</p>
+        <ul>
+          <li><strong>EBU R128 Lydnormalisering:</strong> Broadcast-standard volumjustering (-23 LUFS / -14 LUFS for Spotify og YouTube) uten at lyden forlater enheten.</li>
+          <li><strong>Nevral AI-bakgrunnsfjerning:</strong> segmenteringsmodeller kompilert til WebAssembly fjerner videobakgrunner i sanntid.</li>
+          <li><strong>75% CRF-komprimering:</strong> Reduser filstørrelser dramatisk uten synlig kvalitetstap ved hjelp av FFmpeg WASM.</li>
+        </ul>
+
+        <h2>Fremtiden for personvernsikker medieprosessering</h2>
+        <p>Bedrifter som behandler sensitive interne videoer eller lydopptak slipper å bekymre seg for datalekkasjer – ingenting sendes over internett.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">Heavy multimedia manipulation has historically mandated uploading raw gigabytes to expensive cloud clusters. WebAssembly (WASM) flips this paradigm by running bare-metal media pipelines client-side.</p>
+
+        <h2>Eliminating Ingestion Bottlenecks and Cloud Compute Spikes</h2>
+        <p>Pushing raw footage to central transcoders exposes businesses to network latency, regulatory compliance issues (GDPR/HIPAA), and soaring GPU cloud bills. Client-side WASM allows browser tabs to execute compiled C++/Rust engines at native speeds.</p>
+
+        <blockquote>"WebAssembly turns the web browser into a sandboxed bare-metal environment. Utilizing client-side silicon slashes backend infrastructure overhead to zero."</blockquote>
+
+        <h2>MediaBunny: Zero-Upload Media Infrastructure</h2>
+        <p>Built with high-throughput WASM binaries, <a href="../apps/mediabunny.html"><strong>MediaBunny</strong></a> delivers broadcast-tier processing on-device:</p>
+        <ul>
+          <li><strong>EBU R128 Audio Normalization:</strong> Precision loudness conformance (-23 LUFS for broadcast, -14 LUFS for streaming) calculated locally in real time.</li>
+          <li><strong>Neural Edge Segmentation:</strong> Lightweight on-device models strip video backgrounds without telemetry or data leakage.</li>
+          <li><strong>75% CRF Lossless Compression:</strong> Multi-threaded FFmpeg WASM compresses raw media directly in local storage.</li>
+        </ul>
+
+        <h2>Enterprise-Grade Privacy</h2>
+        <p>Zero data leaves the browser window, ensuring airtight compliance for sensitive corporate communications, internal all-hands recordings, and proprietary assets.</p>
+      `,
+      faqs_no: [
+        { q: 'Hvorfor er klientside WebAssembly sikrere enn skyservere?', a: 'Fordi mediefilen aldri lastes opp til internett. All prosessering skjer internt i nettleserens minne på din egen PC.' },
+        { q: 'Hva er EBU R128-standard for lyd?', a: 'EBU R128 er den internasjonale kringkastingsstandarden som sikrer jevnt volum uten ubehagelige hopp eller forvrengning.' },
+        { q: 'Fungerer dette på mobile enheter?', a: 'Ja, moderne smarttelefoner med oppdaterte nettlesere har kraftige brikkesett som kjører WASM-prosessering lynraskt.' }
+      ],
+      faqs_en: [
+        { q: 'Why is client-side WebAssembly more secure than cloud transcoding?', a: 'Raw files are never transmitted across the network; all byte-level processing occurs strictly within sandboxed browser memory.' },
+        { q: 'What is the EBU R128 loudness standard?', a: 'EBU R128 is the global broadcast standard regulating perceived loudness to prevent dynamic clipping and audio distortion.' },
+        { q: 'Does MediaBunny execute on mobile browsers?', a: 'Yes, modern mobile chipsets execute multi-threaded WASM instructions natively with zero plugin installation required.' }
+      ]
+    },
+
+    appsave: {
+      category_no: 'SaaS & Innkjøpsoptimalisering',
+      category_en: 'SaaS & Procurement Optimization',
+      defaultTitle_no: 'SaaS-innkjøp på autopilot: Slik sparer du 15–40% på programvare med smarte rabattkoder',
+      defaultTitle_en: 'Automated SaaS Procurement: How to Slash Software Overhead by 15-40% at Checkout',
+      slug_no: 'saas-innkjop-autopilot-rabattkoder-appsave',
+      slug_en: 'automated-saas-procurement-appsave',
+      metaDesc_no: 'Hvordan AppSave Chrome-utvidelsen tester verifiserte rabattkoder i kassen for SaaS og skytjenester, og sparer bedrifter for tusenvis av kroner.',
+      metaDesc_en: 'How the AppSave Chrome extension automatically tests verified promo codes during SaaS checkouts, slashing recurring overhead by 15-40%.',
+      contentHtml_no: `
+        <p class="lead">De fleste selskaper betaler full listepris for sin programvarestakk. Sannheten er at nesten alle SaaS-leverandører tilbyr 15 % til 40 % rabatt ved kassen dersom du kjenner de rette kodene.</p>
+
+        <h2>Hemmeligheten bak skjulte B2B-promokoder</h2>
+        <p>SaaS-selskaper oppretter kontinuerlig lanseringskoder, partnerskapsrabatter og sesongtilbud som sjelden vises på den offentlige prissiden. Å lete manuelt gjennom utdaterte kupongnettsider er tidkrevende og fører ofte til ugyldige koder.</p>
+
+        <blockquote>"Å betale full pris for skyhosting og SaaS-abonnementer i 2026 tilsvarer å kaste penger ut av vinduet. De fleste plattformer har aktive marginer for direkte rabattering."</blockquote>
+
+        <h2>AppSave: Den smarte Chrome-utvidelsen for bedrifter</h2>
+        <p>Med <a href="../apps/appsave.html"><strong>AppSave</strong></a> (bygget på Manifest V3) automatiseres hele prosessen:</p>
+        <ul>
+          <li><strong>Automatisk gjenkjenning i kassen:</strong> Utvidelsen oppdager når du er på en checkout-side for kjente verktøy som AWS, HubSpot, Slack og AI-tjenester.</li>
+          <li><strong>Verifisering i sanntid:</strong> Tester en kontinuerlig oppdatert database med aktive koder på få sekunder.</li>
+          <li><strong>Maksimal besparelse:</strong> Velger automatisk koden som gir det største fratrekket i handlekurven før betaling bekreftes.</li>
+        </ul>
+
+        <h2>Oppsummering</h2>
+        <p>Ved å installere AppSave kan både enkeltutviklere og innkjøpsavdelinger redusere den årlige programvareregningen uten forhandlingsmøter.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">Most organizations pay sticker list price for their software stack. In reality, virtually every major SaaS vendor operates checkout discount tiers ranging from 15% to 40%.</p>
+
+        <h2>The Hidden Economy of B2B Promo Codes</h2>
+        <p>SaaS vendors regularly deploy conference promotions, accelerator partnership discounts, and retention codes that never appear on public pricing grids. Manually scouring spam-laden coupon directories wastes productive engineering hours.</p>
+
+        <blockquote>"Paying list price for developer tooling and cloud subscriptions in 2026 represents unnecessary margin leakage. Vendors expect informed buyers to claim checkout concessions."</blockquote>
+
+        <h2>AppSave: Zero-Friction Procurement Savings</h2>
+        <p>Operating as a lightweight Manifest V3 browser extension, <a href="../apps/appsave.html"><strong>AppSave</strong></a> automates enterprise discounts:</p>
+        <ul>
+          <li><strong>Instant Checkout Detection:</strong> Recognizes checkout workflows across hundreds of developer platforms and cloud providers.</li>
+          <li><strong>Algorithmic Code Verification:</strong> Simultaneously cycles verified promotional vouchers within seconds.</li>
+          <li><strong>Optimized Margin Recovery:</strong> Applies the highest-value discount structure before the final credit card authorization.</li>
+        </ul>
+
+        <h2>Immediate Financial Impact</h2>
+        <p>Adopting automated coupon testing at checkout systematically cuts annual software and hosting overhead by thousands of dollars with zero operational disruption.</p>
+      `,
+      faqs_no: [
+        { q: 'Er AppSave trygg å bruke i bedriftsnettlesere?', a: 'Ja, AppSave er bygget på Manifest V3 med strengt sandkassereglement og samler ingen personlige betalingsopplysninger.' },
+        { q: 'Hvilke verktøy dekkes av AppSave?', a: 'Databasen dekker hundrevis av verktøy innen hosting, skytjenester, AI API-er, prosjektstyring og CRM.' },
+        { q: 'Koster det noe å installere utvidelsen?', a: 'Grunnversjonen er helt gratis for bedrifter og utviklere.' }
+      ],
+      faqs_en: [
+        { q: 'Is AppSave secure for enterprise browser environments?', a: 'Yes, AppSave is architected strictly under Chrome Manifest V3 specifications and stores zero payment telemetry.' },
+        { q: 'Which categories of software are supported?', a: 'The database monitors hundreds of platforms spanning cloud infrastructure, AI APIs, analytics, and CRM ecosystems.' },
+        { q: 'What is the pricing model for the extension?', a: 'The core extension is completely free for individual engineers and procurement teams.' }
+      ]
+    },
+
+    manus: {
+      category_no: 'Autonome Agenter & Fremtidens AI',
+      category_en: 'Autonomous Agents & Frontier AI',
+      defaultTitle_no: 'Fra passive chatbots til autonome action-agenter: Hvorfor handling trumfer samtale i 2026',
+      defaultTitle_en: 'Beyond Chatbots: How Autonomous Action Agents Execute Complex Multi-Step Workflows Unattended',
+      slug_no: 'fra-chatbots-til-autonome-action-agenter-2026',
+      slug_en: 'from-chatbots-to-autonomous-action-agents-2026',
+      metaDesc_no: 'Chatbots gir bare svar – autonome action-agenter utfører faktiske handlinger. Se hvordan Manus AI Studio navigerer nettet, koder og løser forretningsprosesser.',
+      metaDesc_en: 'Chatbots offer advice; autonomous agents execute real work. Learn how Manus AI Studio browses the web, writes code, and solves end-to-end business workflows.',
+      contentHtml_no: `
+        <p class="lead">De siste tre årene har markedet vært oversvømmet av samtale-chatbots. Men i 2026 har bedrifter sluttet å nøye seg med gode råd – de trenger systemer som faktisk utfører arbeidet autonomt.</p>
+
+        <h2>Hvorfor tradisjonelle chatbots svikter i den virkelige verden</h2>
+        <p>En standard chatbot kan fortelle deg hvordan du setter opp en database, skrive et utkast til en rapport eller forklare en feilmelding. Men så snart samtalen er over, må et menneske manuelt åpne nettleseren, logge inn på systemene, kopiere koden og rette eventuelle feil.</p>
+
+        <blockquote>"Skillet mellom 2023 og 2026 er skillet mellom samtale og handling. En autonom agent stopper ikke ved forslag – den åpner nettleseren, navigerer grensesnitt og verifiserer resultatet."</blockquote>
+
+        <h2>Manus AI Studio: Arkitekturen bak autonome agenter</h2>
+        <p>Gjennom <a href="../apps/manus.html"><strong>Manus AI Studio</strong></a> beveger vi oss inn i handlingsorientert automatisering:</p>
+        <ul>
+          <li><strong>Verktøybruk og nettleserstyring:</strong> Agenten kan åpne en ekte nettleser (via headless Playwright), navigere menyer, fylle ut skjemaer og hente data.</li>
+          <li><strong>Sandkasse-kodekjøring:</strong> Koden som skrives blir umiddelbart testet i et isolert miljø; hvis en feil oppstår, feilsøker og fikser agenten det selv.</li>
+          <li><strong>Strukturerte oppgaver på autopilot:</strong> Fra markedsundersøkelser og datainnsamling til oppsett av komplette nettsider uten menneskelig innblanding.</li>
+        </ul>
+
+        <h2>Veien videre for bedrifter</h2>
+        <p>Bedrifter som integrerer autonome action-agenter i sine kjerneprosesser vil oppleve en multiplikatoreffekt på produktiviteten til sine ansatte.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">For three years, enterprises embraced conversational chatbots. But in 2026, enterprise value has shifted decisively from conversational advice to autonomous operational execution.</p>
+
+        <h2>The Fundamental Limitation of Chat Interfaces</h2>
+        <p>Conventional LLM chats generate well-reasoned guidance, but they are severed from execution. When a chatbot provides a script, a human operator must still copy the snippet, run tests, diagnose missing dependencies, and manually commit the changes.</p>
+
+        <blockquote>"The decisive architectural shift of 2026 is the migration from advice to action. Autonomous agents do not provide recipes; they step into the kitchen and prepare the meal."</blockquote>
+
+        <h2>Manus AI Studio: The Execution Engine</h2>
+        <p>Operating beyond text windows, <a href="../apps/manus.html"><strong>Manus AI Studio</strong></a> introduces multi-turn autonomous tool orchestration:</p>
+        <ul>
+          <li><strong>Full Browser Automation:</strong> The agent commands sandboxed browser sessions (via Playwright) to navigate dynamic SPAs, authenticate, and manipulate DOM trees.</li>
+          <li><strong>Self-Healing Code Execution:</strong> Generated code is executed in isolated runtime sandboxes; runtime exceptions trigger autonomous reflection and remediation loops.</li>
+          <li><strong>Multi-Step Task Completion:</strong> From end-to-end competitor intelligence gathering to scaffolding complete application microservices unattended.</li>
+        </ul>
+
+        <h2>The Strategic Horizon</h2>
+        <p>Organizations standardizing on autonomous action agents achieve operational velocity impossible with human-in-the-loop manual task shuffling.</p>
+      `,
+      faqs_no: [
+        { q: 'Hva skiller Manus fra en standard ChatGPT-samtale?', a: 'Manus har tilgang til verktøy: agenten kan styre en nettleser, kjøre programkode og fullføre oppgaver uten menneskelig overvåking.' },
+        { q: 'Er agentens handlinger trygge og reviderbare?', a: 'Ja, alle handlinger logges med skjermbilder og fullstendig revisjonsspor før kritiske endringer iverksettes.' },
+        { q: 'Trenger jeg teknisk kompetanse for å styre Manus?', a: 'Nei, du beskriver målet i naturlig språk, og agenten bryter automatisk ned oppgaven i nødvendige delsteg.' }
+      ],
+      faqs_en: [
+        { q: 'What distinguishes Manus from standard LLM chatbots?', a: 'Manus possesses tool authority—it controls sandboxed browsers, executes terminal commands, and resolves errors autonomously.' },
+        { q: 'How are agent actions audited for security?', a: 'Every execution step is captured with full DOM logs, network traces, and visual snapshots for comprehensive audit compliance.' },
+        { q: 'Is programming proficiency required to direct Manus?', a: 'No, objectives are articulated in plain English; the agent autonomously derives the execution plan.' }
+      ]
+    },
+
+    custom_dev: {
+      category_no: 'Skyarkitektur & AI-Ingeniørkunst',
+      category_en: 'Cloud Architecture & AI Engineering',
+      defaultTitle_no: 'Slik bygger du en produksjonsklar AI-mikrotjeneste på Google Cloud Run på 14 dager',
+      defaultTitle_en: 'Engineering Production AI Microservices on Google Cloud Run: From Architecture to MVP in 14 Days',
+      slug_no: 'produksjonsklar-ai-mikrotjeneste-cloud-run-14-dager',
+      slug_en: 'production-ai-microservice-cloud-run-14-days',
+      metaDesc_no: 'Lær hvordan AIAPPSY bygger skalerbare, feiltolerante AI-systemer med Gemini, hybrid RAG og Google Cloud Run med levering på under to uker.',
+      metaDesc_en: 'Learn how AIAPPSY engineers enterprise AI microservices using Gemini, hybrid RAG, and serverless Google Cloud Run shipped in under 14 days.',
+      contentHtml_no: `
+        <p class="lead">Mange bedrifter sitter fast i månedslange AI-piloter som aldri når produksjon. Med riktig arkitektur på Google Cloud Run kan en robust, skalerbar AI-tjeneste leveres på under to uker.</p>
+
+        <h2>Fallgruvene som stopper tradisjonelle AI-prosjekter</h2>
+        <p>De vanligste årsakene til at AI-prosjekter mislykkes er overdreven kompleksitet: massive Kubernetes-klynger for enkle oppgaver, upålitelige RAG-oppsett som hallusinerer, og mangel på integrasjon mot bedriftens eksisterende ERP- og CRM-systemer.</p>
+
+        <blockquote>"Målet er ikke å trene enorme modeller fra bunnen av, men å koble ledende frontier-modeller direkte til bedriftens reelle forretningsdata via sikre API-er."</blockquote>
+
+        <h2>Vår 14-dagers ingeniørmetodikk</h2>
+        <p>Gjennom <a href="../custom-development.html"><strong>Skreddersydd AI-utvikling</strong></a> hos AIAPPSY leverer vi produksjonsklare løsninger i rekordfart:</p>
+        <ul>
+          <li><strong>Dag 1–3: Datamodellering og Hybrid RAG:</strong> Oppsett av vektorsøk kombinert med nøkkelordsøk for 99 % presisjon i informasjonsgjenfinning.</li>
+          <li><strong>Dag 4–8: Autonome agenter og verktøykoblinger:</strong> Implementering av funksjonskall mot regnskapssystemer (Fiken/Tripletex), e-post og interne databaser.</li>
+          <li><strong>Dag 9–14: Serverless utrulling på Google Cloud Run:</strong> Containerisering med Docker, automatisk skalering til null og sub-300ms responstid.</li>
+        </ul>
+
+        <h2>Ferdig produkt til avtalt fastpris</h2>
+        <p>Vi overlater full kildekode, CI/CD-pipelines og dokumentasjon til kunden, uten skjulte abonnementslåsninger.</p>
+      `,
+      contentHtml_en: `
+        <p class="lead">Most enterprise AI initiatives stall in perpetual proof-of-concept limbo. Utilizing modern serverless containers on Google Cloud Run enables robust, hardened AI systems to ship in two weeks.</p>
+
+        <h2>The Root Causes of AI Project Failure</h2>
+        <p>Enterprises frequently over-engineer: deploying bloated Kubernetes infrastructures, brittle vector pipelines prone to severe hallucinations, and failing to connect model outputs back into core transaction systems.</p>
+
+        <blockquote>"The objective is not pre-training bespoke models from scratch; it is binding state-of-the-art frontier models securely to enterprise systems of record."</blockquote>
+
+        <h2>The 14-Day Delivery Framework</h2>
+        <p>Our <a href="../custom-development.html"><strong>Custom AI Engineering</strong></a> practice delivers production-grade solutions rapidly:</p>
+        <ul>
+          <li><strong>Days 1–3: Hybrid Vector Architecture:</strong> Marrying dense embeddings with sparse BM25 indexing and cross-encoder reranking for 99% retrieval precision.</li>
+          <li><strong>Days 4–8: Agent Function Execution:</strong> Wiring deterministic tool calls into ERP systems (Tripletex, Fiken, SAP) and database clusters.</li>
+          <li><strong>Days 9–14: Serverless Deployment on Cloud Run:</strong> Docker containerization, scale-to-zero economics, and cold-start optimization (<300ms).</li>
+        </ul>
+
+        <h2>Full IP Ownership</h2>
+        <p>Clients receive full source code repository ownership, automated CI/CD configurations, and comprehensive operational playbooks.</p>
+      `,
+      faqs_no: [
+        { q: 'Hvorfor velge Google Cloud Run fremfor tradisjonelle servere?', a: 'Cloud Run skalerer automatisk fra null til tusenvis av samtidige forespørsler, slik at du kun betaler for nøyaktig den prosessortiden som brukes.' },
+        { q: 'Hvem eier kildekoden etter fullført prosjekt?', a: 'Kunden har 100 % eierskap til all kildekode, arkitektur og oppsatte mikrotjenester.' },
+        { q: 'Hvordan sikres konfidensielle bedriftsdata?', a: 'Data sendes aldri til offentlig modelltrenig. All kommunikasjon krypteres og forblir i din dedikerte skykonto.' }
+      ],
+      faqs_en: [
+        { q: 'Why select Google Cloud Run over dedicated VM instances?', a: 'Cloud Run scales to zero during idle periods and bursts instantaneously to thousands of concurrent requests, eliminating idle overhead.' },
+        { q: 'Who retains intellectual property rights?', a: 'The client owns 100% of all generated source code, container manifests, and architecture documentation.' },
+        { q: 'How is enterprise data confidentiality protected?', a: 'Zero enterprise telemetry is utilized for public model training; all data resides strictly inside isolated VPC boundaries.' }
+      ]
+    }
+  };
+
+  const selectedTpl = templates[targetApp] || templates['hubzoo'];
+  
+  let title = isEn ? selectedTpl.defaultTitle_en : selectedTpl.defaultTitle_no;
+  let slug = isEn ? selectedTpl.slug_en : selectedTpl.slug_no;
+  let category = isEn ? selectedTpl.category_en : selectedTpl.category_no;
+  let metaDesc = isEn ? selectedTpl.metaDesc_en : selectedTpl.metaDesc_no;
+  let contentHtml = isEn ? selectedTpl.contentHtml_en : selectedTpl.contentHtml_no;
+  let faqs = isEn ? selectedTpl.faqs_en : selectedTpl.faqs_no;
+
+  if (cleanTopic) {
+    title = cleanTopic.length > 70 ? cleanTopic.substring(0, 67).trim() + '...' : cleanTopic;
+    slug = cleanTopic.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    if (slug.length > 50) slug = slug.substring(0, 50).replace(/-+$/, '');
+    
+    // Inject topic context into lead paragraph
+    if (isEn) {
+      metaDesc = `In-depth analysis of ${cleanTopic}. Discover modern app architecture, frontier AI capabilities, and implementation workflows with ${appName}.`;
+      if (metaDesc.length > 160) metaDesc = metaDesc.substring(0, 157).trim() + '...';
+      contentHtml = `<p class="lead">Exploring <strong>${cleanTopic}</strong>: How modern engineering, cloud-native architecture, and the ${appName} ecosystem transform business velocity.</p>` + contentHtml;
+    } else {
+      metaDesc = `Dybdeanalyse av ${cleanTopic}. Se hvordan moderne skyarkitektur, frontier AI og ${appName} skaper målbare resultater for bedriften.`;
+      if (metaDesc.length > 160) metaDesc = metaDesc.substring(0, 157).trim() + '...';
+      contentHtml = `<p class="lead">Dybdeanalyse av <strong>${cleanTopic}</strong>: Hvordan moderne app-arkitektur, frontier AI og økosystemet rundt ${appName} gir målbare fortrinn.</p>` + contentHtml;
+    }
+  }
+
+  return {
+    title,
+    slug,
+    category,
+    targetApp,
+    metaDesc,
+    readTime: isEn ? '5 min read' : '5 min lesetid',
+    contentHtml,
+    faqs
+  };
+}
+
+// POST /api/articles/generate (Admin protected)
+app.post('/api/articles/generate', requireAdminAuth, async (req, res) => {
+  const {
+    topic = '',
+    targetApp = 'hubzoo',
+    articleType = 'how-to',
+    language = 'no',
+    tone = 'tactical',
+    geminiApiKey = ''
+  } = req.body || {};
+
+  const effectiveGeminiKey = geminiApiKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+
+  if (effectiveGeminiKey) {
+    try {
+      const userPrompt = `Generate a complete, in-depth, production-ready article in JSON format.
+Topic / Focus: ${topic || 'Optimalisering med moderne AI og smarte verktøy'}
+Target Product / Service: ${targetApp} (${APP_CTAS[targetApp]?.name || targetApp})
+Article Type: ${articleType}
+Language: ${language === 'en' ? 'English' : 'Norwegian (Bokmål)'}
+Tone: ${tone}
+
+Return a valid JSON object matching this schema:
+{
+  "title": "String (engaging, SEO-optimized title, 50-75 chars)",
+  "slug": "String (URL-friendly kebab-case slug)",
+  "category": "String (e.g. AI-Automatisering, B2B Salg, SaaS & Sky, App-Utvikling)",
+  "targetApp": "${targetApp}",
+  "metaDesc": "String (Punchy meta description strictly <= 160 chars)",
+  "readTime": "String (e.g. '5 min read' or '6 min lesetid')",
+  "contentHtml": "String (Rich HTML with <p class=\\"lead\\">, multiple <h2> and <h3>, paragraphs, <blockquote>, and <ul>/<li> lists)",
+  "faqs": [
+    { "q": "Question 1?", "a": "Answer 1" },
+    { "q": "Question 2?", "a": "Answer 2" },
+    { "q": "Question 3?", "a": "Answer 3" }
+  ]
+}`;
+
+      const generated = await callGeminiArticleJson(effectiveGeminiKey, AIAPPSY_KNOWLEDGE_BASE, userPrompt);
+      if (generated && generated.title && generated.contentHtml) {
+        generated.slug = (generated.slug || generated.title).toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        if (generated.metaDesc && generated.metaDesc.length > 160) {
+          generated.metaDesc = generated.metaDesc.substring(0, 157).trim() + '...';
+        }
+        return res.json({
+          success: true,
+          article: generated,
+          generator: 'gemini-2.5-flash',
+          message: `Artikkel '${generated.title}' ble generert med Gemini 2.5 Flash!`
+        });
+      }
+    } catch (apiErr) {
+      console.warn('[AI Article Writer] Gemini API failed, falling back to built-in KB engine:', apiErr.message);
+    }
+  }
+
+  // Fallback to built-in intelligent domain engine
+  const fallback = generateFallbackArticle({ topic, targetApp, articleType, language, tone });
+  return res.json({
+    success: true,
+    article: fallback,
+    generator: 'builtin-ai-engine',
+    message: `Artikkel '${fallback.title}' ble generert med AIAPPSY Innebygd Kunnskapsmotor!`
+  });
 });
 
 // API: Login & verify admin password
@@ -1433,11 +2164,20 @@ app.post('/api/bookings', (req, res) => {
     meetUrl,
     status: 'confirmed',
     notes: (notes || '').trim(),
+    remindersSent: {},
     createdAt: new Date().toISOString()
   };
 
+  booking.googleCalendarUrl = getGoogleCalendarUrl(booking);
+  booking.icsUrl = `/api/bookings/${booking.id}/ics`;
+
   bookings.unshift(booking);
   saveBookings(bookings);
+
+  // Automatisk e-postbekreftelse og kalendersynk (Google Kalender & .ics)
+  sendBookingNotificationEmails(booking).catch(err => {
+    console.error('[Booking Email] Feil ved utsendelse av bekreftelse:', err.message);
+  });
 
   // Automatisk registrering i CRM med dual timezone-info
   try {
@@ -1480,7 +2220,7 @@ app.post('/api/bookings', (req, res) => {
   console.log(`[Booking Opprettet] ${booking.name} <${booking.email}> - ${booking.title} (${booking.date} ${booking.time} ${booking.clientTimeZone} = ${booking.hostTime} Manila)`);
   res.json({
     success: true,
-    message: 'Møtet er bekreftet!',
+    message: 'Møtet er bekreftet! Kalenderinvitasjon og e-post er sendt.',
     booking
   });
 });
@@ -1501,14 +2241,22 @@ app.put('/api/bookings/:id', requireAdminAuth, (req, res) => {
     return res.status(404).json({ success: false, error: 'Møtebooking ikke funnet.' });
   }
 
+  const prevStatus = booking.status;
   if (updates.status) booking.status = updates.status;
   if (updates.date) booking.date = updates.date;
   if (updates.time) booking.time = updates.time;
   if (updates.meetUrl) booking.meetUrl = updates.meetUrl;
   if (updates.notes) booking.notes = updates.notes;
   booking.updatedAt = new Date().toISOString();
+  booking.googleCalendarUrl = getGoogleCalendarUrl(booking);
 
   saveBookings(bookings);
+
+  // Send bekreftelse ved statusendring til 'confirmed'
+  if (updates.status === 'confirmed' && prevStatus !== 'confirmed') {
+    sendBookingConfirmedEmails(booking).catch(e => console.error('Feil ved bekreftelses-e-post:', e.message));
+  }
+
   res.json({ success: true, message: 'Møtebooking oppdatert!', booking });
 });
 
@@ -1524,7 +2272,44 @@ app.delete('/api/bookings/:id', requireAdminAuth, (req, res) => {
   res.json({ success: true, message: 'Møtebooking slettet.' });
 });
 
-// GET generate .ics calendar invite (Public, Universal UTC)
+// POST /api/bookings/:id/send-reminder (Admin protected manual trigger)
+app.post('/api/bookings/:id/send-reminder', requireAdminAuth, async (req, res) => {
+  const { id } = req.params;
+  const bookings = loadBookings();
+  const booking = bookings.find(b => b.id === id);
+  if (!booking) {
+    return res.status(404).json({ success: false, error: 'Booking ikke funnet.' });
+  }
+
+  try {
+    const result = await sendMeetingReminderEmails(booking, 'manual');
+    if (!booking.remindersSent) booking.remindersSent = {};
+    booking.remindersSent.manual = new Date().toISOString();
+    saveBookings(bookings);
+
+    res.json({
+      success: true,
+      message: `Påminnelse og møtelenke sendt til ${booking.email} og verten!`,
+      result
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /api/bookings/:id/google-calendar (Public 302 redirect to Google Calendar event creation)
+app.get('/api/bookings/:id/google-calendar', (req, res) => {
+  const { id } = req.params;
+  const bookings = loadBookings();
+  const b = bookings.find(item => item.id === id);
+  if (!b) {
+    return res.status(404).send('Booking ikke funnet');
+  }
+  const gcalUrl = getGoogleCalendarUrl(b);
+  res.redirect(gcalUrl);
+});
+
+// GET generate .ics calendar invite (Public, Universal UTC with METHOD:REQUEST)
 app.get('/api/bookings/:id/ics', (req, res) => {
   const { id } = req.params;
   const bookings = loadBookings();
@@ -1533,6 +2318,59 @@ app.get('/api/bookings/:id/ics', (req, res) => {
     return res.status(404).send('Booking not found');
   }
 
+  const icsContent = buildIcsCalendarEvent(b);
+  res.setHeader('Content-Type', 'text/calendar; charset=utf-8; method=REQUEST');
+  res.setHeader('Content-Disposition', `attachment; filename="aiappsy-mote-${b.date}.ics"`);
+  res.send(icsContent);
+});
+
+// ============================================================================
+// EMAIL, PING, REMINDERS & GOOGLE CALENDAR ENGINE
+// ============================================================================
+
+function loadEmailConfig() {
+  const settings = typeof loadSettings === 'function' ? loadSettings() : {};
+  const cfg = (settings && settings.email) ? settings.email : {};
+  return {
+    enabled: cfg.enabled !== false,
+    smtpHost: process.env.SMTP_HOST || cfg.smtpHost || 'smtp.gmail.com',
+    smtpPort: parseInt(process.env.SMTP_PORT || cfg.smtpPort || '465', 10),
+    smtpSecure: (process.env.SMTP_SECURE !== undefined ? process.env.SMTP_SECURE === 'true' : (cfg.smtpSecure !== false)),
+    smtpUser: process.env.SMTP_USER || process.env.SENDER_EMAIL || cfg.smtpUser || 'paljuritzen@gmail.com',
+    smtpPass: process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || cfg.smtpPass || '',
+    notificationEmail: process.env.NOTIFICATION_EMAIL || cfg.notificationEmail || 'paul@aiappsy.com',
+    senderName: cfg.senderName || 'Pål Juritzen · AIAPPSY'
+  };
+}
+
+function saveEmailConfig(cfg) {
+  const settings = typeof loadSettings === 'function' ? loadSettings() : {};
+  settings.email = { ...(settings.email || {}), ...cfg };
+  if (typeof saveSettings === 'function') saveSettings(settings);
+  return settings.email;
+}
+
+function loadEmailLogs() {
+  try {
+    if (fs.existsSync(EMAIL_LOGS_FILE)) {
+      return JSON.parse(fs.readFileSync(EMAIL_LOGS_FILE, 'utf8'));
+    }
+  } catch (e) {}
+  return [];
+}
+
+function logEmailSent(entry) {
+  try {
+    const logs = loadEmailLogs();
+    logs.unshift({ id: 'mail_' + Date.now(), timestamp: new Date().toISOString(), ...entry });
+    if (logs.length > 200) logs.length = 200;
+    fs.writeFileSync(EMAIL_LOGS_FILE, JSON.stringify(logs, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Feil ved skriving til email_logs.json:', e.message);
+  }
+}
+
+function getGoogleCalendarUrl(b) {
   let startUtc = null;
   if (b.utcIso) {
     startUtc = new Date(b.utcIso);
@@ -1540,7 +2378,22 @@ app.get('/api/bookings/:id/ics', (req, res) => {
     const tz = b.clientTimeZone || 'Europe/Oslo';
     startUtc = zonedDateTimeToUtc(b.date, b.time, tz);
   }
+  const durationMin = parseInt(b.duration, 10) || 30;
+  const endUtc = new Date(startUtc.getTime() + durationMin * 60000);
+  const fmt = d => d.toISOString().replace(/-|:|\.\d+/g, '');
+  const title = `AIAPPSY: ${b.title || 'AI Rådgivning & Strategimøte'}`;
+  const details = `Møte med ${b.name} (${b.email}).\n\nKlientens lokale tid (${b.clientTimeZone || 'Europe/Oslo'}): ${b.date} kl. ${b.time}\nVertens lokale tid (${b.hostTimeZone || 'Asia/Manila'}): ${b.hostTime || ''}\n\nGoogle Meet: ${b.meetUrl || 'https://meet.google.com/new'}\nFirma: ${b.company || 'Ikke oppgitt'}\nTelefon: ${b.phone || 'Ikke oppgitt'}\nNotater: ${b.notes || 'Ingen'}\n\nArrangør: Pål Juritzen (AIAPPSY)`;
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${fmt(startUtc)}/${fmt(endUtc)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(b.meetUrl || 'Google Meet')}&add=${encodeURIComponent(b.email)}`;
+}
 
+function buildIcsCalendarEvent(b) {
+  let startUtc = null;
+  if (b.utcIso) {
+    startUtc = new Date(b.utcIso);
+  } else {
+    const tz = b.clientTimeZone || 'Europe/Oslo';
+    startUtc = zonedDateTimeToUtc(b.date, b.time, tz);
+  }
   const durationMin = parseInt(b.duration, 10) || 30;
   const endUtc = new Date(startUtc.getTime() + durationMin * 60000);
 
@@ -1551,10 +2404,10 @@ app.get('/api/bookings/:id/ics', (req, res) => {
   const startDt = formatIcsDate(startUtc);
   const endDt = formatIcsDate(endUtc);
 
-  const icsContent = [
+  return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//AIAPPSY//Meeting Scheduler//NO',
+    'PRODID:-//AIAPPSY//Meeting Engine 2.0//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:REQUEST',
     'BEGIN:VEVENT',
@@ -1562,19 +2415,419 @@ app.get('/api/bookings/:id/ics', (req, res) => {
     `DTSTAMP:${formatIcsDate(new Date())}`,
     `DTSTART:${startDt}`,
     `DTEND:${endDt}`,
-    `SUMMARY:AIAPPSY: ${b.title}`,
-    `DESCRIPTION:${b.title}\\n\\nKlienttid: ${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})\\nVertstid (Manila): kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})\\n\\nMøtelenke: ${b.meetUrl}\\nKontakt: paljuritzen@gmail.com\\nNotater: ${b.notes || 'Ingen'}`,
+    `SUMMARY:AIAPPSY: ${b.title || 'Strategimøte'}`,
+    `DESCRIPTION:${b.title || 'Strategimøte'}\\n\\nKlienttid: ${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})\\nVertstid (Manila): kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})\\n\\nGoogle Meet videolenke: ${b.meetUrl}\\nArrangør: Pål Juritzen (paljuritzen@gmail.com)\\nNotater: ${b.notes || 'Ingen'}`,
     `LOCATION:${b.meetUrl}`,
     'STATUS:CONFIRMED',
-    'ORGANIZER;CN=AIAPPSY Engineering:mailto:paljuritzen@gmail.com',
+    'ORGANIZER;CN=Pål Juritzen (AIAPPSY):mailto:paljuritzen@gmail.com',
     `ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=${b.name}:mailto:${b.email}`,
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:AIAPPSY Møte starter om 15 minutter',
+    'TRIGGER:-PT15M',
+    'END:VALARM',
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
+}
 
-  res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
-  res.setHeader('Content-Disposition', `attachment; filename="aiappsy-mote-${b.date}.ics"`);
-  res.send(icsContent);
+async function sendEmail({ to, subject, html, text, icsContent, icsFilename = 'meeting-invite.ics', isPing = false }) {
+  const cfg = loadEmailConfig();
+  const fromAddress = `"${cfg.senderName}" <${cfg.smtpUser}>`;
+
+  const logEntry = {
+    to,
+    subject,
+    from: fromAddress,
+    isPing,
+    hasIcs: !!icsContent,
+    status: 'pending'
+  };
+
+  if (!cfg.enabled || !cfg.smtpPass) {
+    console.log(`[Email Service (Simulert/Logg)] To: ${to} | Subject: "${subject}" | (Mangler SMTP-passord i konfigurasjon)`);
+    logEntry.status = 'simulated';
+    logEntry.note = 'Simulert e-post (Mangler SMTP-passord / Gmail App Password i innstillinger)';
+    logEmailSent(logEntry);
+    return { success: true, simulated: true };
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host: cfg.smtpHost,
+      port: cfg.smtpPort,
+      secure: cfg.smtpSecure,
+      auth: {
+        user: cfg.smtpUser,
+        pass: cfg.smtpPass
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+    const mailOptions = {
+      from: fromAddress,
+      to,
+      subject,
+      text: text || html.replace(/<[^>]+>/g, ' '),
+      html
+    };
+
+    if (icsContent) {
+      mailOptions.icalEvent = {
+        filename: icsFilename,
+        method: 'REQUEST',
+        content: icsContent
+      };
+      mailOptions.alternatives = [{
+        contentType: 'text/calendar; charset="utf-8"; method=REQUEST',
+        content: icsContent
+      }];
+    }
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[Email Service] ✓ Sendt til ${to}: "${subject}" (MessageID: ${info.messageId})`);
+    logEntry.status = 'sent';
+    logEntry.messageId = info.messageId;
+    logEmailSent(logEntry);
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[Email Service] ❌ Feil ved sending til ${to}:`, err.message);
+    logEntry.status = 'failed';
+    logEntry.error = err.message;
+    logEmailSent(logEntry);
+    return { success: false, error: err.message };
+  }
+}
+
+async function sendBookingNotificationEmails(b) {
+  const cfg = loadEmailConfig();
+  const icsContent = buildIcsCalendarEvent(b);
+  const gcalUrl = getGoogleCalendarUrl(b);
+
+  // 1. E-post til besøkende / kunde
+  const visitorHtml = `
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; padding: 32px 20px; border-radius: 12px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <span style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: uppercase;">Møtebekreftelse · AIAPPSY</span>
+      <h1 style="color: #ffffff; font-size: 24px; margin: 16px 0 8px;">Ditt møte er reservert!</h1>
+      <p style="color: #94a3b8; font-size: 15px; margin: 0;">Vi gleder oss til samtalen om AI-utvikling og smarte løsninger.</p>
+    </div>
+
+    <div style="background: #131d35; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="margin-top: 0; color: #ffffff; font-size: 17px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">${b.title}</h3>
+      <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8; width: 140px;">📅 Din lokale tid:</td>
+          <td style="padding: 6px 0; color: #38bdf8; font-weight: 700;">${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">🌏 Vertens tid:</td>
+          <td style="padding: 6px 0; color: #a78bfa; font-weight: 600;">kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">⏱️ Varighet:</td>
+          <td style="padding: 6px 0; color: #ffffff;">${b.duration} minutter</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">🎥 Møtested:</td>
+          <td style="padding: 6px 0;"><a href="${b.meetUrl}" style="color: #6366f1; text-decoration: none; font-weight: 700;">${b.meetUrl}</a></td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">👤 Vert:</td>
+          <td style="padding: 6px 0; color: #ffffff;">Pål Juritzen · AIAPPSY Engineering</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 24px;">
+      <a href="${gcalUrl}" style="background: #4285f4; color: #ffffff; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-block; margin-right: 10px; margin-bottom: 10px;">
+        📅 Legg til i Google Kalender
+      </a>
+      <a href="${b.meetUrl}" style="background: #10b981; color: #ffffff; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-block; margin-bottom: 10px;">
+        🎥 Bli med i Google Meet
+      </a>
+    </div>
+
+    <p style="color: #64748b; font-size: 12px; text-align: center; margin: 0;">
+      En kalenderinvitasjon (.ics) er vedlagt denne e-posten for Outlook og Apple Calendar.<br>
+      © ${new Date().getFullYear()} AIAPPSY (aiappsy.com)
+    </p>
+  </div>`;
+
+  await sendEmail({
+    to: b.email,
+    subject: `✓ Bekreftelse: Ditt møte med AIAPPSY (${b.date} kl. ${b.time})`,
+    html: visitorHtml,
+    icsContent
+  });
+
+  // 2. Varsling til verten (Pål Juritzen / Admin)
+  const hostHtml = `
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; padding: 32px 20px; border-radius: 12px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+    <div style="margin-bottom: 20px;">
+      <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;">🔔 NY MØTEBOOKING</span>
+      <h1 style="color: #ffffff; font-size: 22px; margin: 12px 0 6px;">Nytt møte: ${b.name} (${b.company || 'Privat'})</h1>
+      <p style="color: #94a3b8; font-size: 14px; margin: 0;">Møtet er automatisk registrert i kalenderen og CRM-pipelinen.</p>
+    </div>
+
+    <div style="background: #131d35; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; margin-bottom: 24px;">
+      <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8; width: 140px;">🇵🇭 Manila Tid (Deg):</td>
+          <td style="padding: 6px 0; color: #38bdf8; font-weight: 800;">${b.hostDate || b.date} kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">🇳🇴 Klienttid (Oslo):</td>
+          <td style="padding: 6px 0; color: #a78bfa; font-weight: 700;">${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">👤 Klient:</td>
+          <td style="padding: 6px 0; color: #ffffff; font-weight: 700;">${b.name} &lt;${b.email}&gt;</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">🏢 Firma / Tlf:</td>
+          <td style="padding: 6px 0; color: #ffffff;">${b.company || 'Ikke oppgitt'} · Tlf: ${b.phone || 'Ikke oppgitt'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">📝 Notater:</td>
+          <td style="padding: 6px 0; color: #cbd5e1;">${b.notes || 'Ingen spesifisert'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #94a3b8;">🎥 Meet URL:</td>
+          <td style="padding: 6px 0;"><a href="${b.meetUrl}" style="color: #6366f1; font-weight: 700;">${b.meetUrl}</a></td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="${gcalUrl}" style="background: #4285f4; color: #ffffff; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-block; margin-right: 10px; margin-bottom: 10px;">
+        📅 Oppdater min Google Kalender (1-klikk)
+      </a>
+      <a href="https://aiappsy.com/admin#bookings" style="background: #6366f1; color: #ffffff; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-block; margin-bottom: 10px;">
+        Åpne Admin CRM
+      </a>
+    </div>
+  </div>`;
+
+  await sendEmail({
+    to: cfg.notificationEmail,
+    subject: `🔔 Nytt møte: ${b.name} (${b.company || 'Privat'}) - ${b.date} kl. ${b.hostTime} (Manila)`,
+    html: hostHtml,
+    icsContent
+  });
+}
+
+async function sendBookingConfirmedEmails(b) {
+  const cfg = loadEmailConfig();
+  const icsContent = buildIcsCalendarEvent(b);
+  const gcalUrl = getGoogleCalendarUrl(b);
+
+  const html = `
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; padding: 32px 20px; border-radius: 12px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+    <h2 style="color: #34d399; margin-top: 0;">✓ Møte bekreftet av AIAPPSY</h2>
+    <p>Ditt møte med Pål Juritzen er bekreftet for <strong>${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})</strong>.</p>
+    <p>Møtelenke: <a href="${b.meetUrl}" style="color: #6366f1; font-weight: bold;">${b.meetUrl}</a></p>
+    <div style="margin-top: 20px;">
+      <a href="${gcalUrl}" style="background: #4285f4; color: #ffffff; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+        📅 Oppdater Google Kalender
+      </a>
+    </div>
+  </div>`;
+
+  await sendEmail({
+    to: b.email,
+    subject: `✓ Bekreftet: Møte med AIAPPSY (${b.date} kl. ${b.time})`,
+    html,
+    icsContent
+  });
+}
+
+async function sendMeetingReminderEmails(b, type = '24h') {
+  const cfg = loadEmailConfig();
+  const gcalUrl = getGoogleCalendarUrl(b);
+  const is1h = type === '1h' || type === 'manual';
+
+  const visitorSubject = is1h 
+    ? `🚨 Starter om 1 time: Ditt møte med AIAPPSY (kl. ${b.time}) - Bli med her`
+    : `⏰ Påminnelse: Vårt AI-møte er i morgen kl. ${b.time} (${b.clientTimeZone || 'Oslo'})`;
+
+  const hostSubject = is1h
+    ? `🚨 Starter om 1 time: Møte med ${b.name} (kl. ${b.hostTime} Manila / ${b.time} Oslo)`
+    : `⏰ Påminnelse: Møte med ${b.name} i morgen kl. ${b.hostTime} (Manila)`;
+
+  const visitorHtml = `
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; padding: 32px 20px; border-radius: 12px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+    <span style="background: ${is1h ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${is1h ? '#f87171' : '#fbbf24'}; border: 1px solid ${is1h ? 'rgba(239, 68, 68, 0.4)' : 'rgba(245, 158, 11, 0.4)'}; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;">
+      ${is1h ? '🚨 STARTER OM 1 TIME' : '⏰ PÅMINNELSE: MØTE I MORGEN'}
+    </span>
+    <h1 style="color: #ffffff; font-size: 22px; margin: 14px 0 8px;">Ditt møte med AIAPPSY nærmer seg</h1>
+    <p style="color: #94a3b8; font-size: 15px; margin: 0 0 20px;">
+      Tidspunkt: <strong>${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})</strong>
+    </p>
+
+    <div style="background: #131d35; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 24px;">
+      <p style="margin: 0 0 14px; font-size: 15px; color: #e2e8f0;">Bli med direkte via Google Meet:</p>
+      <a href="${b.meetUrl}" style="background: #10b981; color: #ffffff; padding: 14px 28px; border-radius: 10px; font-weight: 900; font-size: 16px; text-decoration: none; display: inline-block; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
+        🎥 Åpne Google Meet Videomøte nå
+      </a>
+      <p style="margin: 12px 0 0; font-size: 13px; color: #64748b;">Møtelenke: ${b.meetUrl}</p>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="${gcalUrl}" style="color: #38bdf8; text-decoration: none; font-size: 13px; font-weight: 600;">
+        📅 Se eller oppdater hendelsen i Google Kalender →
+      </a>
+    </div>
+  </div>`;
+
+  const hostHtml = `
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; padding: 24px 20px; border-radius: 12px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+    <h2 style="color: ${is1h ? '#f87171' : '#fbbf24'}; margin-top: 0;">${is1h ? '🚨 Starter om 1 time' : '⏰ Møte i morgen'}: ${b.name}</h2>
+    <p>Klient: <strong>${b.name}</strong> (${b.company || 'Privat'}) &lt;${b.email}&gt;</p>
+    <p>Manila-tid: <strong>${b.hostDate || b.date} kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})</strong><br>
+       Klient-tid: <strong>${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})</strong></p>
+    <div style="margin: 20px 0;">
+      <a href="${b.meetUrl}" style="background: #10b981; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; display: inline-block;">
+        🎥 Bli med i Google Meet (${b.meetUrl})
+      </a>
+    </div>
+  </div>`;
+
+  await Promise.all([
+    sendEmail({ to: b.email, subject: visitorSubject, html: visitorHtml, isPing: true }),
+    sendEmail({ to: cfg.notificationEmail, subject: hostSubject, html: hostHtml, isPing: true })
+  ]);
+}
+
+// Background Reminder Cron: Runs every 10 minutes
+function checkAndSendMeetingReminders() {
+  try {
+    const bookings = loadBookings();
+    const now = Date.now();
+    let updated = false;
+
+    for (const b of bookings) {
+      if (b.status === 'cancelled') continue;
+
+      let startUtc = null;
+      if (b.utcIso) {
+        startUtc = new Date(b.utcIso).getTime();
+      } else {
+        const tz = b.clientTimeZone || 'Europe/Oslo';
+        startUtc = zonedDateTimeToUtc(b.date, b.time, tz).getTime();
+      }
+
+      const msDiff = startUtc - now;
+      const hoursDiff = msDiff / (1000 * 60 * 60);
+
+      if (!b.remindersSent) b.remindersSent = {};
+
+      // 24-timers påminnelse (trigges mellom 22 og 26 timer før start)
+      if (hoursDiff >= 22 && hoursDiff <= 26 && !b.remindersSent.h24) {
+        console.log(`[Auto-Reminder] Sender 24t påminnelse for møte ${b.id} (${b.name})`);
+        sendMeetingReminderEmails(b, '24h').catch(e => console.error(e));
+        b.remindersSent.h24 = new Date().toISOString();
+        updated = true;
+      }
+
+      // 1-times urgent ping (trigges mellom 0.5 og 1.5 timer før start)
+      if (hoursDiff >= 0.5 && hoursDiff <= 1.5 && !b.remindersSent.h1) {
+        console.log(`[Auto-Reminder] Sender 1t urgent ping for møte ${b.id} (${b.name})`);
+        sendMeetingReminderEmails(b, '1h').catch(e => console.error(e));
+        b.remindersSent.h1 = new Date().toISOString();
+        updated = true;
+      }
+    }
+
+    if (updated) {
+      saveBookings(bookings);
+    }
+  } catch (err) {
+    console.error('Feil i påminnelsesmotor:', err.message);
+  }
+}
+
+// Start cron-intervaller
+setInterval(checkAndSendMeetingReminders, 10 * 60 * 1000);
+setTimeout(checkAndSendMeetingReminders, 4000);
+
+// API: Get Email Settings (Admin protected)
+app.get('/api/settings/email', requireAdminAuth, (req, res) => {
+  const cfg = loadEmailConfig();
+  res.json({
+    success: true,
+    email: {
+      enabled: cfg.enabled,
+      smtpHost: cfg.smtpHost,
+      smtpPort: cfg.smtpPort,
+      smtpSecure: cfg.smtpSecure,
+      smtpUser: cfg.smtpUser,
+      smtpPassConfigured: !!cfg.smtpPass,
+      notificationEmail: cfg.notificationEmail,
+      senderName: cfg.senderName
+    }
+  });
+});
+
+// API: Save Email Settings (Admin protected)
+app.post('/api/settings/email', requireAdminAuth, (req, res) => {
+  const { enabled, smtpHost, smtpPort, smtpSecure, smtpUser, smtpPass, notificationEmail, senderName } = req.body || {};
+  const updates = {};
+  if (enabled !== undefined) updates.enabled = !!enabled;
+  if (smtpHost !== undefined) updates.smtpHost = smtpHost.trim();
+  if (smtpPort !== undefined) updates.smtpPort = parseInt(smtpPort, 10);
+  if (smtpSecure !== undefined) updates.smtpSecure = !!smtpSecure;
+  if (smtpUser !== undefined) updates.smtpUser = smtpUser.trim();
+  if (smtpPass !== undefined && smtpPass.trim() !== '') updates.smtpPass = smtpPass.trim();
+  if (notificationEmail !== undefined) updates.notificationEmail = notificationEmail.trim();
+  if (senderName !== undefined) updates.senderName = senderName.trim();
+
+  const saved = saveEmailConfig(updates);
+  res.json({
+    success: true,
+    message: 'E-postinnstillinger er lagret!',
+    email: {
+      enabled: saved.enabled,
+      smtpHost: saved.smtpHost,
+      smtpPort: saved.smtpPort,
+      smtpSecure: saved.smtpSecure,
+      smtpUser: saved.smtpUser,
+      smtpPassConfigured: !!saved.smtpPass,
+      notificationEmail: saved.notificationEmail,
+      senderName: saved.senderName
+    }
+  });
+});
+
+// API: Test Email Dispatch (Admin protected)
+app.post('/api/test-email', requireAdminAuth, async (req, res) => {
+  const { targetEmail } = req.body || {};
+  const cfg = loadEmailConfig();
+  const recipient = targetEmail || cfg.notificationEmail;
+
+  try {
+    const result = await sendEmail({
+      to: recipient,
+      subject: `🧪 Test e-post fra AIAPPSY Meeting Engine (${new Date().toLocaleTimeString('no-NO')})`,
+      html: `
+      <div style="font-family: sans-serif; padding: 20px; background: #0b0f19; color: #fff; border-radius: 8px;">
+        <h2 style="color: #10b981;">✓ E-postmotoren fungerer utmerket!</h2>
+        <p>Dette er en bekreftelse på at AIAPPSY SMTP-tjenesten og automatisk møtevarsling er operativ.</p>
+        <p>Tidspunkt: ${new Date().toISOString()}</p>
+      </div>`
+    });
+
+    res.json({
+      success: true,
+      recipient,
+      result,
+      message: `Test e-post er sendt til ${recipient}!`
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 
