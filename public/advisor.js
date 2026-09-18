@@ -15,9 +15,10 @@
         name: "Hubzoo",
         tagline: "Autonomous Sales Partner & CRM for SMBs",
         market: "Contractors, plumbers, electricians, marketing consultants, and SMB service providers who lose 60%+ of sales simply because they are too busy on-site to reply to leads immediately.",
-        whitelabelPotential: "Enormous recurring B2B retention! Agencies charge $49-$149/mo per client. At just 40 tradesmen clients, that generates ~$3,500/mo in pure recurring revenue with virtually zero churn because it directly wins them jobs.",
+        businessValue: "Massive time savings and revenue capture! Direct subscription at kr 499/mo ($49/mo) saves busy contractors 10+ hours a week in late-night quote drafting while closing up to 40% more jobs with 60-second response times.",
+        whitelabelPotential: "Massive time savings and revenue capture! Direct subscription at kr 499/mo ($49/mo) saves busy contractors 10+ hours a week in late-night quote drafting while closing up to 40% more jobs with 60-second response times.",
         keyFeatures: "60-second mobile quote creator, multi-channel auto follow-ups across WhatsApp/SMS/Email, and direct accounting sync with Tripletex and Fiken.",
-        encouragement: "Hubzoo is one of the highest-converting SaaS offerings you can launch because it directly puts money into business owners' pockets from day one!"
+        encouragement: "Hubzoo is built by AIAPPSY specifically to empower small businesses and contractors to win work faster without administrative friction!"
       },
       maxmotion: {
         name: "MaxMotion AI",
@@ -76,9 +77,10 @@
         name: "Hubzoo",
         tagline: "Autonom salgsassistent & CRM for håndverkere og SMB",
         market: "Håndverkere, snekkere, rørleggere, elektrikere og konsulenter som taper 60 %+ av oppdragene rett og slett fordi de er opptatt ute i felt og svarer for sent.",
-        whitelabelPotential: "Ekstremt høy kundelojalitet! Norske byråer kan ta 690 – 1 490 kr/mnd per kunde. Med kun 40 lokale bedriftskunder gir det over 35 000 kr i faste månedlige inntekter (MRR).",
+        businessValue: "Enorm tidsbesparelse og direkte økt omsetning! Abonnement til kun kr 499/mnd sparer håndverkeren for over 10 timer papirarbeid i uka, og sikrer 40 % flere vunnede oppdrag med lynraske tilbud og automatisk oppfølging.",
+        whitelabelPotential: "Enorm tidsbesparelse og direkte økt omsetning! Abonnement til kun kr 499/mnd sparer håndverkeren for over 10 timer papirarbeid i uka, og sikrer 40 % flere vunnede oppdrag med lynraske tilbud og automatisk oppfølging.",
         keyFeatures: "60-sekunders mobilt pristilbud, automatiske påminnelser på SMS/e-post/WhatsApp og toveis integrasjon mot Fiken og Tripletex.",
-        encouragement: "Hubzoo er et av de enkleste SaaS-produktene å selge i Norge, fordi det direkte skaffer kunden nye oppdrag fra dag én!"
+        encouragement: "Hubzoo er AIAPPSYs egenutviklede SaaS-tjeneste bygget for at håndverkere og bedrifter skal vinne oppdrag raskt uten administrativt slit!"
       },
       maxmotion: {
         name: "MaxMotion AI",
@@ -227,22 +229,22 @@
     }
 
     // Hubzoo
-    if (q.includes("hubzoo") || q.includes("hubzoo") || q.includes("crm") || q.includes("salg") || q.includes("sales") || q.includes("håndverk") || q.includes("fiken") || q.includes("tripletex") || q.includes("quote")) {
+    if (q.includes("hubzoo") || q.includes("crm") || q.includes("salg") || q.includes("sales") || q.includes("håndverk") || q.includes("fiken") || q.includes("tripletex") || q.includes("quote")) {
       const a = K.apps.hubzoo;
       if (isNo) {
-        return pickRandom(openers) + "**" + a.name + "** er en fantastisk løsning for håndverkere og servicenæringen!\n\n" +
-          "🎯 **Markedsmulighet**: " + a.market + "\n\n" +
-          "💰 **Inntjeningspotensial**: " + a.whitelabelPotential + "\n\n" +
+        return pickRandom(openers) + "**" + a.name + "** er AIAPPSYs spesialiserte SaaS-løsning for håndverkere og servicenæringen!\n\n" +
+          "🎯 **Målgruppe**: " + a.market + "\n\n" +
+          "💰 **Verdi for bedriften**: " + a.businessValue + "\n\n" +
           "⚡ **Kjernefordeler**: " + a.keyFeatures + "\n\n" +
-          "💡 *Hvorfor du vil lykkes*: " + a.encouragement + "\n\n" +
-          "Vil du at jeg skal åpne lisensskjemaet for Hubzoo?";
+          "💡 *Hvorfor bruke Hubzoo*: " + a.encouragement + "\n\n" +
+          "Vil du teste tilbudsgeneratoren eller se våre SaaS-abonnementer?";
       } else {
-        return pickRandom(openers) + "**" + a.name + "** is a total game-changer for service businesses and trades!\n\n" +
-          "🎯 **Market Opportunity**: " + a.market + "\n\n" +
-          "💰 **Whitelabel Potential**: " + a.whitelabelPotential + "\n\n" +
+        return pickRandom(openers) + "**" + a.name + "** is AIAPPSY's proprietary SaaS platform for service businesses and contractors!\n\n" +
+          "🎯 **Target Audience**: " + a.market + "\n\n" +
+          "💰 **Business Impact**: " + a.businessValue + "\n\n" +
           "⚡ **Core Highlights**: " + a.keyFeatures + "\n\n" +
-          "💡 *Why you'll succeed*: " + a.encouragement + "\n\n" +
-          "Would you like me to open the inquiry form for Hubzoo?";
+          "💡 *Why contractors love it*: " + a.encouragement + "\n\n" +
+          "Would you like to test the live quote generator or view the SaaS subscription plans?";
       }
     }
 
