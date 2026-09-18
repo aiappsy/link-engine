@@ -2447,9 +2447,33 @@ async function sendEmail({ to, subject, html, text, icsContent, icsFilename = 'm
   if (!cfg.enabled || !cfg.smtpPass) {
     console.log(`[Email Service (Simulert/Logg)] To: ${to} | Subject: "${subject}" | (Mangler SMTP-passord i konfigurasjon)`);
     logEntry.status = 'simulated';
-    logEntry.note = 'Simulert e-post (Mangler SMTP-passord / Gmail App Password i innstillinger)';
+    logEntry.note = 'Simulert e-post (Mangler Gmail App-passord i innstillingene)';
     logEmailSent(logEntry);
-    return { success: true, simulated: true };
+    return {
+      success: false,
+      simulated: true,
+      error: 'Gmail App-passord er ikke lagret ennå. Gå til innstillingene i Admin og lim inn ditt 16-tegns Google App Password.'
+    };
+  }
+
+  const mailOptions = {
+    from: fromAddress,
+    to,
+    subject,
+    text: text || html.replace(/<[^>]+>/g, ' '),
+    html
+  };
+
+  if (icsContent) {
+    mailOptions.icalEvent = {
+      filename: icsFilename,
+      method: 'REQUEST',
+      content: icsContent
+    };
+    mailOptions.alternatives = [{
+      contentType: 'text/calendar; charset="utf-8"; method=REQUEST',
+      content: icsContent
+    }];
   }
 
   try {
@@ -2463,28 +2487,10 @@ async function sendEmail({ to, subject, html, text, icsContent, icsFilename = 'm
       },
       tls: {
         rejectUnauthorized: false
-      }
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000
     });
-
-    const mailOptions = {
-      from: fromAddress,
-      to,
-      subject,
-      text: text || html.replace(/<[^>]+>/g, ' '),
-      html
-    };
-
-    if (icsContent) {
-      mailOptions.icalEvent = {
-        filename: icsFilename,
-        method: 'REQUEST',
-        content: icsContent
-      };
-      mailOptions.alternatives = [{
-        contentType: 'text/calendar; charset="utf-8"; method=REQUEST',
-        content: icsContent
-      }];
-    }
 
     const info = await transporter.sendMail(mailOptions);
     console.log(`[Email Service] ✓ Sendt til ${to}: "${subject}" (MessageID: ${info.messageId})`);
@@ -2493,7 +2499,41 @@ async function sendEmail({ to, subject, html, text, icsContent, icsFilename = 'm
     logEmailSent(logEntry);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`[Email Service] ❌ Feil ved sending til ${to}:`, err.message);
+    console.warn(`[Email Service] Første forsøk feilet for ${to} på port ${cfg.smtpPort}: ${err.message}`);
+
+    // Fallback: Hvis port 465 timeout/blokkert, prøv port 587 (STARTTLS)
+    if (cfg.smtpPort === 465 || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED' || err.code === 'ESOCKET') {
+      try {
+        console.log(`[Email Service] Prøver fallback via smtp.gmail.com:587 (STARTTLS)...`);
+        const fallbackTransporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: cfg.smtpUser,
+            pass: cfg.smtpPass
+          },
+          tls: {
+            rejectUnauthorized: false
+          },
+          connectionTimeout: 10000,
+          greetingTimeout: 10000
+        });
+        const info = await fallbackTransporter.sendMail(mailOptions);
+        console.log(`[Email Service] ✓ Fallback sendt via port 587 til ${to} (MessageID: ${info.messageId})`);
+        logEntry.status = 'sent_fallback_587';
+        logEntry.messageId = info.messageId;
+        logEmailSent(logEntry);
+        return { success: true, messageId: info.messageId };
+      } catch (fallbackErr) {
+        console.error(`[Email Service] ❌ Også fallback feilet for ${to}:`, fallbackErr.message);
+        logEntry.status = 'failed';
+        logEntry.error = fallbackErr.message;
+        logEmailSent(logEntry);
+        return { success: false, error: fallbackErr.message };
+      }
+    }
+
     logEntry.status = 'failed';
     logEntry.error = err.message;
     logEmailSent(logEntry);
@@ -2756,74 +2796,129 @@ setTimeout(checkAndSendMeetingReminders, 4000);
 // API: Get Email Settings (Admin protected)
 app.get('/api/settings/email', requireAdminAuth, (req, res) => {
   const cfg = loadEmailConfig();
+  const obj = {
+    enabled: cfg.enabled,
+    smtpHost: cfg.smtpHost,
+    smtpPort: cfg.smtpPort,
+    smtpSecure: cfg.smtpSecure,
+    smtpUser: cfg.smtpUser,
+    smtpPass: cfg.smtpPass ? '••••••••••••••••' : '',
+    smtpPassConfigured: !!cfg.smtpPass,
+    notificationEmail: cfg.notificationEmail,
+    notifyHostEmail: cfg.notificationEmail,
+    autoRemindersEnabled: cfg.enabled,
+    senderName: cfg.senderName
+  };
   res.json({
     success: true,
-    email: {
-      enabled: cfg.enabled,
-      smtpHost: cfg.smtpHost,
-      smtpPort: cfg.smtpPort,
-      smtpSecure: cfg.smtpSecure,
-      smtpUser: cfg.smtpUser,
-      smtpPassConfigured: !!cfg.smtpPass,
-      notificationEmail: cfg.notificationEmail,
-      senderName: cfg.senderName
-    }
+    email: obj,
+    config: obj
   });
 });
 
 // API: Save Email Settings (Admin protected)
 app.post('/api/settings/email', requireAdminAuth, (req, res) => {
-  const { enabled, smtpHost, smtpPort, smtpSecure, smtpUser, smtpPass, notificationEmail, senderName } = req.body || {};
+  const {
+    enabled,
+    autoRemindersEnabled,
+    smtpHost,
+    smtpPort,
+    smtpSecure,
+    smtpUser,
+    smtpPass,
+    notificationEmail,
+    notifyHostEmail,
+    senderName
+  } = req.body || {};
+
   const updates = {};
   if (enabled !== undefined) updates.enabled = !!enabled;
-  if (smtpHost !== undefined) updates.smtpHost = smtpHost.trim();
+  if (autoRemindersEnabled !== undefined) updates.enabled = !!autoRemindersEnabled;
+  if (smtpHost !== undefined && smtpHost.trim() !== '') updates.smtpHost = smtpHost.trim();
   if (smtpPort !== undefined) updates.smtpPort = parseInt(smtpPort, 10);
   if (smtpSecure !== undefined) updates.smtpSecure = !!smtpSecure;
-  if (smtpUser !== undefined) updates.smtpUser = smtpUser.trim();
-  if (smtpPass !== undefined && smtpPass.trim() !== '') updates.smtpPass = smtpPass.trim();
-  if (notificationEmail !== undefined) updates.notificationEmail = notificationEmail.trim();
-  if (senderName !== undefined) updates.senderName = senderName.trim();
+  if (smtpUser !== undefined && smtpUser.trim() !== '') updates.smtpUser = smtpUser.trim().toLowerCase();
+
+  // Strip whitespace if user pasted 16-character Google App Password with spaces ("abcd efgh ijkl mnop")
+  if (smtpPass !== undefined) {
+    const cleanPass = smtpPass.replace(/\s+/g, '');
+    if (cleanPass !== '' && !cleanPass.includes('••')) {
+      updates.smtpPass = cleanPass;
+    }
+  }
+
+  const effectiveNotify = notificationEmail || notifyHostEmail;
+  if (effectiveNotify !== undefined && effectiveNotify.trim() !== '') {
+    updates.notificationEmail = effectiveNotify.trim();
+  }
+  if (senderName !== undefined && senderName.trim() !== '') {
+    updates.senderName = senderName.trim();
+  }
 
   const saved = saveEmailConfig(updates);
+  const obj = {
+    enabled: saved.enabled,
+    smtpHost: saved.smtpHost,
+    smtpPort: saved.smtpPort,
+    smtpSecure: saved.smtpSecure,
+    smtpUser: saved.smtpUser,
+    smtpPassConfigured: !!saved.smtpPass,
+    notificationEmail: saved.notificationEmail,
+    notifyHostEmail: saved.notificationEmail,
+    autoRemindersEnabled: saved.enabled,
+    senderName: saved.senderName
+  };
+
   res.json({
     success: true,
     message: 'E-postinnstillinger er lagret!',
-    email: {
-      enabled: saved.enabled,
-      smtpHost: saved.smtpHost,
-      smtpPort: saved.smtpPort,
-      smtpSecure: saved.smtpSecure,
-      smtpUser: saved.smtpUser,
-      smtpPassConfigured: !!saved.smtpPass,
-      notificationEmail: saved.notificationEmail,
-      senderName: saved.senderName
-    }
+    email: obj,
+    config: obj
   });
 });
 
 // API: Test Email Dispatch (Admin protected)
 app.post('/api/test-email', requireAdminAuth, async (req, res) => {
-  const { targetEmail } = req.body || {};
+  const { targetEmail, email } = req.body || {};
   const cfg = loadEmailConfig();
-  const recipient = targetEmail || cfg.notificationEmail;
+  const recipient = (targetEmail || email || cfg.notificationEmail || cfg.smtpUser || 'paljuritzen@gmail.com').trim();
+
+  if (!cfg.smtpPass) {
+    return res.status(400).json({
+      success: false,
+      error: 'Gmail App-passord mangler! Vennligst lim inn ditt 16-tegns Google App Password i feltet og klikk "Lagre E-postoppsett" først.'
+    });
+  }
 
   try {
     const result = await sendEmail({
       to: recipient,
       subject: `🧪 Test e-post fra AIAPPSY Meeting Engine (${new Date().toLocaleTimeString('no-NO')})`,
       html: `
-      <div style="font-family: sans-serif; padding: 20px; background: #0b0f19; color: #fff; border-radius: 8px;">
-        <h2 style="color: #10b981;">✓ E-postmotoren fungerer utmerket!</h2>
-        <p>Dette er en bekreftelse på at AIAPPSY SMTP-tjenesten og automatisk møtevarsling er operativ.</p>
-        <p>Tidspunkt: ${new Date().toISOString()}</p>
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 26px; background: #0b0f19; color: #fff; border-radius: 12px; max-width: 580px; margin: 0 auto; border: 1px solid #1e293b; line-height: 1.6;">
+        <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;">✓ TEST VELLYKKET</span>
+        <h2 style="color: #ffffff; margin: 16px 0 8px;">AIAPPSY E-postmotor fungerer utmerket!</h2>
+        <p style="color: #cbd5e1; margin: 0 0 16px;">Dette er en bekreftelse på at din Gmail SMTP-tilkobling, Google Kalender-invitasjoner og automatiske møtepåminnelser er 100 % operative.</p>
+        <div style="background: #131d35; padding: 14px; border-radius: 8px; font-size: 13px; color: #94a3b8; border: 1px solid rgba(255,255,255,0.06);">
+          <div style="margin-bottom: 4px;">Avsender: <strong style="color: #38bdf8;">${cfg.smtpUser}</strong></div>
+          <div style="margin-bottom: 4px;">Mottaker: <strong style="color: #a78bfa;">${recipient}</strong></div>
+          <div>Tidspunkt: <strong>${new Date().toISOString()}</strong></div>
+        </div>
       </div>`
     });
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error || 'Feil ved sending via Gmail SMTP.'
+      });
+    }
 
     res.json({
       success: true,
       recipient,
       result,
-      message: `Test e-post er sendt til ${recipient}!`
+      message: `Test e-post og Google Kalender-oppsett ble sendt via Gmail SMTP til ${recipient}!`
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

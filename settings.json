@@ -1,0 +1,92 @@
+{
+  "activeDomain": "aiappsy.com",
+  "serviceName": "aiappsy-link-engine",
+  "region": "us-west1",
+  "cloudRunUrl": "https://aiappsy-link-engine-910579541086.us-west1.run.app",
+  "dns": {
+    "cnameTarget": "ghs.googlehosted.com.",
+    "apexARecords": [
+      "216.239.32.21",
+      "216.239.34.21",
+      "216.239.36.21",
+      "216.239.38.21"
+    ]
+  },
+  "customer": {
+    "name": "AIAppsy Norge AS",
+    "orgNumber": "934182471",
+    "contactPerson": "Pål Juritzen",
+    "email": "paljuritzen@gmail.com",
+    "address": "Dronning Eufemias gate 16, 0191 Oslo"
+  },
+  "email": {
+    "enabled": true,
+    "smtpHost": "smtp.gmail.com",
+    "smtpPort": 465,
+    "smtpSecure": true,
+    "smtpUser": "paljuritzen@gmail.com",
+    "smtpPass": "",
+    "notificationEmail": "paul@aiappsy.com",
+    "senderName": "Pål Juritzen · AIAPPSY"
+  },
+  "domains": [
+    {
+      "domain": "aiappsy.com",
+      "label": "aiappsy.com (Hoveddomene – 11 tegn)",
+      "isDefault": true,
+      "isSubdomain": false,
+      "subdomain": "@",
+      "parentDomain": "aiappsy.com",
+      "recordType": "A (4 poster)",
+      "target": "216.239.32.21 (samt .34, .36, .38)",
+      "aRecords": [
+        "216.239.32.21",
+        "216.239.34.21",
+        "216.239.36.21",
+        "216.239.38.21"
+      ],
+      "gcloudCommand": "gcloud beta run domain-mappings create --service aiappsy-link-engine --domain aiappsy.com --region us-west1"
+    },
+    {
+      "domain": "go.aiappsy.no",
+      "label": "go.aiappsy.no (Anbefalt kortdomene – 13 tegn)",
+      "isDefault": false,
+      "isSubdomain": true,
+      "subdomain": "go",
+      "parentDomain": "aiappsy.no",
+      "recordType": "CNAME",
+      "target": "ghs.googlehosted.com.",
+      "aRecords": [],
+      "gcloudCommand": "gcloud beta run domain-mappings create --service aiappsy-link-engine --domain go.aiappsy.no --region us-west1"
+    },
+    {
+      "domain": "link.aiappsy.no",
+      "label": "link.aiappsy.no (Subdomene – 15 tegn)",
+      "isDefault": false,
+      "isSubdomain": true,
+      "subdomain": "link",
+      "parentDomain": "aiappsy.no",
+      "recordType": "CNAME",
+      "target": "ghs.googlehosted.com.",
+      "aRecords": [],
+      "gcloudCommand": "gcloud beta run domain-mappings create --service aiappsy-link-engine --domain link.aiappsy.no --region us-west1"
+    },
+    {
+      "domain": "aiappsy.link",
+      "label": "aiappsy.link (Toppdomene – 12 tegn)",
+      "isDefault": false,
+      "isSubdomain": false,
+      "subdomain": "@",
+      "parentDomain": "aiappsy.link",
+      "recordType": "A (4 poster)",
+      "target": "216.239.32.21 (samt .34, .36, .38)",
+      "aRecords": [
+        "216.239.32.21",
+        "216.239.34.21",
+        "216.239.36.21",
+        "216.239.38.21"
+      ],
+      "gcloudCommand": "gcloud beta run domain-mappings create --service aiappsy-link-engine --domain aiappsy.link --region us-west1"
+    }
+  ]
+}
