@@ -1009,20 +1009,23 @@ const BOOKINGS_FILE = path.join(__dirname, 'bookings.json');
 const CALENDAR_CONFIG_FILE = path.join(__dirname, 'calendar_config.json');
 
 const DEFAULT_CALENDAR_CONFIG = {
+  hostTimeZone: 'Asia/Manila',
+  clientPrimaryTimeZone: 'Europe/Oslo',
+  scheduleTimeZone: 'Asia/Manila',
   weeklySchedule: {
-    monday:    { enabled: true,  start: '09:00', end: '16:30' },
-    tuesday:   { enabled: true,  start: '09:00', end: '16:30' },
-    wednesday: { enabled: true,  start: '09:00', end: '16:30' },
-    thursday:  { enabled: true,  start: '09:00', end: '16:30' },
-    friday:    { enabled: true,  start: '09:00', end: '15:30' },
-    saturday:  { enabled: false, start: '10:00', end: '14:00' },
-    sunday:    { enabled: false, start: '10:00', end: '14:00' }
+    monday:    { enabled: true,  start: '15:00', end: '23:00' },
+    tuesday:   { enabled: true,  start: '15:00', end: '23:00' },
+    wednesday: { enabled: true,  start: '15:00', end: '23:00' },
+    thursday:  { enabled: true,  start: '15:00', end: '23:00' },
+    friday:    { enabled: true,  start: '15:00', end: '22:00' },
+    saturday:  { enabled: false, start: '15:00', end: '19:00' },
+    sunday:    { enabled: false, start: '15:00', end: '19:00' }
   },
-  lunchBreak: { enabled: true, start: '12:00', end: '12:30' },
+  lunchBreak: { enabled: true, start: '18:30', end: '19:15' },
   bufferMinutes: 15,
   minNoticeHours: 2,
   maxFutureDays: 30,
-  timeZone: 'Europe/Oslo',
+  timeZone: 'Asia/Manila',
   blackoutDates: [],
   defaultMeetType: 'google_meet',
   customMeetUrl: '',
@@ -1060,6 +1063,54 @@ const DEFAULT_CALENDAR_CONFIG = {
   ]
 };
 
+// Timezone conversion helpers
+function isValidTimeZone(tz) {
+  if (!tz || typeof tz !== 'string') return false;
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: tz });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function zonedDateTimeToUtc(dateStr, timeStr, timeZone) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const [h, min] = timeStr.split(':').map(Number);
+  const utcGuess = new Date(Date.UTC(y, m - 1, d, h, min, 0));
+  const invDate = new Date(utcGuess.toLocaleString('en-US', { timeZone: 'UTC' }));
+  const targetDate = new Date(utcGuess.toLocaleString('en-US', { timeZone }));
+  const diff = invDate.getTime() - targetDate.getTime();
+  return new Date(utcGuess.getTime() + diff);
+}
+
+function getZonedParts(utcDate, timeZone) {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+    weekday: 'long'
+  });
+  const parts = formatter.formatToParts(utcDate);
+  const map = {};
+  for (const p of parts) map[p.type] = p.value;
+  return {
+    year: map.year,
+    month: map.month,
+    day: map.day,
+    dateStr: `${map.year}-${map.month}-${map.day}`,
+    weekday: (map.weekday || '').toLowerCase(),
+    hour: map.hour,
+    minute: map.minute,
+    timeStr: `${map.hour}:${map.minute}`,
+    minutes: parseInt(map.hour, 10) * 60 + parseInt(map.minute, 10)
+  };
+}
+
 function loadCalendarConfig() {
   try {
     if (fs.existsSync(CALENDAR_CONFIG_FILE)) {
@@ -1067,6 +1118,9 @@ function loadCalendarConfig() {
       return {
         ...DEFAULT_CALENDAR_CONFIG,
         ...parsed,
+        hostTimeZone: parsed.hostTimeZone || DEFAULT_CALENDAR_CONFIG.hostTimeZone,
+        clientPrimaryTimeZone: parsed.clientPrimaryTimeZone || DEFAULT_CALENDAR_CONFIG.clientPrimaryTimeZone,
+        scheduleTimeZone: parsed.scheduleTimeZone || DEFAULT_CALENDAR_CONFIG.scheduleTimeZone,
         weeklySchedule: { ...DEFAULT_CALENDAR_CONFIG.weeklySchedule, ...(parsed.weeklySchedule || {}) },
         lunchBreak: { ...DEFAULT_CALENDAR_CONFIG.lunchBreak, ...(parsed.lunchBreak || {}) }
       };
@@ -1133,6 +1187,9 @@ app.post('/api/bookings/config', requireAdminAuth, (req, res) => {
   const updated = {
     ...current,
     ...incoming,
+    hostTimeZone: incoming.hostTimeZone || current.hostTimeZone || 'Asia/Manila',
+    clientPrimaryTimeZone: incoming.clientPrimaryTimeZone || current.clientPrimaryTimeZone || 'Europe/Oslo',
+    scheduleTimeZone: incoming.scheduleTimeZone || current.scheduleTimeZone || 'Asia/Manila',
     weeklySchedule: { ...current.weeklySchedule, ...(incoming.weeklySchedule || {}) },
     lunchBreak: { ...current.lunchBreak, ...(incoming.lunchBreak || {}) },
     meetingTypes: Array.isArray(incoming.meetingTypes) ? incoming.meetingTypes : current.meetingTypes,
@@ -1141,123 +1198,215 @@ app.post('/api/bookings/config', requireAdminAuth, (req, res) => {
   };
 
   saveCalendarConfig(updated);
-  console.log('[Calendar Config] Innstillinger oppdatert av admin.');
+  console.log('[Calendar Config] Innstillinger oppdatert av admin med tidssoner:', {
+    host: updated.hostTimeZone,
+    client: updated.clientPrimaryTimeZone,
+    schedule: updated.scheduleTimeZone
+  });
   res.json({ success: true, message: 'Kalender- og tilgjengelighetsinnstillinger lagret!', config: updated });
 });
 
-// GET available slots for a given date and meeting type (Public)
+// GET available slots for a given date and meeting type (Public, Timezone-aware)
 app.get('/api/bookings/available-slots', (req, res) => {
   const date = req.query.date;
   const type = req.query.type || 'strategy';
+  const durationParam = parseInt(req.query.duration, 10);
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return res.status(400).json({ success: false, error: 'Ugyldig datoformat (YYYY-MM-DD).' });
   }
 
   const config = loadCalendarConfig();
+  const hostTz = isValidTimeZone(config.hostTimeZone) ? config.hostTimeZone : 'Asia/Manila';
+  const clientPrimaryTz = isValidTimeZone(config.clientPrimaryTimeZone) ? config.clientPrimaryTimeZone : 'Europe/Oslo';
+  const schedTz = isValidTimeZone(config.scheduleTimeZone) ? config.scheduleTimeZone : hostTz;
 
-  // 1. Sjekk sperredatoer / feriedager
+  const requestedTz = req.query.timeZone || req.query.clientTimeZone || clientPrimaryTz;
+  const clientTz = isValidTimeZone(requestedTz) ? requestedTz : clientPrimaryTz;
+
+  // 1. Sjekk sperredatoer / feriedager (sjekkes mot dato)
   if (config.blackoutDates && config.blackoutDates.includes(date)) {
-    return res.json({ success: true, date, availableSlots: [], bookedSlots: [], isClosed: true, reason: 'blackout' });
+    return res.json({ 
+      success: true, 
+      date, 
+      clientTimeZone: clientTz,
+      hostTimeZone: hostTz,
+      scheduleTimeZone: schedTz,
+      availableSlots: [], 
+      slotDetails: [],
+      bookedSlots: [], 
+      isClosed: true, 
+      reason: 'blackout' 
+    });
   }
 
-  // 2. Finn ukedag
-  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  const [y, m, d] = date.split('-').map(Number);
-  const dateObj = new Date(y, m - 1, d);
-  const dayName = dayNames[dateObj.getDay()];
-  const dayConfig = config.weeklySchedule[dayName];
-
-  if (!dayConfig || !dayConfig.enabled) {
-    return res.json({ success: true, date, availableSlots: [], bookedSlots: [], isClosed: true, reason: 'day_disabled' });
-  }
-
-  // 3. Finn møtevarighet
+  // 2. Finn møtetype og varighet
   const mType = (config.meetingTypes || []).find(t => t.id === type) || config.meetingTypes[0] || { duration: 30 };
-  const duration = parseInt(mType.duration, 10) || 30;
+  const duration = durationParam || parseInt(mType.duration, 10) || 30;
   const buffer = parseInt(config.bufferMinutes, 10) || 0;
+  const minNoticeHours = parseInt(config.minNoticeHours, 10) || 2;
+  const maxFutureDays = parseInt(config.maxFutureDays, 10) || 30;
 
-  // 4. Arbeidstid og lunsj
-  const dayStart = timeToMinutes(dayConfig.start || '09:00');
-  const dayEnd = timeToMinutes(dayConfig.end || '16:30');
+  // 3. Lunsjpause i scheduleTimeZone
   const hasLunch = config.lunchBreak && config.lunchBreak.enabled;
-  const lunchStart = hasLunch ? timeToMinutes(config.lunchBreak.start || '12:00') : -1;
-  const lunchEnd = hasLunch ? timeToMinutes(config.lunchBreak.end || '12:30') : -1;
+  const lunchStart = hasLunch ? timeToMinutes(config.lunchBreak.start || '18:30') : -1;
+  const lunchEnd = hasLunch ? timeToMinutes(config.lunchBreak.end || '19:15') : -1;
 
-  // 5. Eksisterende bookinger
+  // 4. Eksisterende bookinger
   const bookings = loadBookings();
-  const dayBookings = bookings
-    .filter(b => b.date === date && b.status !== 'cancelled')
-    .map(b => ({
-      start: timeToMinutes(b.time),
-      end: timeToMinutes(b.time) + (parseInt(b.duration, 10) || 30)
-    }));
+  const activeBookings = bookings.filter(b => b.status !== 'cancelled').map(b => {
+    let startUtc = 0;
+    if (b.utcIso) {
+      startUtc = new Date(b.utcIso).getTime();
+    } else if (b.date && b.time) {
+      const bTz = b.clientTimeZone || clientPrimaryTz;
+      startUtc = zonedDateTimeToUtc(b.date, b.time, bTz).getTime();
+    }
+    const bDuration = parseInt(b.duration, 10) || 30;
+    return {
+      startUtc,
+      endUtc: startUtc + bDuration * 60000,
+      clientDate: b.date,
+      clientTime: b.time
+    };
+  });
 
-  const bookedSlotStrings = bookings
-    .filter(b => b.date === date && b.status !== 'cancelled')
-    .map(b => b.time);
+  const nowMs = Date.now();
+  const minAllowedTime = nowMs + minNoticeHours * 3600000;
+  const maxAllowedTime = nowMs + maxFutureDays * 86400000;
 
-  // 6. Sjekk om datoen er i dag (forhåndsvarsel)
-  const now = new Date();
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  const isToday = (date === todayStr);
-  const minNoticeMin = (parseInt(config.minNoticeHours, 10) || 2) * 60;
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-  // 7. Generer tidsluker med 30-minutters intervall (eller 15 min ved korte møter)
-  const step = duration <= 15 ? 15 : 30;
   const availableSlots = [];
+  const slotDetails = [];
+  const bookedSlotStrings = [];
 
-  for (let slotStart = dayStart; slotStart + duration <= dayEnd; slotStart += step) {
-    const slotEnd = slotStart + duration;
+  // Generer kandidattider gjennom dagen i klientens tidssone (fra 07:00 til 23:00)
+  const step = duration <= 15 ? 15 : 30;
 
-    // Forhåndsvarsel for i dag
-    if (isToday && slotStart < currentMinutes + minNoticeMin) {
+  for (let clientMinutes = 7 * 60; clientMinutes + duration <= 23 * 60; clientMinutes += step) {
+    const timeStr = minutesToTime(clientMinutes);
+    const candUtcDate = zonedDateTimeToUtc(date, timeStr, clientTz);
+    const candStartMs = candUtcDate.getTime();
+    const candEndMs = candStartMs + duration * 60000;
+
+    // Sjekk minste varslingstid
+    if (candStartMs < minAllowedTime) {
       continue;
     }
 
-    // Kollisjon med lunsjpause
-    if (hasLunch && slotStart < lunchEnd && slotEnd > lunchStart) {
+    // Sjekk maksimal planleggingshorisont
+    if (candStartMs > maxAllowedTime) {
       continue;
     }
 
-    // Kollisjon med eksisterende bookinger (inkludert buffer)
-    const hasConflict = dayBookings.some(b => {
-      return (slotStart < (b.end + buffer)) && (slotEnd > (b.start - buffer));
+    // Finn tid og ukedag i vertens timeplan-tidssone (schedTz, f.eks. Asia/Manila)
+    const hostParts = getZonedParts(candUtcDate, schedTz);
+    const hostDayName = hostParts.weekday;
+    const hostDayConfig = config.weeklySchedule ? config.weeklySchedule[hostDayName] : null;
+
+    // Er vertens ukedag åpen?
+    if (!hostDayConfig || !hostDayConfig.enabled) {
+      continue;
+    }
+
+    // Er datoen i vertens tidssone sperret?
+    if (config.blackoutDates && config.blackoutDates.includes(hostParts.dateStr)) {
+      continue;
+    }
+
+    // Sjekk om innenfor vertens arbeidstid
+    const dayStartMin = timeToMinutes(hostDayConfig.start || '15:00');
+    const dayEndMin = timeToMinutes(hostDayConfig.end || '23:00');
+    const hostSlotStart = hostParts.minutes;
+    const hostSlotEnd = hostSlotStart + duration;
+
+    if (hostSlotStart < dayStartMin || hostSlotEnd > dayEndMin) {
+      continue;
+    }
+
+    // Sjekk lunsjpause
+    if (hasLunch && hostSlotStart < lunchEnd && hostSlotEnd > lunchStart) {
+      continue;
+    }
+
+    // Sjekk kollisjon med bookinger inkludert buffer
+    const hasConflict = activeBookings.some(b => {
+      const bufferMs = buffer * 60000;
+      return (candStartMs < (b.endUtc + bufferMs)) && (candEndMs > (b.startUtc - bufferMs));
     });
 
-    if (!hasConflict) {
-      availableSlots.push(minutesToTime(slotStart));
+    if (hasConflict) {
+      bookedSlotStrings.push(timeStr);
+      continue;
     }
+
+    // Gyldig tidsluke funnet
+    availableSlots.push(timeStr);
+    slotDetails.push({
+      time: timeStr,
+      hostTime: hostParts.timeStr,
+      hostDay: hostDayName,
+      hostDate: hostParts.dateStr,
+      utc: candUtcDate.toISOString(),
+      label: `${timeStr} (${hostParts.timeStr} Manila)`
+    });
   }
 
   res.json({
     success: true,
     date,
-    dayName,
+    clientTimeZone: clientTz,
+    hostTimeZone: hostTz,
+    scheduleTimeZone: schedTz,
     duration,
     availableSlots,
+    slotDetails,
     bookedSlots: bookedSlotStrings,
-    isClosed: false
+    isClosed: availableSlots.length === 0
   });
 });
 
-// POST create booking (Public)
+// POST create booking (Public, Timezone-aware)
 app.post('/api/bookings', (req, res) => {
-  const { name, email, company, phone, type, date, time, notes } = req.body || {};
+  const { name, email, company, phone, type, date, time, notes, clientTimeZone } = req.body || {};
   if (!name || !email || !email.includes('@') || !date || !time) {
     return res.status(400).json({ success: false, error: 'Navn, gyldig e-post, dato og klokkeslett kreves.' });
   }
 
+  const config = loadCalendarConfig();
+  const hostTz = isValidTimeZone(config.hostTimeZone) ? config.hostTimeZone : 'Asia/Manila';
+  const clientPrimaryTz = isValidTimeZone(config.clientPrimaryTimeZone) ? config.clientPrimaryTimeZone : 'Europe/Oslo';
+  const effectiveClientTz = isValidTimeZone(clientTimeZone) ? clientTimeZone : clientPrimaryTz;
+
+  const utcDate = zonedDateTimeToUtc(date, time, effectiveClientTz);
+  const utcIso = utcDate.toISOString();
+  const candStartMs = utcDate.getTime();
+
+  const mType = (config.meetingTypes || []).find(t => t.id === type) || config.meetingTypes[0] || {};
+  const title = mType.name_no || '30 min Gratis AI-Strategisamtale';
+  const duration = parseInt(req.body.duration || mType.duration, 10) || 30;
+  const candEndMs = candStartMs + duration * 60000;
+
+  // Sjekk kollisjon mot aktive bookinger
   const bookings = loadBookings();
-  const isConflict = bookings.some(b => b.date === date && b.time === time && b.status !== 'cancelled');
+  const isConflict = bookings.some(b => {
+    if (b.status === 'cancelled') return false;
+    let bStart = 0;
+    if (b.utcIso) {
+      bStart = new Date(b.utcIso).getTime();
+    } else if (b.date && b.time) {
+      const bTz = b.clientTimeZone || clientPrimaryTz;
+      bStart = zonedDateTimeToUtc(b.date, b.time, bTz).getTime();
+    }
+    const bDur = parseInt(b.duration, 10) || 30;
+    const bEnd = bStart + bDur * 60000;
+    return (candStartMs < bEnd && candEndMs > bStart);
+  });
+
   if (isConflict) {
     return res.status(400).json({ success: false, error: 'Dette tidspunktet er dessverre allerede booket. Vennligst velg et annet.' });
   }
 
-  const config = loadCalendarConfig();
-  const mType = (config.meetingTypes || []).find(t => t.id === type) || config.meetingTypes[0] || {};
-  const title = mType.name_no || '30 min Gratis AI-Strategisamtale';
-  const duration = parseInt(mType.duration, 10) || 30;
+  // Finn dato og klokkeslett i Filippinene (vertens tidssone)
+  const hostParts = getZonedParts(utcDate, hostTz);
 
   let meetUrl = config.customMeetUrl;
   if (!meetUrl) {
@@ -1275,6 +1424,11 @@ app.post('/api/bookings', (req, res) => {
     phone: (phone || '').trim(),
     date: date.trim(),
     time: time.trim(),
+    clientTimeZone: effectiveClientTz,
+    hostDate: hostParts.dateStr,
+    hostTime: hostParts.timeStr,
+    hostTimeZone: hostTz,
+    utcIso,
     duration,
     meetUrl,
     status: 'confirmed',
@@ -1285,16 +1439,17 @@ app.post('/api/bookings', (req, res) => {
   bookings.unshift(booking);
   saveBookings(bookings);
 
-  // Automatically record as a lead in CRM
+  // Automatisk registrering i CRM med dual timezone-info
   try {
     const leads = loadLeadsSafe();
     const existingLead = leads.find(l => l.email && l.email.toLowerCase() === booking.email.toLowerCase());
+    const meetingNoteText = `Booket møte: ${booking.title} den ${booking.date} kl. ${booking.time} (${booking.clientTimeZone}) / kl. ${booking.hostTime} (${booking.hostTimeZone})`;
     if (existingLead) {
       existingLead.status = 'meeting_booked';
       if (!existingLead.notes) existingLead.notes = [];
       existingLead.notes.unshift({
         id: 'note_' + Date.now(),
-        text: `Booket møte: ${booking.title} den ${booking.date} kl. ${booking.time}`,
+        text: meetingNoteText,
         createdAt: new Date().toISOString()
       });
       existingLead.updatedAt = new Date().toISOString();
@@ -1305,7 +1460,7 @@ app.post('/api/bookings', (req, res) => {
         name: booking.name,
         email: booking.email,
         projectType: `Møte: ${booking.title}`,
-        message: `Booket tidspunkt: ${booking.date} kl. ${booking.time}. Notater: ${booking.notes || 'Ingen'}`,
+        message: `${meetingNoteText}. Notater: ${booking.notes || 'Ingen'}`,
         createdAt: new Date().toISOString(),
         status: 'meeting_booked',
         notes: [{
@@ -1322,7 +1477,7 @@ app.post('/api/bookings', (req, res) => {
     console.error('Feil ved CRM-kobling av booking:', err);
   }
 
-  console.log(`[Booking Opprettet] ${booking.name} <${booking.email}> - ${booking.title} (${booking.date} ${booking.time})`);
+  console.log(`[Booking Opprettet] ${booking.name} <${booking.email}> - ${booking.title} (${booking.date} ${booking.time} ${booking.clientTimeZone} = ${booking.hostTime} Manila)`);
   res.json({
     success: true,
     message: 'Møtet er bekreftet!',
@@ -1369,7 +1524,7 @@ app.delete('/api/bookings/:id', requireAdminAuth, (req, res) => {
   res.json({ success: true, message: 'Møtebooking slettet.' });
 });
 
-// GET generate .ics calendar invite (Public)
+// GET generate .ics calendar invite (Public, Universal UTC)
 app.get('/api/bookings/:id/ics', (req, res) => {
   const { id } = req.params;
   const bookings = loadBookings();
@@ -1378,14 +1533,23 @@ app.get('/api/bookings/:id/ics', (req, res) => {
     return res.status(404).send('Booking not found');
   }
 
-  const [year, month, day] = b.date.split('-');
-  const [hour, minute] = b.time.split(':');
-  const startDt = `${year}${month}${day}T${hour}${minute}00`;
-  const durHours = Math.floor(b.duration / 60);
-  const durMins = b.duration % 60;
-  const endHour = String(parseInt(hour, 10) + durHours).padStart(2, '0');
-  const endMin = String(parseInt(minute, 10) + durMins).padStart(2, '0');
-  const endDt = `${year}${month}${day}T${endHour}${endMin}00`;
+  let startUtc = null;
+  if (b.utcIso) {
+    startUtc = new Date(b.utcIso);
+  } else {
+    const tz = b.clientTimeZone || 'Europe/Oslo';
+    startUtc = zonedDateTimeToUtc(b.date, b.time, tz);
+  }
+
+  const durationMin = parseInt(b.duration, 10) || 30;
+  const endUtc = new Date(startUtc.getTime() + durationMin * 60000);
+
+  function formatIcsDate(d) {
+    return d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
+
+  const startDt = formatIcsDate(startUtc);
+  const endDt = formatIcsDate(endUtc);
 
   const icsContent = [
     'BEGIN:VCALENDAR',
@@ -1395,11 +1559,11 @@ app.get('/api/bookings/:id/ics', (req, res) => {
     'METHOD:REQUEST',
     'BEGIN:VEVENT',
     `UID:${b.id}@aiappsy.com`,
-    `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
+    `DTSTAMP:${formatIcsDate(new Date())}`,
     `DTSTART:${startDt}`,
     `DTEND:${endDt}`,
     `SUMMARY:AIAPPSY: ${b.title}`,
-    `DESCRIPTION:${b.title}\\n\\nMøtelenke: ${b.meetUrl}\\nKontakt: paljuritzen@gmail.com\\nNotater: ${b.notes || 'Ingen'}`,
+    `DESCRIPTION:${b.title}\\n\\nKlienttid: ${b.date} kl. ${b.time} (${b.clientTimeZone || 'Europe/Oslo'})\\nVertstid (Manila): kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})\\n\\nMøtelenke: ${b.meetUrl}\\nKontakt: paljuritzen@gmail.com\\nNotater: ${b.notes || 'Ingen'}`,
     `LOCATION:${b.meetUrl}`,
     'STATUS:CONFIRMED',
     'ORGANIZER;CN=AIAPPSY Engineering:mailto:paljuritzen@gmail.com',

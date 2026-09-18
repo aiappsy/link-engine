@@ -1,50 +1,53 @@
 {
+  "hostTimeZone": "Asia/Manila",
+  "clientPrimaryTimeZone": "Europe/Oslo",
+  "scheduleTimeZone": "Asia/Manila",
   "weeklySchedule": {
     "monday": {
       "enabled": true,
-      "start": "09:00",
-      "end": "16:30"
+      "start": "15:00",
+      "end": "23:00"
     },
     "tuesday": {
       "enabled": true,
-      "start": "09:00",
-      "end": "16:30"
+      "start": "15:00",
+      "end": "23:00"
     },
     "wednesday": {
       "enabled": true,
-      "start": "09:00",
-      "end": "16:30"
+      "start": "15:00",
+      "end": "23:00"
     },
     "thursday": {
       "enabled": true,
-      "start": "09:00",
-      "end": "16:30"
+      "start": "15:00",
+      "end": "23:00"
     },
     "friday": {
       "enabled": true,
-      "start": "09:30",
-      "end": "15:00"
+      "start": "15:00",
+      "end": "22:00"
     },
     "saturday": {
       "enabled": false,
-      "start": "10:00",
-      "end": "14:00"
+      "start": "15:00",
+      "end": "19:00"
     },
     "sunday": {
       "enabled": false,
-      "start": "10:00",
-      "end": "14:00"
+      "start": "15:00",
+      "end": "19:00"
     }
   },
   "lunchBreak": {
     "enabled": true,
-    "start": "12:00",
-    "end": "12:30"
+    "start": "18:30",
+    "end": "19:15"
   },
   "bufferMinutes": 15,
   "minNoticeHours": 2,
   "maxFutureDays": 30,
-  "timeZone": "Europe/Oslo",
+  "timeZone": "Asia/Manila",
   "blackoutDates": [
     "2026-12-24",
     "2026-12-25"

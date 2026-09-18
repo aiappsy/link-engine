@@ -525,9 +525,43 @@
       align-items: center;
       gap: 4px;
     }
+    .tz-selector-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 10px;
+    }
+    .tz-selector-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tz-select-input {
+      background: #090e1a;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #ffffff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.15s ease;
+      max-width: 100%;
+    }
+    .tz-select-input:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+    }
     .slots-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
       gap: 10px;
       max-height: 280px;
       overflow-y: auto;
@@ -540,17 +574,27 @@
       background: #131d35;
       border: 1px solid var(--border);
       color: #ffffff;
-      padding: 0.75rem 0.5rem;
+      padding: 0.65rem 0.5rem;
       border-radius: 10px;
       text-align: center;
-      font-weight: 700;
-      font-size: 0.95rem;
       cursor: pointer;
       transition: all 0.15s ease;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 2px;
+    }
+    .slot-pill-time {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #ffffff;
+    }
+    .slot-pill-host {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      font-weight: 500;
+      line-height: 1;
     }
     .slot-pill:hover {
       border-color: #6366f1;
@@ -562,6 +606,9 @@
       border-color: #818cf8;
       color: #ffffff;
       box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
+    }
+    .slot-pill.selected .slot-pill-host {
+      color: #e0e7ff;
     }
     .slot-status-msg {
       grid-column: 1 / -1;
@@ -893,7 +940,39 @@
             <div class="slots-panel">
               <div class="slots-header">
                 <div class="slots-title" id="slots-header-date">Velg dato i kalenderen</div>
-                <div class="slots-tz">🌐 Europe/Oslo (CET)</div>
+              </div>
+
+              <!-- Timezone Selector Component -->
+              <div class="tz-selector-wrap">
+                <div class="tz-selector-row">
+                  <span style="font-size: 0.78rem; font-weight: 700; color: #e2e8f0; display: flex; align-items: center; gap: 6px;">
+                    <span>🌐</span> Møtetidssone:
+                  </span>
+                  <select id="user-timezone-select" class="tz-select-input" onchange="onUserTimeZoneChange(this.value)" title="Velg din lokale tidssone">
+                    <option value="Europe/Oslo">🇳🇴 Norge / Oslo (CET/CEST)</option>
+                    <option value="Europe/Stockholm">🇸🇪 Sverige / Stockholm (CET/CEST)</option>
+                    <option value="Europe/Copenhagen">🇩🇰 Danmark / København (CET/CEST)</option>
+                    <option value="Europe/London">🇬🇧 Storbritannia / London (GMT/BST)</option>
+                    <option value="Europe/Berlin">🇩🇪 Tyskland / Berlin (CET/CEST)</option>
+                    <option value="Europe/Paris">🇫🇷 Frankrike / Paris (CET/CEST)</option>
+                    <option value="Europe/Helsinki">🇫🇮 Finland / Helsinki (EET/EEST)</option>
+                    <option value="Europe/Zurich">🇨🇭 Sveits / Zürich (CET/CEST)</option>
+                    <option value="Europe/Amsterdam">🇳🇱 Nederland / Amsterdam (CET/CEST)</option>
+                    <option value="Asia/Manila">🇵🇭 Filippinene / Manila (PHT, UTC+8)</option>
+                    <option value="Asia/Singapore">🇸🇬 Singapore (SGT, UTC+8)</option>
+                    <option value="Asia/Tokyo">🇯🇵 Japan / Tokyo (JST, UTC+9)</option>
+                    <option value="Asia/Dubai">🇦🇪 Dubai / UAE (GST, UTC+4)</option>
+                    <option value="America/New_York">🇺🇸 USA / New York (EST/EDT)</option>
+                    <option value="America/Chicago">🇺🇸 USA / Chicago (CST/CDT)</option>
+                    <option value="America/Los_Angeles">🇺🇸 USA / Los Angeles (PST/PDT)</option>
+                    <option value="Australia/Sydney">🇦🇺 Australia / Sydney (AEST/AEDT)</option>
+                    <option value="UTC">🌐 UTC (Koordinert universell tid)</option>
+                  </select>
+                </div>
+                <div id="tz-difference-subtext" style="font-size: 0.73rem; color: #94a3b8; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; margin-top: 2px;">
+                  <span>Vertens tid (Manila): 🇵🇭 <strong id="tz-live-host-clock" style="color: #ffffff; font-family: var(--font-mono);">--:--</strong></span>
+                  <span id="tz-live-diff-tag" style="color: #38bdf8; font-weight: 700;">6 timer tidsforskjell</span>
+                </div>
               </div>
 
               <div class="slots-grid" id="slots-container">
@@ -962,8 +1041,12 @@
             <span class="confirm-val" id="res-title">AI-Strategisamtale</span>
           </div>
           <div class="confirm-row">
-            <span class="confirm-label">Tidspunkt:</span>
-            <span class="confirm-val" id="res-datetime" style="color: #34d399;"></span>
+            <span class="confirm-label">Tidspunkt (Din tid):</span>
+            <span class="confirm-val" id="res-datetime" style="color: #34d399; font-weight: 700;"></span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Vertens tid (Filippinene):</span>
+            <span class="confirm-val" id="res-host-datetime" style="color: #38bdf8; font-weight: 700;"></span>
           </div>
           <div class="confirm-row">
             <span class="confirm-label">Varighet:</span>
@@ -1014,6 +1097,8 @@
     let selectedDuration = 30;
     let selectedDate = null; // YYYY-MM-DD
     let selectedTime = null; // HH:mm
+    let userTimeZone = 'Europe/Oslo';
+    let hostTimeZone = 'Asia/Manila';
 
     const today = new Date();
     let viewYear = today.getFullYear();
@@ -1024,6 +1109,78 @@
       'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'
     ];
     const DAY_MAP = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+    // 0. Timezone Initialization & Detection
+    function initUserTimeZone() {
+      try {
+        const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (detected) {
+          userTimeZone = detected;
+        }
+      } catch (e) {
+        userTimeZone = 'Europe/Oslo';
+      }
+
+      const selectEl = document.getElementById('user-timezone-select');
+      if (selectEl) {
+        let hasOption = false;
+        for (let i = 0; i < selectEl.options.length; i++) {
+          if (selectEl.options[i].value === userTimeZone) {
+            hasOption = true;
+            break;
+          }
+        }
+        if (!hasOption) {
+          const opt = document.createElement('option');
+          opt.value = userTimeZone;
+          opt.textContent = `📍 ${userTimeZone} (Din lokale tid)`;
+          selectEl.insertBefore(opt, selectEl.firstChild);
+        }
+        selectEl.value = userTimeZone;
+      }
+      updateTimezoneLiveIndicator();
+      setInterval(updateTimezoneLiveIndicator, 5000);
+    }
+
+    window.onUserTimeZoneChange = function(newTz) {
+      userTimeZone = newTz;
+      updateTimezoneLiveIndicator();
+      if (selectedDate) {
+        fetchSlotsForDate(selectedDate);
+      }
+    };
+
+    function updateTimezoneLiveIndicator() {
+      const hostClockEl = document.getElementById('tz-live-host-clock');
+      const diffTagEl = document.getElementById('tz-live-diff-tag');
+      const now = new Date();
+      if (hostClockEl) {
+        hostClockEl.textContent = new Intl.DateTimeFormat('en-GB', {
+          timeZone: hostTimeZone,
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }).format(now);
+      }
+      if (diffTagEl) {
+        try {
+          const hostH = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: hostTimeZone, hour: 'numeric', hour12: false }).format(now), 10);
+          const userH = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: userTimeZone, hour: 'numeric', hour12: false }).format(now), 10);
+          let diff = hostH - userH;
+          if (diff < -12) diff += 24;
+          if (diff > 12) diff -= 24;
+          if (diff === 0) {
+            diffTagEl.textContent = 'Samme tid som verten';
+          } else if (diff > 0) {
+            diffTagEl.textContent = `Verten er ${diff}t foran deg`;
+          } else {
+            diffTagEl.textContent = `Verten er ${Math.abs(diff)}t bak deg`;
+          }
+        } catch (e) {
+          diffTagEl.textContent = '';
+        }
+      }
+    }
 
     // 1. Initialize meeting types selection
     const typeCards = document.querySelectorAll('.type-card');
@@ -1041,11 +1198,17 @@
 
     // 2. Fetch Availability Configuration
     async function initCalendar() {
+      initUserTimeZone();
+
       try {
         const res = await fetch('/api/bookings/config?_t=' + Date.now());
         const data = await res.json();
         if (data.success && data.config) {
           calendarConfig = data.config;
+          if (calendarConfig.hostTimeZone) {
+            hostTimeZone = calendarConfig.hostTimeZone;
+          }
+          updateTimezoneLiveIndicator();
         }
       } catch (err) {
         console.warn('Fallback standard kalenderconfig', err);
@@ -1199,14 +1362,15 @@
       fetchSlotsForDate(dateStr);
     };
 
-    // 4. Fetch Available Slots for Date
+    // 4. Fetch Available Slots for Date with Timezone awareness
     async function fetchSlotsForDate(dateStr) {
       const container = document.getElementById('slots-container');
       container.innerHTML = '<div class="slot-status-msg">Henter ledige tider... ⏳</div>';
       selectedTime = null;
 
       try {
-        const res = await fetch(`/api/bookings/available-slots?date=${dateStr}&duration=${selectedDuration}&_t=${Date.now()}`);
+        const url = `/api/bookings/available-slots?date=${dateStr}&duration=${selectedDuration}&timeZone=${encodeURIComponent(userTimeZone)}&_t=${Date.now()}`;
+        const res = await fetch(url);
         const data = await res.json();
 
         if (data.success && data.availableSlots) {
@@ -1215,9 +1379,24 @@
             return;
           }
 
-          container.innerHTML = data.availableSlots.map((slot, idx) => {
-            return `<div class="slot-pill" data-slot="${slot}">${slot}</div>`;
-          }).join('');
+          if (data.slotDetails && data.slotDetails.length > 0) {
+            container.innerHTML = data.slotDetails.map((slotObj) => {
+              return `
+                <div class="slot-pill" data-slot="${slotObj.time}" data-host-time="${slotObj.hostTime || ''}">
+                  <span class="slot-pill-time">${slotObj.time}</span>
+                  <span class="slot-pill-host">🇵🇭 ${slotObj.hostTime || ''} Manila</span>
+                </div>
+              `;
+            }).join('');
+          } else {
+            container.innerHTML = data.availableSlots.map((slot) => {
+              return `
+                <div class="slot-pill" data-slot="${slot}">
+                  <span class="slot-pill-time">${slot}</span>
+                </div>
+              `;
+            }).join('');
+          }
 
           // Auto-select first slot
           const pills = container.querySelectorAll('.slot-pill');
@@ -1265,6 +1444,7 @@
         date: selectedDate,
         time: selectedTime,
         duration: selectedDuration,
+        clientTimeZone: userTimeZone,
         name: document.getElementById('b-name').value.trim(),
         email: document.getElementById('b-email').value.trim(),
         company: document.getElementById('b-company').value.trim(),
@@ -1285,8 +1465,10 @@
           document.getElementById('booking-flow-area').style.display = 'none';
           document.getElementById('booking-confirm-area').style.display = 'block';
 
+          const clientTzShort = b.clientTimeZone ? (b.clientTimeZone.split('/')[1] || b.clientTimeZone) : 'Oslo';
           document.getElementById('res-title').textContent = b.title;
-          document.getElementById('res-datetime').textContent = `${b.date} kl. ${b.time}`;
+          document.getElementById('res-datetime').textContent = `${b.date} kl. ${b.time} (${clientTzShort})`;
+          document.getElementById('res-host-datetime').textContent = `${b.hostDate || b.date} kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})`;
           document.getElementById('res-duration').textContent = `${b.duration} minutter`;
           document.getElementById('res-attendee').textContent = `${b.name} (${b.email})`;
           
@@ -1318,10 +1500,15 @@
       // Direct .ics download link
       document.getElementById('btn-dl-ics').href = `/api/bookings/${b.id}/ics`;
 
-      // Date parsing for Google & Outlook
-      const [year, month, day] = b.date.split('-').map(Number);
-      const [hour, min] = b.time.split(':').map(Number);
-      const startDate = new Date(year, month - 1, day, hour, min);
+      // Date parsing for Google & Outlook using pure UTC timestamps
+      let startDate = null;
+      if (b.utcIso) {
+        startDate = new Date(b.utcIso);
+      } else {
+        const [year, month, day] = b.date.split('-').map(Number);
+        const [hour, min] = b.time.split(':').map(Number);
+        startDate = new Date(Date.UTC(year, month - 1, day, hour, min));
+      }
       const endDate = new Date(startDate.getTime() + (b.duration || 30) * 60000);
 
       function formatGCal(d) {
@@ -1330,13 +1517,13 @@
 
       const gcalStart = formatGCal(startDate);
       const gcalEnd = formatGCal(endDate);
-      const detailsText = `Videomøte med AIAPPSY: ${b.meetUrl}\n\nDeltaker: ${b.name} (${b.email})\nSelskap: ${b.company || 'Ikke oppgitt'}\nNotater: ${b.notes || 'Ingen'}`;
+      const detailsText = `Videomøte med AIAPPSY: ${b.meetUrl}\n\nDin tid: ${b.date} kl. ${b.time} (${b.clientTimeZone || userTimeZone})\nVertens tid: kl. ${b.hostTime || ''} (${b.hostTimeZone || 'Asia/Manila'})\n\nDeltaker: ${b.name} (${b.email})\nSelskap: ${b.company || 'Ikke oppgitt'}\nNotater: ${b.notes || 'Ingen'}`;
 
-      // 1. Google Calendar link
-      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(b.title + ' - AIAPPSY')}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(detailsText)}&location=${encodeURIComponent(b.meetUrl)}&ctz=Europe/Oslo`;
+      // 1. Google Calendar link (UTC Z)
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(b.title + ' - AIAPPSY')}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(detailsText)}&location=${encodeURIComponent(b.meetUrl)}`;
       document.getElementById('btn-add-gcal').href = gcalUrl;
 
-      // 2. Outlook Web Calendar link
+      // 2. Outlook Web Calendar link (UTC ISO)
       const outlookStart = startDate.toISOString();
       const outlookEnd = endDate.toISOString();
       const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(b.title + ' - AIAPPSY')}&startdt=${encodeURIComponent(outlookStart)}&enddt=${encodeURIComponent(outlookEnd)}&body=${encodeURIComponent(detailsText)}&location=${encodeURIComponent(b.meetUrl)}`;
