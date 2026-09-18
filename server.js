@@ -1450,7 +1450,8 @@ const DEFAULT_PAYMENTS_CONFIG = {
     },
     hubzoo: {
       name: 'Hubzoo',
-      enabled: true,
+      enabled: false,
+      internalOnly: true,
       price: 499,
       currency: 'NOK',
       billingType: 'monthly',

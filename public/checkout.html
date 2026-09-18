@@ -698,6 +698,35 @@
         };
       }
 
+      // Block checkout for internal-only applications
+      if (appKey === 'hubzoo' || (currentApp && (currentApp.internalOnly || currentApp.enabled === false))) {
+        const checkoutGrid = document.querySelector('.checkout-grid');
+        if (checkoutGrid) {
+          checkoutGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 3rem 2rem; text-align: center; max-width: 600px; margin: 2rem auto; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+              <h2 style="color: #fff; font-size: 1.6rem; margin-bottom: 0.75rem;">${lang === 'no' ? 'Internt AIAPPSY-verktøy' : 'AIAPPSY Internal Tool'}</h2>
+              <p style="color: #94a3b8; font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;">
+                ${lang === 'no' 
+                  ? 'Hubzoo er forbeholdt intern bruk hos AIAPPSY (salg, CRM og operasjoner) og er ikke tilgjengelig for eksternt abonnement eller kjøp.' 
+                  : 'Hubzoo is strictly an internal CRM and sales engine for AIAPPSY operations and is not available for public licensing or purchase.'}
+              </p>
+              <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/admin" class="btn-primary-hero" style="font-size: 0.95rem; padding: 0.75rem 1.75rem;">
+                  <span>🔑</span>
+                  <span>${lang === 'no' ? 'Gå til Admin CRM' : 'Go to Admin CRM'}</span>
+                </a>
+                <a href="/" class="btn-secondary-hero" style="font-size: 0.95rem; padding: 0.75rem 1.75rem;">
+                  <span>←</span>
+                  <span>${lang === 'no' ? 'Tilbake til AIAPPSY' : 'Back to AIAPPSY'}</span>
+                </a>
+              </div>
+            </div>
+          `;
+        }
+        return;
+      }
+
       // Update UI with Language & Currency
       function renderFullUI() {
         const t = I18N[lang] || I18N.no;

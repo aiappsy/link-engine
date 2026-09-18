@@ -228,23 +228,20 @@
       }
     }
 
-    // Hubzoo
-    if (q.includes("hubzoo") || q.includes("crm") || q.includes("salg") || q.includes("sales") || q.includes("håndverk") || q.includes("fiken") || q.includes("tripletex") || q.includes("quote")) {
-      const a = K.apps.hubzoo;
+    // Hubzoo (Internal CRM)
+    if (q.includes("hubzoo") || q.includes("crm") || q.includes("salg") || q.includes("sales") || q.includes("håndverk") || q.includes("quote")) {
       if (isNo) {
-        return pickRandom(openers) + "**" + a.name + "** er AIAPPSYs spesialiserte SaaS-løsning for håndverkere og servicenæringen!\n\n" +
-          "🎯 **Målgruppe**: " + a.market + "\n\n" +
-          "💰 **Verdi for bedriften**: " + a.businessValue + "\n\n" +
-          "⚡ **Kjernefordeler**: " + a.keyFeatures + "\n\n" +
-          "💡 *Hvorfor bruke Hubzoo*: " + a.encouragement + "\n\n" +
-          "Vil du teste tilbudsgeneratoren eller se våre SaaS-abonnementer?";
+        return pickRandom(openers) + "**Hubzoo** er AIAPPSYs eget interne CRM- og salgssystem.\n\n" +
+          "🔒 **Status**: Internt verktøy forbeholdt AIAPPSY-drift.\n\n" +
+          "⚡ **Hva Hubzoo gjør**: Systemet fanger innkommende henvendelser, genererer tilbud på 60 sekunder direkte fra mobilen, og følger opp egne kundeprosjekter med direkte regnskapssynk mot Fiken og Tripletex.\n\n" +
+          "💡 **For eksterne kunder**: Ønsker din bedrift et tilsvarende tilpasset CRM eller salgsassistent? Vi bygger skreddersydde løsninger via **Skreddersydd AI-utvikling**, eller du kan utforske våre 6 operative SaaS-plattformer (Upworkz, SubSentry, MaxMotion AI, MediaBunny, AppSave, Manus AI).\n\n" +
+          "Vil du at vi skal diskutere en skreddersydd løsning eller ta en kikk på våre 6 apper?";
       } else {
-        return pickRandom(openers) + "**" + a.name + "** is AIAPPSY's proprietary SaaS platform for service businesses and contractors!\n\n" +
-          "🎯 **Target Audience**: " + a.market + "\n\n" +
-          "💰 **Business Impact**: " + a.businessValue + "\n\n" +
-          "⚡ **Core Highlights**: " + a.keyFeatures + "\n\n" +
-          "💡 *Why contractors love it*: " + a.encouragement + "\n\n" +
-          "Would you like to test the live quote generator or view the SaaS subscription plans?";
+        return pickRandom(openers) + "**Hubzoo** is AIAPPSY's proprietary internal CRM and deal-closing platform.\n\n" +
+          "🔒 **Status**: Strictly an internal tool powering AIAPPSY's sales and client operations.\n\n" +
+          "⚡ **Internal Capabilities**: Auto-captures inbound leads, generates mobile client estimates in 60 seconds, and orchestrates follow-ups with accounting integrations.\n\n" +
+          "💡 **For External Clients**: If your company needs a customized CRM or automated quotation agent, we engineer bespoke solutions via **Custom AI Development**, or you can explore our 6 production SaaS platforms (Upworkz, SubSentry, MaxMotion AI, MediaBunny, AppSave, Manus AI).\n\n" +
+          "Would you like to explore custom engineering or view our 6 public platforms?";
       }
     }
 
@@ -459,7 +456,7 @@
       <div class="advisor-chips-container">
         <button class="advisor-chip-btn" data-query="${isNo ? 'Må jeg kunne koding eller teknikk?' : 'Do I need technical skills?'}">${isNo ? '🛠️ Null teknisk krav' : '🛠️ Zero Tech Skills Needed'}</button>
         <button class="advisor-chip-btn" data-query="${isNo ? 'Hva koster lisensene og hva følger med?' : 'How does licensing pricing work?'}">${isNo ? '💰 Priser & Hva som inngår' : '💰 Licensing Pricing'}</button>
-        <button class="advisor-chip-btn" data-query="${isNo ? 'Fortell om Hubzoo for håndverkere' : 'Tell me about Hubzoo'}">${isNo ? '⚡ Hubzoo' : '⚡ Hubzoo Opportunity'}</button>
+        <button class="advisor-chip-btn" data-query="${isNo ? 'Fortell om skreddersydd AI-utvikling' : 'Tell me about custom AI engineering'}">${isNo ? '🛠️ Skreddersøm' : '🛠️ Custom AI Dev'}</button>
         <button class="advisor-chip-btn" data-query="${isNo ? 'Hvordan fungerer Leie-til-eie?' : 'How does Lease-to-Own work?'}">${isNo ? '🔑 Leie-til-eie' : '🔑 Lease-to-Own'}</button>
         <button class="advisor-chip-btn" data-query="${isNo ? 'Hvor mye kan jeg tjene?' : 'How much MRR can I generate?'}">${isNo ? '📈 Inntektskalkyle' : '📈 Revenue Math'}</button>
       </div>
