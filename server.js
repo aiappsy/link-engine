@@ -64,10 +64,10 @@ const DEFAULT_SETTINGS = {
   region: 'us-west1',
   cloudRunUrl: 'https://aiappsy-link-engine-910579541086.us-west1.run.app',
   domains: [
-    parseDomainEntry('aiappsy.com', 'aiappsy.com (Hoveddomene – 11 tegn)', true, '', ''),
+    parseDomainEntry('aiappsy.com', 'aiappsy.com (AIAPPSY Hub – 11 tegn)', false, '', ''),
     parseDomainEntry('atlastravelclub.com', 'atlastravelclub.com (Atlas Travel Club – 19 tegn)', false, 'https://atlaslaunch.ai.studio', ''),
     parseDomainEntry('vip.atlastravelclub.com', 'vip.atlastravelclub.com (VIP Subdomene – 23 tegn)', false, 'https://atlaslaunch.ai.studio', ''),
-    parseDomainEntry('go.aiappsy.no', 'go.aiappsy.no (Anbefalt subdomene – 13 tegn)', false, '', ''),
+    parseDomainEntry('go.aiappsy.no', 'go.aiappsy.no (Subdomene – 13 tegn)', false, '', ''),
     parseDomainEntry('link.aiappsy.no', 'link.aiappsy.no (Subdomene – 15 tegn)', false, '', ''),
     parseDomainEntry('aiappsy.link', 'aiappsy.link (Toppdomene – 12 tegn)', false, '', '')
   ]
@@ -83,8 +83,9 @@ function loadSettingsFromFile() {
       if (!data.activeDomain) {
         data.activeDomain = data.domains[0].domain;
       }
-      // Sikre at eksisterende domener har rootDestination og fallback404
+      // Sikre at eksisterende domener har likeverdig status, korrekt rootDestination og fallback404
       data.domains = data.domains.map(d => {
+        let label = (d.label || '').replace(/Hoveddomene/g, 'Portal');
         let rootDest = d.rootDestination;
         if (d.domain && d.domain.includes('atlastravelclub') && (!rootDest || rootDest === '')) {
           rootDest = 'https://atlaslaunch.ai.studio';
@@ -93,8 +94,8 @@ function loadSettingsFromFile() {
         if (d.domain && d.domain.includes('atlastravelclub') && (!fallback || fallback === '')) {
           fallback = 'https://atlaslaunch.ai.studio';
         }
-        const parsed = parseDomainEntry(d.domain, d.label, d.isDefault, rootDest || '', fallback || '');
-        return { ...parsed, ...d, rootDestination: rootDest || '', fallback404: fallback || '' };
+        const parsed = parseDomainEntry(d.domain, label, false, rootDest || '', fallback || '');
+        return { ...parsed, ...d, label: label || d.label, isDefault: false, rootDestination: rootDest || '', fallback404: fallback || '' };
       });
       return data;
     }

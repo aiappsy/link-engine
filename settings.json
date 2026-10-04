@@ -33,8 +33,8 @@
   "domains": [
     {
       "domain": "aiappsy.com",
-      "label": "aiappsy.com (Hoveddomene – 11 tegn)",
-      "isDefault": true,
+      "label": "aiappsy.com (AIAPPSY Hub – 11 tegn)",
+      "isDefault": false,
       "isSubdomain": false,
       "subdomain": "@",
       "parentDomain": "aiappsy.com",
@@ -52,7 +52,7 @@
     },
     {
       "domain": "atlastravelclub.com",
-      "label": "atlastravelclub.com (Atlas Travel Club – Hoveddomene)",
+      "label": "atlastravelclub.com (Atlas Travel Club – 19 tegn)",
       "isDefault": false,
       "isSubdomain": false,
       "subdomain": "@",

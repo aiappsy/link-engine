@@ -874,12 +874,10 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="display: flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 8px; padding: 3px 10px;">
-            <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Forvalgt domene for nye lenker:</span>
-            <select id="topbar-active-domain-select" class="form-select" style="padding: 2px 8px; font-size: 0.82rem; height: auto; background: transparent; border: none; color: #38bdf8; font-weight: 800; cursor: pointer; outline: none;">
-              <option value="atlastravelclub.com">atlastravelclub.com</option>
-              <option value="aiappsy.com">aiappsy.com</option>
-            </select>
+          <div id="topbar-active-domains-indicator" style="display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e;"></span>
+            <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Aktive Domener:</span>
+            <span id="topbar-domains-list" style="font-size: 0.82rem; color: #38bdf8; font-family: var(--font-mono); font-weight: 800;">aiappsy.com &bull; atlastravelclub.com</span>
           </div>
           <a href="/" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">
             <span>🌐</span> Forside ↗
@@ -1110,11 +1108,11 @@
       <div class="card" style="margin-bottom: 1.5rem;">
         <div class="card-header">
           <div class="card-title"><span>📋</span> Registrerte Domener & Subdomener</div>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">Alle domener under er 100% aktive parallelt</span>
+          <span style="font-size: 0.8rem; color: #34d399; font-weight: 700;">🟢 Alle domener er 100% likeverdige og fullt aktive samtidig</span>
         </div>
 
         <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.25); border-left: 4px solid #22c55e; padding: 12px 16px; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.86rem; color: #dcfce7; line-height: 1.5;">
-          🟢 <strong>Alle domener og subdomener er aktive samtidig:</strong> Både <code>aiappsy.com</code> og <code>atlastravelclub.com</code> (og alle subdomener du oppretter) kjører parallelt og tar imot trafikk i sanntid. Ingen domener slås av! «Forvalgt domene» bestemmer kun hvilket domene som forhåndsvelges i skjemaet når du oppretter en ny kortlenke.
+          🟢 <strong>Både aiappsy.com og atlastravelclub.com er 100% likeverdige og fullt operative:</strong> Begge domener (og eventuelle subdomener) kjører parallelt i sanntid. Ingen av domenene er prioritert eller overordnet det andre – all trafikk behandles helt likt og uavhengig basert på adressen brukeren besøker.
         </div>
 
         <div class="table-wrap">
@@ -1178,15 +1176,9 @@
             </div>
           </div>
 
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Egendefinert visningsnavn / Etikett (Valgfritt)</label>
-              <input type="text" id="domain-label-input" class="form-input" placeholder="f.eks. Atlas Travel Club Hovedportal" />
-            </div>
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px; padding-top: 1.5rem;">
-              <input type="checkbox" id="domain-set-default-check" style="width: 18px; height: 18px; accent-color: var(--primary);" />
-              <label for="domain-set-default-check" style="font-size: 0.88rem; color: #f8fafc; cursor: pointer;">Sett som standard domene for nye kortlenker</label>
-            </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Egendefinert visningsnavn / Etikett (Valgfritt)</label>
+            <input type="text" id="domain-label-input" class="form-input" placeholder="f.eks. Atlas Travel Club Hovedportal" />
           </div>
 
           <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
@@ -3175,16 +3167,6 @@
       });
     }
 
-    // Topbar Domain Switcher change
-    if (topbarActiveDomainSelect) {
-      topbarActiveDomainSelect.addEventListener('change', async () => {
-        const newDomain = topbarActiveDomainSelect.value;
-        if (newDomain) {
-          await setDefaultDomain(newDomain);
-        }
-      });
-    }
-
     async function fetchDomains() {
       try {
         const res = await fetch('/api/domains?_t=' + Date.now(), {
@@ -3195,30 +3177,26 @@
         const data = await res.json();
         if (data.success && data.domains) {
           allLoadedDomains = data.domains;
-          currentActiveDomain = data.activeDomain || (data.domains[0] ? data.domains[0].domain : 'aiappsy.com');
-          renderDomainsTable(data.domains, currentActiveDomain);
-          populateDomainSelects(data.domains, currentActiveDomain);
+          renderDomainsTable(data.domains);
+          populateDomainSelects(data.domains);
         }
       } catch (err) {
         console.error('Feil ved lasting av domener:', err);
       }
     }
 
-    function populateDomainSelects(domains, activeDomain) {
-      // Topbar select
-      if (topbarActiveDomainSelect) {
-        topbarActiveDomainSelect.innerHTML = domains.map(d => {
-          const isSelected = d.domain === activeDomain ? 'selected' : '';
-          return `<option value="${d.domain}" ${isSelected}>${d.domain}</option>`;
-        }).join('');
+    function populateDomainSelects(domains) {
+      const topbarDomainsList = document.getElementById('topbar-domains-list');
+      if (topbarDomainsList && domains) {
+        topbarDomainsList.innerHTML = domains.map(d => d.domain).join(' &bull; ');
       }
 
       // Link creation form select
       if (linkDomainSelect) {
         const prevVal = linkDomainSelect.value;
-        let html = '<option value="all">Alle domener (Global)</option>';
+        let html = '<option value="all">Alle domener (Global - virker på alle domener)</option>';
         domains.forEach(d => {
-          const isSel = (d.domain === activeDomain || d.domain === prevVal) ? 'selected' : '';
+          const isSel = (d.domain === prevVal) ? 'selected' : '';
           html += `<option value="${d.domain}" ${isSel}>${d.domain}</option>`;
         });
         linkDomainSelect.innerHTML = html;
@@ -3233,19 +3211,18 @@
       }
     }
 
-    function renderDomainsTable(domains, activeDomain) {
+    function renderDomainsTable(domains) {
       if (badgeDomainCount) badgeDomainCount.textContent = domains.length;
       if (domainsStatCount) domainsStatCount.textContent = `${domains.length} aktive`;
-      if (domainsStatActive) domainsStatActive.textContent = activeDomain;
+      if (domainsStatActive) domainsStatActive.textContent = '🟢 Alle domener likeverdige & aktive';
 
       if (!domainsTbody) return;
       if (domains.length === 0) {
-        domainsTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen domener registrert.</td></tr>';
+        domainsTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen domener registrert.</td></tr>';
         return;
       }
 
       domainsTbody.innerHTML = domains.map(d => {
-        const isCurrent = (d.domain === activeDomain || d.isDefault);
         let effectiveRoot = d.rootDestination;
         if (d.domain.includes('atlastravelclub') && (!effectiveRoot || effectiveRoot === '')) {
           effectiveRoot = 'https://atlaslaunch.ai.studio';
@@ -3270,7 +3247,6 @@
             <td>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-family: var(--font-mono); font-weight: 800; color: #fff; font-size: 0.88rem;">${d.domain}</span>
-                ${isCurrent ? '<span style="background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); font-size: 0.68rem; font-weight: 700; padding: 1px 6px; border-radius: 4px;">★ FORVALGT</span>' : ''}
               </div>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">${d.label || ''}</div>
             </td>
@@ -3283,7 +3259,6 @@
             <td>
               <div style="display: flex; align-items: center; gap: 6px;">
                 <button class="btn btn-secondary" onclick="editDomainPrompt('${d.domain}')" title="Rediger destinasjon og fallback" style="padding: 3px 8px; font-size: 0.75rem;">✏️ Rediger</button>
-                ${!isCurrent ? `<button class="btn btn-secondary" onclick="setDefaultDomain('${d.domain}')" title="Sett som forvalgt domene for nye kortlenker" style="padding: 3px 8px; font-size: 0.75rem;">⭐ Sett forvalg</button>` : ''}
                 <a href="https://${d.domain}" target="_blank" class="btn btn-secondary" title="Åpne domenet i ny fane" style="padding: 3px 6px; font-size: 0.75rem; text-decoration: none;">↗</a>
                 ${domains.length > 1 ? `<button class="btn btn-danger" onclick="deleteDomain('${d.domain}')" title="Slett domene" style="padding: 3px 8px; font-size: 0.75rem;">🗑️</button>` : ''}
               </div>
@@ -3326,7 +3301,7 @@
           label: (domainLabelInput.value || '').trim(),
           rootDestination: (domainRootDestInput.value || '').trim(),
           fallback404: (domain404DestInput.value || '').trim(),
-          setAsDefault: !!domainSetDefaultCheck.checked
+          setAsDefault: false
         };
 
         try {
