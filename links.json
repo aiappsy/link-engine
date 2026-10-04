@@ -1,27 +1,9 @@
 {
-  "apps": {
-    "url": "https://saasapps-ai-studio-910579541086.us-west1.run.app",
-    "createdAt": "2026-09-05T01:30:42.567Z",
-    "clicks": 1
-  },
-  "hubzoo": {
-    "url": "https://hubzoo.ai.studio",
-    "createdAt": "2026-09-06T02:09:26.990Z",
-    "clicks": 1
-  },
-  "maxmotion": {
-    "url": "https://maxmotion.ai.studio",
-    "createdAt": "2026-09-05T01:30:42.568Z",
-    "clicks": 0
-  },
-  "agentur": {
-    "url": "https://saasapps-ai-studio-910579541086.us-west1.run.app?ref=agenturer.no",
-    "createdAt": "2026-09-05T01:30:42.568Z",
-    "clicks": 0
-  },
-  "saasapps": {
-    "url": "https://saasapps-ai-studio-910579541086.us-west1.run.app",
-    "createdAt": "2026-09-05T01:32:36.206Z",
-    "clicks": 2
+  "atlas": {
+    "url": "https://atlaslaunch.ai.studio",
+    "domain": "all",
+    "clicks": 1,
+    "createdAt": "2026-10-04T05:20:00.000Z",
+    "updatedAt": "2026-10-04T05:20:00.000Z"
   }
 }

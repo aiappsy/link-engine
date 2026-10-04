@@ -30,7 +30,7 @@ try {
   console.log('[Firestore] Kunne ikke laste Firestore-bibliotek, kjører i lokal filmodus:', err.message);
 }
 
-function parseDomainEntry(domainStr, label = '', isDefault = false) {
+function parseDomainEntry(domainStr, label = '', isDefault = false, rootDestination = '', fallback404 = '') {
   const clean = domainStr.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/+$/, '');
   const parts = clean.split('.');
   const isSubdomain = parts.length >= 3;
@@ -44,10 +44,12 @@ function parseDomainEntry(domainStr, label = '', isDefault = false) {
   return {
     domain: clean,
     label: label ? label.trim() : defaultLabel,
-    isDefault,
+    isDefault: !!isDefault,
     isSubdomain,
     subdomain,
     parentDomain,
+    rootDestination: (rootDestination || '').trim(),
+    fallback404: (fallback404 || '').trim(),
     recordType,
     target,
     aRecords: isSubdomain ? [] : ['216.239.32.21', '216.239.34.21', '216.239.36.21', '216.239.38.21'],
@@ -58,10 +60,12 @@ function parseDomainEntry(domainStr, label = '', isDefault = false) {
 const DEFAULT_SETTINGS = {
   activeDomain: process.env.CUSTOM_DOMAIN || process.env.SHORT_DOMAIN || 'aiappsy.com',
   domains: [
-    parseDomainEntry('aiappsy.com', 'aiappsy.com (Hoveddomene – 11 tegn)', true),
-    parseDomainEntry('go.aiappsy.no', 'go.aiappsy.no (Anbefalt subdomene – 13 tegn)', false),
-    parseDomainEntry('link.aiappsy.no', 'link.aiappsy.no (Subdomene – 15 tegn)', false),
-    parseDomainEntry('aiappsy.link', 'aiappsy.link (Toppdomene – 12 tegn)', false)
+    parseDomainEntry('aiappsy.com', 'aiappsy.com (Hoveddomene – 11 tegn)', true, '', ''),
+    parseDomainEntry('atlastravelclub.com', 'atlastravelclub.com (Atlas Travel Club – 19 tegn)', false, 'https://atlaslaunch.ai.studio', ''),
+    parseDomainEntry('vip.atlastravelclub.com', 'vip.atlastravelclub.com (VIP Subdomene – 23 tegn)', false, 'https://atlaslaunch.ai.studio', ''),
+    parseDomainEntry('go.aiappsy.no', 'go.aiappsy.no (Anbefalt subdomene – 13 tegn)', false, '', ''),
+    parseDomainEntry('link.aiappsy.no', 'link.aiappsy.no (Subdomene – 15 tegn)', false, '', ''),
+    parseDomainEntry('aiappsy.link', 'aiappsy.link (Toppdomene – 12 tegn)', false, '', '')
   ]
 };
 
@@ -75,6 +79,11 @@ function loadSettingsFromFile() {
       if (!data.activeDomain) {
         data.activeDomain = data.domains[0].domain;
       }
+      // Sikre at eksisterende domener har rootDestination og fallback404
+      data.domains = data.domains.map(d => {
+        const parsed = parseDomainEntry(d.domain, d.label, d.isDefault, d.rootDestination || '', d.fallback404 || '');
+        return { ...parsed, ...d };
+      });
       return data;
     }
   } catch (err) {
@@ -225,6 +234,34 @@ app.get(['/admin', '/admin/', '/admin/index.html', '/admin.html'], (req, res) =>
     return res.sendFile(rootAdminFile);
   }
   res.sendFile(path.join(PUBLIC_DIR, 'admin', 'index.html'));
+});
+
+// ============================================================================
+// Multi-Domain & Subdomain Host Routing Middleware
+// Ruter rotforespørsler (/) til konfigurert rootDestination (f.eks. atlaslaunch.ai.studio)
+// ============================================================================
+app.use((req, res, next) => {
+  const rawHost = (req.headers['x-forwarded-host'] || req.get('host') || '').toLowerCase();
+  const host = rawHost.split(':')[0];
+
+  // Ignorer localhost, lokale IP-er eller direkte Cloud Run URL
+  if (!host || host === 'localhost' || host === '127.0.0.1' || host.includes('.run.app')) {
+    return next();
+  }
+
+  const settings = typeof loadSettings === 'function' ? loadSettings() : DEFAULT_SETTINGS;
+  const domainConfig = (settings.domains || []).find(d => d.domain.toLowerCase() === host);
+
+  if (domainConfig) {
+    req.domainConfig = domainConfig;
+    // Dersom noen besøker rotkatalogen '/' eller '/index.html' på et domene med en spesifisert rootDestination
+    if ((req.path === '/' || req.path === '/index.html') && domainConfig.rootDestination) {
+      console.log(`[Host Routing] Rotforespørsel for ${host} -> 302 omdirigering til ${domainConfig.rootDestination}`);
+      return res.redirect(302, domainConfig.rootDestination);
+    }
+  }
+
+  next();
 });
 
 app.use(express.static(PUBLIC_DIR, {
@@ -3413,8 +3450,8 @@ function handleCreateOrShortenLink(req, res) {
   saveLinks(links, cleanSlug);
 
   const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
-  const host = req.get('host') || selectedDomain || 'aiappsy.com';
-  const shortUrl = `${protocol}://${host}/${cleanSlug}`;
+  const shortHost = (selectedDomain && selectedDomain !== 'all') ? selectedDomain : (req.get('host') || 'aiappsy.com');
+  const shortUrl = `${protocol}://${shortHost}/${cleanSlug}`;
 
   return res.json({
     success: true,
@@ -3494,24 +3531,26 @@ app.get('/api/domains', (req, res) => {
   });
 });
 
-// API: Legg til domene
+// API: Legg til eller oppdater domene
 app.post('/api/domains', (req, res) => {
-  const { domain, label, setAsDefault } = req.body;
+  const { domain, label, setAsDefault, rootDestination, fallback404 } = req.body;
   if (!domain || typeof domain !== 'string') {
     return res.status(400).json({ success: false, error: 'Vennligst oppgi et gyldig domenenavn.' });
   }
 
   const cleanDomain = domain.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/+$/, '');
   if (!cleanDomain || cleanDomain.length < 3 || !cleanDomain.includes('.')) {
-    return res.status(400).json({ success: false, error: 'Ugyldig domeneformat. Eksempel: go.aiappsy.no eller mittdomene.no' });
+    return res.status(400).json({ success: false, error: 'Ugyldig domeneformat. Eksempel: atlastravelclub.com eller vip.atlastravelclub.com' });
   }
 
   const settings = loadSettings();
   const existing = settings.domains.find(d => d.domain === cleanDomain);
-  const entry = parseDomainEntry(cleanDomain, label, !!setAsDefault);
+  const entry = parseDomainEntry(cleanDomain, label, !!setAsDefault, rootDestination, fallback404);
 
   if (existing) {
-    existing.label = entry.label;
+    if (label !== undefined && label !== null) existing.label = label.trim() || entry.label;
+    if (rootDestination !== undefined) existing.rootDestination = (rootDestination || '').trim();
+    if (fallback404 !== undefined) existing.fallback404 = (fallback404 || '').trim();
     if (setAsDefault) {
       settings.domains.forEach(d => d.isDefault = false);
       existing.isDefault = true;
@@ -3528,8 +3567,38 @@ app.post('/api/domains', (req, res) => {
   saveSettings(settings);
   res.json({
     success: true,
-    message: `Domenet ${cleanDomain} er lagret og klart til bruk!`,
-    domain: entry,
+    message: `Domenet ${cleanDomain} er lagret og konfigurert!`,
+    domain: existing || entry,
+    activeDomain: settings.activeDomain,
+    domains: settings.domains
+  });
+});
+
+// API: Oppdater eksisterende domeneinnstillinger
+app.put('/api/domains/:domain', (req, res) => {
+  const targetDomain = (req.params.domain || '').trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  const { label, rootDestination, fallback404, isDefault } = req.body;
+
+  const settings = loadSettings();
+  const match = settings.domains.find(d => d.domain.toLowerCase() === targetDomain);
+  if (!match) {
+    return res.status(404).json({ success: false, error: `Domenet ${targetDomain} ble ikke funnet.` });
+  }
+
+  if (label !== undefined && label !== null) match.label = label.trim();
+  if (rootDestination !== undefined) match.rootDestination = (rootDestination || '').trim();
+  if (fallback404 !== undefined) match.fallback404 = (fallback404 || '').trim();
+  if (isDefault) {
+    settings.domains.forEach(d => d.isDefault = false);
+    match.isDefault = true;
+    settings.activeDomain = targetDomain;
+  }
+
+  saveSettings(settings);
+  res.json({
+    success: true,
+    message: `Domenet ${targetDomain} ble oppdatert!`,
+    domain: match,
     activeDomain: settings.activeDomain,
     domains: settings.domains
   });
@@ -4299,7 +4368,7 @@ Vær proaktiv, hjelpsom, presis og profesjonell. Gi konkrete svar, anbefalinger 
 });
 
 // ============================================================================
-// 302 Redirection Engine for short links
+// 302 Redirection Engine for short links (Multi-Domain Aware)
 app.get('/:slug', (req, res, next) => {
   let rawSlug = (req.params.slug || '').trim().replace(/^\/+|\/+$/g, '');
   try {
@@ -4324,35 +4393,44 @@ app.get('/:slug', (req, res, next) => {
     return next();
   }
 
+  const rawHost = (req.headers['x-forwarded-host'] || req.get('host') || '').toLowerCase().split(':')[0];
+  const settings = typeof loadSettings === 'function' ? loadSettings() : DEFAULT_SETTINGS;
+  const domainConfig = (settings.domains || []).find(d => d.domain.toLowerCase() === rawHost);
+
   const links = loadLinks();
   const item = links[slug];
 
   if (item && item.url) {
-    // Inkrementer klikkteller
-    item.clicks = (item.clicks || 0) + 1;
-    item.lastClickedAt = new Date().toISOString();
-    saveLinks(links, slug);
+    // Verifiser om lenken tilhører gjeldende domene, eller er global
+    const isDomainMatch = !item.domain || item.domain === 'all' || item.domain === rawHost || !rawHost || rawHost.includes('.run.app') || rawHost === 'localhost' || rawHost === '127.0.0.1';
 
-    // Videresend query parameters dersom de finnes i forespørselen (f.eks. ?ref=e-post)
-    let targetUrl = item.url;
-    const qIndex = req.originalUrl.indexOf('?');
-    if (qIndex !== -1) {
-      const qs = req.originalUrl.substring(qIndex + 1);
-      if (qs) {
-        targetUrl += (targetUrl.includes('?') ? '&' : '?') + qs;
+    if (isDomainMatch) {
+      // Inkrementer klikkteller
+      item.clicks = (item.clicks || 0) + 1;
+      item.lastClickedAt = new Date().toISOString();
+      saveLinks(links, slug);
+
+      // Videresend query parameters dersom de finnes i forespørselen (f.eks. ?ref=e-post)
+      let targetUrl = item.url;
+      const qIndex = req.originalUrl.indexOf('?');
+      if (qIndex !== -1) {
+        const qs = req.originalUrl.substring(qIndex + 1);
+        if (qs) {
+          targetUrl += (targetUrl.includes('?') ? '&' : '?') + qs;
+        }
       }
-    }
 
-    console.log(`[302 Redirect Engine] /${slug} -> ${targetUrl} (Total klikk: ${item.clicks})`);
+      const brandName = domainConfig ? domainConfig.domain : 'AIAppsy Link Engine';
+      console.log(`[302 Redirect Engine] [${rawHost || 'default'}] /${slug} -> ${targetUrl} (Total klikk: ${item.clicks})`);
 
-    // Dual redirection: Både HTTP 302 Location-header og HTML Meta-Refresh / JS location.replace
-    res.status(302);
-    res.set('Location', targetUrl);
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.set('Pragma', 'no-cache');
-    res.set('Expires', '0');
+      // Dual redirection: Både HTTP 302 Location-header og HTML Meta-Refresh / JS location.replace
+      res.status(302);
+      res.set('Location', targetUrl);
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
 
-    return res.send(`<!DOCTYPE html>
+      return res.send(`<!DOCTYPE html>
 <html lang="no">
 <head>
   <meta charset="utf-8">
@@ -4362,23 +4440,37 @@ app.get('/:slug', (req, res, next) => {
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px;">
   <div style="background: #131b2e; border: 1px solid #1e293b; border-radius: 12px; padding: 32px; max-width: 480px; width: 100%; text-align: center;">
-    <div style="font-size: 20px; font-weight: 800; color: #38bdf8; margin-bottom: 12px;">⚡ AIAppsy Link Engine</div>
+    <div style="font-size: 20px; font-weight: 800; color: #38bdf8; margin-bottom: 12px;">⚡ ${brandName}</div>
     <div style="font-size: 15px; color: #94a3b8; margin-bottom: 16px;">Omdirigerer deg automatisk til:</div>
     <div style="font-family: monospace; background: #0f172a; border: 1px solid #334155; padding: 10px 14px; border-radius: 6px; color: #38bdf8; word-break: break-all; margin-bottom: 20px; font-size: 13px;">${encodeURI(targetUrl)}</div>
     <a href="${encodeURI(targetUrl)}" style="display: inline-block; background: #0284c7; color: #ffffff; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 6px; font-size: 14px;">Klikk her om du ikke sendes videre</a>
   </div>
 </body>
 </html>`);
+    }
   }
 
-  // 404 Not Found layout hvis slug ikke finnes
+  // Dersom kortlenken ikke finnes for dette domenet, sjekk om domenet har en fallback eller rootDestination
+  if (domainConfig) {
+    if (domainConfig.fallback404) {
+      console.log(`[Host Routing] Udefinert lenke /${slug} på ${rawHost} -> 302 fallback404 ${domainConfig.fallback404}`);
+      return res.redirect(302, domainConfig.fallback404);
+    }
+    if (domainConfig.rootDestination) {
+      console.log(`[Host Routing] Udefinert lenke /${slug} på ${rawHost} -> 302 rootDestination ${domainConfig.rootDestination}`);
+      return res.redirect(302, domainConfig.rootDestination);
+    }
+  }
+
+  // 404 Not Found layout hvis slug ikke finnes og ingen fallback er satt
+  const displayBrand = domainConfig ? domainConfig.domain : 'AIAppsy Link Engine';
   res.status(404).send(`
     <!DOCTYPE html>
     <html lang="no">
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>404 - Kortlenke ikke funnet | AIAppsy</title>
+      <title>404 - Kortlenke ikke funnet | ${displayBrand}</title>
       <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
         .card { background: #131b2e; border: 1px solid #1e293b; border-radius: 12px; padding: 40px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
@@ -4392,11 +4484,11 @@ app.get('/:slug', (req, res, next) => {
     </head>
     <body>
       <div class="card">
-        <div class="logo">⚡ AIAppsy Link Engine</div>
+        <div class="logo">⚡ ${displayBrand}</div>
         <div class="slug-box">/${slug}</div>
         <h1>Kortlenken finnes ikke</h1>
         <p>Denne omdirigeringen er enten utløpt, slettet eller ikke opprettet ennå.</p>
-        <a href="/" class="btn">Gå til Kontrollpanelet</a>
+        <a href="/" class="btn">Gå til Forsiden</a>
       </div>
     </body>
     </html>

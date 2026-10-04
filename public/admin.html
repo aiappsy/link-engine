@@ -794,6 +794,11 @@
             <span class="tab-label">Kortlenker</span>
             <span class="tab-badge" id="badge-link-count">0</span>
           </button>
+          <button class="nav-tab" data-tab="domains" data-title="Domener, Subdomener & DNS">
+            <span class="tab-icon">🌐</span>
+            <span class="tab-label">Domener & DNS</span>
+            <span class="tab-badge" id="badge-domain-count">0</span>
+          </button>
           <button class="nav-tab" data-tab="campaigns" data-title="Kampanjer & Pop-ups">
             <span class="tab-icon">🎯</span>
             <span class="tab-label">Kampanjer & Pop-ups</span>
@@ -869,6 +874,13 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 8px; padding: 3px 10px;">
+            <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Aktivt Domene:</span>
+            <select id="topbar-active-domain-select" class="form-select" style="padding: 2px 8px; font-size: 0.82rem; height: auto; background: transparent; border: none; color: #38bdf8; font-weight: 800; cursor: pointer; outline: none;">
+              <option value="aiappsy.com">aiappsy.com</option>
+              <option value="atlastravelclub.com">atlastravelclub.com</option>
+            </select>
+          </div>
           <a href="/" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">
             <span>🌐</span> Forside ↗
           </a>
@@ -993,15 +1005,26 @@
               <input type="url" id="link-target-url" class="form-input" placeholder="https://dinside.ai.studio" required />
             </div>
             <div class="form-group">
+              <label class="form-label">Tilhørende Domene</label>
+              <select id="link-domain-select" class="form-select">
+                <option value="all">Alle domener (Global)</option>
+                <option value="aiappsy.com" selected>aiappsy.com</option>
+                <option value="atlastravelclub.com">atlastravelclub.com</option>
+                <option value="vip.atlastravelclub.com">vip.atlastravelclub.com</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
               <label class="form-label">Kortnavn / Slug (Valgfritt)</label>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="color: var(--text-muted); font-family: var(--font-mono); font-weight: 700;">/</span>
                 <input type="text" id="link-custom-slug" class="form-input" placeholder="f.eks. atlas, kampanje (genereres om tom)" />
               </div>
             </div>
-          </div>
-          <div style="display: flex; justify-content: flex-end;">
-            <button type="submit" id="btn-submit-link" class="btn btn-primary"><span>⚡</span> Opprett Kortlenke</button>
+            <div style="display: flex; align-items: flex-end; justify-content: flex-end;">
+              <button type="submit" id="btn-submit-link" class="btn btn-primary" style="height: 42px; width: 100%;"><span>⚡</span> Opprett Kortlenke</button>
+            </div>
           </div>
         </form>
 
@@ -1026,16 +1049,216 @@
           <table>
             <thead>
               <tr>
-                <th style="width: 180px;">Kortlenke</th>
+                <th style="width: 220px;">Kortlenke</th>
+                <th style="width: 150px;">Domene</th>
                 <th>Mål-adresse</th>
-                <th style="width: 120px;">Klikk</th>
+                <th style="width: 90px;">Klikk</th>
                 <th style="width: 140px;">Handling</th>
               </tr>
             </thead>
             <tbody id="links-tbody">
-              <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Laster inn kortlenker...</td></tr>
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Laster inn kortlenker...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB: DOMENER, SUBDOMENER & DNS-HUB -->
+    <!-- ================================================================= -->
+    <div class="tab-pane" id="pane-domains">
+      <!-- Hero / Header Card -->
+      <div class="card" style="border-left: 4px solid #38bdf8;">
+        <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 1.3rem;">🌐</span>
+              <h2 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin: 0;">Domener, Subdomener & DNS-Hub</h2>
+              <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 700;">Multi-Domain Engine</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0; max-width: 750px;">
+              Administrer både <strong>aiappsy.com</strong>, <strong>atlastravelclub.com</strong> og ubegrenset antall subdomener (som <code>vip.atlastravelclub.com</code>, <code>go.atlastravelclub.com</code>). 
+              Når Wildcard DNS er satt opp i Namecheap én gang, flyttes all ruting og administrasjon hit for godt!
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-refresh-domains" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+              <span>🔄</span> Oppdater Domener
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Info Banner -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Aktivt Hoveddomene</div>
+            <div id="domains-stat-active" style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; font-family: var(--font-mono); margin-top: 4px;">aiappsy.com</div>
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Tilkoblede Domener</div>
+            <div id="domains-stat-count" style="font-size: 1.1rem; font-weight: 800; color: #34d399; margin-top: 4px;">Laster...</div>
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Google Cloud Run Klynge</div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: #f8fafc; margin-top: 4px;">us-west1 (Serverless)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Management: Table -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div class="card-title"><span>📋</span> Registrerte Domener & Subdomener</div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Rediger rot-omdirigering eller sett som standard</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 220px;">Domene / Vert</th>
+                <th style="width: 140px;">Type</th>
+                <th>Hoveddestinasjon (Root URL)</th>
+                <th style="width: 140px;">DNS Type</th>
+                <th style="width: 180px;">Handling</th>
+              </tr>
+            </thead>
+            <tbody id="domains-tbody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Laster inn domener...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add Domain / Subdomain Card -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div class="card-title"><span>➕</span> Legg til nytt domene eller subdomene</div>
+          <span style="font-size: 0.82rem; color: var(--text-muted);">Opprett toppdomene eller subdomene med egendefinert destinasjon</span>
+        </div>
+        <form id="domain-create-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Domenetype</label>
+              <select id="domain-type-select" class="form-select">
+                <option value="apex">Toppdomene / Apex (f.eks. atlastravelclub.com)</option>
+                <option value="subdomain">Subdomene (f.eks. vip.atlastravelclub.com)</option>
+              </select>
+            </div>
+            <div class="form-group" id="group-apex-name">
+              <label class="form-label">Domenenavn</label>
+              <input type="text" id="domain-name-input" class="form-input" placeholder="f.eks. atlastravelclub.com eller mittdomene.no" />
+            </div>
+            <div class="form-group" id="group-subdomain-wrap" style="display: none;">
+              <label class="form-label">Subdomene Prefiks + Foreldredomene</label>
+              <div style="display: grid; grid-template-columns: 1fr auto 1.5fr; gap: 8px; align-items: center;">
+                <input type="text" id="subdomain-prefix-input" class="form-input" placeholder="vip, go, app, booking" />
+                <span style="color: var(--text-muted); font-weight: 700;">.</span>
+                <select id="subdomain-parent-select" class="form-select"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Hoveddestinasjon (Når noen åpner domenet direkte / Root URL)</label>
+              <input type="url" id="domain-root-dest-input" class="form-input" placeholder="f.eks. https://atlaslaunch.ai.studio (La stå tom for forside)" />
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Besøkende på roten (/) sendes automatisk hit via HTTP 302.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">404 Fallback URL (Valgfritt)</label>
+              <input type="url" id="domain-404-dest-input" class="form-input" placeholder="f.eks. https://atlaslaunch.ai.studio/notfound (La stå tom for standard 404)" />
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Hvis en kortlenke ikke eksisterer på dette domenet, sendes brukeren hit.</span>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Egendefinert visningsnavn / Etikett (Valgfritt)</label>
+              <input type="text" id="domain-label-input" class="form-input" placeholder="f.eks. Atlas Travel Club Hovedportal" />
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; padding-top: 1.5rem;">
+              <input type="checkbox" id="domain-set-default-check" style="width: 18px; height: 18px; accent-color: var(--primary);" />
+              <label for="domain-set-default-check" style="font-size: 0.88rem; color: #f8fafc; cursor: pointer;">Sett som standard domene for nye kortlenker</label>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+            <button type="submit" id="btn-submit-domain" class="btn btn-primary">
+              <span>🌐</span> Lagre & Aktiver Domene
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- One-Time Namecheap Wildcard Guide -->
+      <div class="card" style="border: 1px solid rgba(56, 189, 248, 0.3); background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.05), #111827);">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🛡️</span> Engangs-oppsett i Namecheap (Flytt alt hit permanent)
+          </div>
+          <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 0.8rem;">
+            Gjøres kun 1 gang per domene
+          </span>
+        </div>
+        <div style="padding: 0.5rem 0; font-size: 0.9rem; line-height: 1.6; color: #cbd5e1;">
+          <p style="margin-bottom: 1rem;">
+            For at du skal kunne opprette nye subdomener (som <code>vip</code>, <code>go</code>, <code>booking</code>, <code>app</code>) direkte i dette kontrollpanelet <strong>uten å måtte logge inn på Namecheap noen gang igjen</strong>, legger du inn disse postene under <em>Advanced DNS</em> i Namecheap for <strong>atlastravelclub.com</strong>:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 1.25rem;">
+            <!-- Box 1: Wildcard CNAME -->
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 800; color: #38bdf8; font-size: 0.85rem;">1. ALLE SUBDOMENER (WILDCARD)</span>
+                <span style="background: #0369a1; color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">CNAME Record</span>
+              </div>
+              <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+                Dette gjør at ethvert subdomene du oppretter her rutes automatisk:
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #090e1a; padding: 8px 12px; border-radius: 6px; border: 1px solid #1e293b; margin-bottom: 6px;">
+                <span style="font-size: 0.8rem; color: #94a3b8;">Host: <strong style="color: #fff; font-family: var(--font-mono);">*</strong></span>
+                <button type="button" class="btn btn-secondary" onclick="copyText('*')" style="padding: 2px 8px; font-size: 0.72rem;">Kopier Host</button>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #090e1a; padding: 8px 12px; border-radius: 6px; border: 1px solid #1e293b;">
+                <span style="font-size: 0.8rem; color: #94a3b8;">Target: <strong style="color: #38bdf8; font-family: var(--font-mono);">ghs.googlehosted.com.</strong></span>
+                <button type="button" class="btn btn-secondary" onclick="copyText('ghs.googlehosted.com.')" style="padding: 2px 8px; font-size: 0.72rem;">Kopier Mål</button>
+              </div>
+            </div>
+
+            <!-- Box 2: 4 Apex A-Records -->
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-weight: 800; color: #34d399; font-size: 0.85rem;">2. HOVEDDOMENE (APEX @)</span>
+                <span style="background: #065f46; color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">4 A-poster</span>
+              </div>
+              <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+                Host er <code>@</code> for alle 4 poster med disse IP-ene:
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #090e1a; padding: 5px 10px; border-radius: 6px; border: 1px solid #1e293b;">
+                  <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #34d399;">216.239.32.21</span>
+                  <button type="button" class="btn btn-secondary" onclick="copyText('216.239.32.21')" style="padding: 2px 6px; font-size: 0.7rem;">Kopier</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #090e1a; padding: 5px 10px; border-radius: 6px; border: 1px solid #1e293b;">
+                  <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #34d399;">216.239.34.21</span>
+                  <button type="button" class="btn btn-secondary" onclick="copyText('216.239.34.21')" style="padding: 2px 6px; font-size: 0.7rem;">Kopier</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #090e1a; padding: 5px 10px; border-radius: 6px; border: 1px solid #1e293b;">
+                  <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #34d399;">216.239.36.21</span>
+                  <button type="button" class="btn btn-secondary" onclick="copyText('216.239.36.21')" style="padding: 2px 6px; font-size: 0.7rem;">Kopier</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #090e1a; padding: 5px 10px; border-radius: 6px; border: 1px solid #1e293b;">
+                  <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #34d399;">216.239.38.21</span>
+                  <button type="button" class="btn btn-secondary" onclick="copyText('216.239.38.21')" style="padding: 2px 6px; font-size: 0.7rem;">Kopier</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: rgba(56, 189, 248, 0.1); border-left: 3px solid #38bdf8; padding: 10px 14px; border-radius: 4px; font-size: 0.82rem; color: #e2e8f0;">
+            💡 <strong>Husk å slette</strong> eventuelle gamle "Redirect Domain"-regler eller motstridende CNAME på <code>@</code> i Namecheap, da Namecheaps innebygde omdirigering mangler HTTPS/SSL og førte til feilen du opplevde.
+          </div>
         </div>
       </div>
     </div>
@@ -2292,6 +2515,7 @@
     const tabMeta = {
       assistant: { icon: '🤖', title: 'AI Assistent & Autonom Copilot' },
       links: { icon: '🔗', title: 'Kortlenker & Omdirigeringer' },
+      domains: { icon: '🌐', title: 'Domener, Subdomener & DNS-Hub' },
       campaigns: { icon: '🎯', title: 'Kampanjer & Pop-up Bannere' },
       meetings: { icon: '📅', title: 'Møter & Kalenderbooking' },
       vouchers: { icon: '🏷️', title: 'Rabattkoder & Kampanjekuponger' },
@@ -2386,6 +2610,7 @@
     function initAdminData() {
       initCopilot();
       fetchCopilotInsights();
+      fetchDomains();
       fetchLinks();
       fetchCampaign();
       fetchMeetings();
@@ -2733,6 +2958,7 @@
     // =========================================================================
     const linkForm = document.getElementById('link-create-form');
     const linkTargetUrl = document.getElementById('link-target-url');
+    const linkDomainSelect = document.getElementById('link-domain-select');
     const linkCustomSlug = document.getElementById('link-custom-slug');
     const btnSubmitLink = document.getElementById('btn-submit-link');
     const linkResultBox = document.getElementById('link-result-box');
@@ -2740,6 +2966,9 @@
     const btnCopyLinkResult = document.getElementById('btn-copy-link-result');
     const linksTbody = document.getElementById('links-tbody');
     const badgeLinkCount = document.getElementById('badge-link-count');
+
+    let allLoadedDomains = [];
+    let currentActiveDomain = 'aiappsy.com';
 
     async function fetchLinks() {
       try {
@@ -2759,20 +2988,27 @@
 
     function renderLinksTable(links) {
       const keys = Object.keys(links || {});
-      badgeLinkCount.textContent = keys.length;
+      if (badgeLinkCount) badgeLinkCount.textContent = keys.length;
       if (keys.length === 0) {
-        linksTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen kortlenker ennå.</td></tr>';
+        linksTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen kortlenker ennå.</td></tr>';
         return;
       }
       linksTbody.innerHTML = keys.map(slug => {
         const item = links[slug];
-        const fullShort = window.location.origin + '/' + slug;
+        const itemDomain = item.domain || 'all';
+        const displayHost = (itemDomain !== 'all') ? itemDomain : (currentActiveDomain || window.location.host);
+        const fullShort = 'https://' + displayHost + '/' + slug;
         return `
           <tr>
             <td style="font-family: var(--font-mono); font-weight: 700;">
               <a href="${fullShort}" target="_blank" style="color: #38bdf8; text-decoration: none;">/${slug}</a>
             </td>
-            <td style="color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.url}">
+            <td>
+              <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.76rem; display: inline-block;">
+                ${itemDomain === 'all' ? '🌐 Alle (Global)' : itemDomain}
+              </span>
+            </td>
+            <td style="color: var(--text-muted); max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.url}">
               ${item.url}
             </td>
             <td><span style="background: rgba(99,102,241,0.15); color: #818cf8; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">${item.clicks || 0} klikk</span></td>
@@ -2789,7 +3025,12 @@
       e.preventDefault();
       btnSubmitLink.disabled = true;
       btnSubmitLink.innerHTML = '⚡ Oppretter...';
-      const payload = { url: linkTargetUrl.value.trim(), customSlug: linkCustomSlug.value.trim() };
+      const selectedDomain = linkDomainSelect ? linkDomainSelect.value : (currentActiveDomain || 'aiappsy.com');
+      const payload = { 
+        url: linkTargetUrl.value.trim(), 
+        customSlug: linkCustomSlug.value.trim(),
+        domain: selectedDomain
+      };
       try {
         let res = await fetch('/api/shorten', {
           method: 'POST',
@@ -2805,13 +3046,13 @@
         }
         const data = await res.json();
         if (data.success) {
-          const finalShort = data.shortUrl || `${window.location.origin}/${data.slug}`;
+          const finalShort = data.shortUrl || `https://${selectedDomain !== 'all' ? selectedDomain : window.location.host}/${data.slug}`;
           linkResultAnchor.textContent = finalShort;
           linkResultAnchor.href = finalShort;
           linkResultBox.style.display = 'flex';
           linkTargetUrl.value = '';
           linkCustomSlug.value = '';
-          showToast(`Kortlenke /${data.slug} opprettet!`);
+          showToast(`Kortlenke /${data.slug} opprettet for ${selectedDomain}!`);
           fetchLinks();
         } else {
           showToast('Feil: ' + data.error, true);
@@ -2838,6 +3079,279 @@
         if (data.success) { showToast(`Slettet /${slug}`); fetchLinks(); }
       } catch(e) {}
     }
+
+    // =========================================================================
+    // 1B. DOMENER, SUBDOMENER & DNS-HUB
+    // =========================================================================
+    const domainsTbody = document.getElementById('domains-tbody');
+    const badgeDomainCount = document.getElementById('badge-domain-count');
+    const domainsStatActive = document.getElementById('domains-stat-active');
+    const domainsStatCount = document.getElementById('domains-stat-count');
+    const topbarActiveDomainSelect = document.getElementById('topbar-active-domain-select');
+    const domainCreateForm = document.getElementById('domain-create-form');
+    const domainTypeSelect = document.getElementById('domain-type-select');
+    const groupApexName = document.getElementById('group-apex-name');
+    const groupSubdomainWrap = document.getElementById('group-subdomain-wrap');
+    const domainNameInput = document.getElementById('domain-name-input');
+    const subdomainPrefixInput = document.getElementById('subdomain-prefix-input');
+    const subdomainParentSelect = document.getElementById('subdomain-parent-select');
+    const domainRootDestInput = document.getElementById('domain-root-dest-input');
+    const domain404DestInput = document.getElementById('domain-404-dest-input');
+    const domainLabelInput = document.getElementById('domain-label-input');
+    const domainSetDefaultCheck = document.getElementById('domain-set-default-check');
+    const btnSubmitDomain = document.getElementById('btn-submit-domain');
+
+    // Toggle Type: apex vs subdomain
+    if (domainTypeSelect) {
+      domainTypeSelect.addEventListener('change', () => {
+        const isSub = domainTypeSelect.value === 'subdomain';
+        if (groupApexName) groupApexName.style.display = isSub ? 'none' : 'block';
+        if (groupSubdomainWrap) groupSubdomainWrap.style.display = isSub ? 'block' : 'none';
+      });
+    }
+
+    // Topbar Domain Switcher change
+    if (topbarActiveDomainSelect) {
+      topbarActiveDomainSelect.addEventListener('change', async () => {
+        const newDomain = topbarActiveDomainSelect.value;
+        if (newDomain) {
+          await setDefaultDomain(newDomain);
+        }
+      });
+    }
+
+    async function fetchDomains() {
+      try {
+        const res = await fetch('/api/domains?_t=' + Date.now(), {
+          headers: { 'x-admin-password': getPassword() }
+        });
+        if (res.status === 401) { checkAuth(); return; }
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.domains) {
+          allLoadedDomains = data.domains;
+          currentActiveDomain = data.activeDomain || (data.domains[0] ? data.domains[0].domain : 'aiappsy.com');
+          renderDomainsTable(data.domains, currentActiveDomain);
+          populateDomainSelects(data.domains, currentActiveDomain);
+        }
+      } catch (err) {
+        console.error('Feil ved lasting av domener:', err);
+      }
+    }
+
+    function populateDomainSelects(domains, activeDomain) {
+      // Topbar select
+      if (topbarActiveDomainSelect) {
+        topbarActiveDomainSelect.innerHTML = domains.map(d => {
+          const isSelected = d.domain === activeDomain ? 'selected' : '';
+          return `<option value="${d.domain}" ${isSelected}>${d.domain}</option>`;
+        }).join('');
+      }
+
+      // Link creation form select
+      if (linkDomainSelect) {
+        const prevVal = linkDomainSelect.value;
+        let html = '<option value="all">Alle domener (Global)</option>';
+        domains.forEach(d => {
+          const isSel = (d.domain === activeDomain || d.domain === prevVal) ? 'selected' : '';
+          html += `<option value="${d.domain}" ${isSel}>${d.domain}</option>`;
+        });
+        linkDomainSelect.innerHTML = html;
+      }
+
+      // Subdomain parent select (only apex / non-subdomains)
+      if (subdomainParentSelect) {
+        const apexList = domains.filter(d => !d.isSubdomain);
+        subdomainParentSelect.innerHTML = (apexList.length > 0 ? apexList : domains).map(d => {
+          return `<option value="${d.domain}">${d.domain}</option>`;
+        }).join('');
+      }
+    }
+
+    function renderDomainsTable(domains, activeDomain) {
+      if (badgeDomainCount) badgeDomainCount.textContent = domains.length;
+      if (domainsStatCount) domainsStatCount.textContent = `${domains.length} aktive`;
+      if (domainsStatActive) domainsStatActive.textContent = activeDomain;
+
+      if (!domainsTbody) return;
+      if (domains.length === 0) {
+        domainsTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Ingen domener registrert.</td></tr>';
+        return;
+      }
+
+      domainsTbody.innerHTML = domains.map(d => {
+        const isCurrent = (d.domain === activeDomain || d.isDefault);
+        const rootText = d.rootDestination 
+          ? `<a href="${d.rootDestination}" target="_blank" style="color: #38bdf8; font-family: var(--font-mono); font-size: 0.8rem; text-decoration: none;">${d.rootDestination} ↗</a>` 
+          : '<span style="color: var(--text-muted); font-size: 0.8rem;">Standard (AIAppsy Forside)</span>';
+        
+        const typeBadge = d.isSubdomain 
+          ? '<span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">Subdomene</span>'
+          : '<span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">Toppdomene (@)</span>';
+
+        const dnsBadge = d.isSubdomain 
+          ? '<span style="color: #94a3b8; font-family: var(--font-mono); font-size: 0.75rem;">CNAME → ghs</span>'
+          : '<span style="color: #34d399; font-family: var(--font-mono); font-size: 0.75rem;">4 A-poster</span>';
+
+        return `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: var(--font-mono); font-weight: 800; color: #fff; font-size: 0.88rem;">${d.domain}</span>
+                ${isCurrent ? '<span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); font-size: 0.68rem; font-weight: 700; padding: 1px 6px; border-radius: 4px;">AKTIV</span>' : ''}
+              </div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">${d.label || ''}</div>
+            </td>
+            <td>${typeBadge}</td>
+            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${rootText}
+            </td>
+            <td>${dnsBadge}</td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button class="btn btn-secondary" onclick="editDomainPrompt('${d.domain}')" title="Rediger destinasjon og fallback" style="padding: 3px 8px; font-size: 0.75rem;">✏️ Rediger</button>
+                ${!isCurrent ? `<button class="btn btn-secondary" onclick="setDefaultDomain('${d.domain}')" title="Sett som aktivt standarddomene" style="padding: 3px 8px; font-size: 0.75rem;">⭐ Sett aktiv</button>` : ''}
+                <a href="https://${d.domain}" target="_blank" class="btn btn-secondary" title="Åpne domenet i ny fane" style="padding: 3px 6px; font-size: 0.75rem; text-decoration: none;">↗</a>
+                ${domains.length > 1 ? `<button class="btn btn-danger" onclick="deleteDomain('${d.domain}')" title="Slett domene" style="padding: 3px 8px; font-size: 0.75rem;">🗑️</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    if (domainCreateForm) {
+      domainCreateForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        btnSubmitDomain.disabled = true;
+        btnSubmitDomain.innerHTML = '🌐 Lagrer...';
+
+        let targetDomain = '';
+        const isSub = domainTypeSelect.value === 'subdomain';
+        if (isSub) {
+          const prefix = (subdomainPrefixInput.value || '').trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+          const parent = subdomainParentSelect.value.trim().toLowerCase();
+          if (!prefix) {
+            showToast('Vennligst skriv inn subdomene (f.eks. vip, go, app)', true);
+            btnSubmitDomain.disabled = false;
+            btnSubmitDomain.innerHTML = '<span>🌐</span> Lagre & Aktiver Domene';
+            return;
+          }
+          targetDomain = `${prefix}.${parent}`;
+        } else {
+          targetDomain = (domainNameInput.value || '').trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/+$/, '');
+          if (!targetDomain || !targetDomain.includes('.')) {
+            showToast('Vennligst skriv inn et gyldig domenenavn (f.eks. atlastravelclub.com)', true);
+            btnSubmitDomain.disabled = false;
+            btnSubmitDomain.innerHTML = '<span>🌐</span> Lagre & Aktiver Domene';
+            return;
+          }
+        }
+
+        const payload = {
+          domain: targetDomain,
+          label: (domainLabelInput.value || '').trim(),
+          rootDestination: (domainRootDestInput.value || '').trim(),
+          fallback404: (domain404DestInput.value || '').trim(),
+          setAsDefault: !!domainSetDefaultCheck.checked
+        };
+
+        try {
+          const res = await fetch('/api/domains', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(`Domenet ${targetDomain} er lagret og konfigurert!`);
+            if (domainNameInput) domainNameInput.value = '';
+            if (subdomainPrefixInput) subdomainPrefixInput.value = '';
+            if (domainRootDestInput) domainRootDestInput.value = '';
+            if (domain404DestInput) domain404DestInput.value = '';
+            if (domainLabelInput) domainLabelInput.value = '';
+            if (domainSetDefaultCheck) domainSetDefaultCheck.checked = false;
+            await fetchDomains();
+          } else {
+            showToast('Feil: ' + data.error, true);
+          }
+        } catch (err) {
+          showToast('Nettverksfeil: ' + err.message, true);
+        } finally {
+          btnSubmitDomain.disabled = false;
+          btnSubmitDomain.innerHTML = '<span>🌐</span> Lagre & Aktiver Domene';
+        }
+      });
+    }
+
+    async function setDefaultDomain(domain) {
+      try {
+        const res = await fetch('/api/domains/default', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
+          body: JSON.stringify({ defaultDomain: domain })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Aktivt standarddomene er nå: ${domain}`);
+          await fetchDomains();
+        } else {
+          showToast('Feil: ' + data.error, true);
+        }
+      } catch (err) {
+        showToast('Nettverksfeil: ' + err.message, true);
+      }
+    }
+
+    async function editDomainPrompt(domain) {
+      const match = allLoadedDomains.find(d => d.domain === domain) || {};
+      const newRoot = prompt(`Oppgi Hoveddestinasjon (Root URL) for ${domain}:\n(Besøkende på roten / sendes hit via HTTP 302)`, match.rootDestination || '');
+      if (newRoot === null) return;
+
+      const new404 = prompt(`Oppgi 404 Fallback URL for ${domain} (valgfritt):\n(Ukjente kortlenker sendes hit i stedet for feilside)`, match.fallback404 || '');
+      if (new404 === null) return;
+
+      try {
+        const res = await fetch('/api/domains/' + encodeURIComponent(domain), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
+          body: JSON.stringify({
+            rootDestination: newRoot.trim(),
+            fallback404: new404.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Oppdaterte innstillinger for ${domain}!`);
+          await fetchDomains();
+        } else {
+          showToast('Feil: ' + data.error, true);
+        }
+      } catch (err) {
+        showToast('Nettverksfeil: ' + err.message, true);
+      }
+    }
+
+    async function deleteDomain(domain) {
+      if (!confirm(`Er du sikker på at du vil fjerne domenet ${domain}?`)) return;
+      try {
+        const res = await fetch('/api/domains/' + encodeURIComponent(domain), {
+          method: 'DELETE',
+          headers: { 'x-admin-password': getPassword() }
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Fjernet domenet ${domain}`);
+          await fetchDomains();
+        } else {
+          showToast('Feil: ' + data.error, true);
+        }
+      } catch (err) {
+        showToast('Nettverksfeil: ' + err.message, true);
+      }
+    }
+
+    document.getElementById('btn-refresh-domains')?.addEventListener('click', fetchDomains);
 
     // =========================================================================
     // 2. LIVE CAMPAIGN STUDIO
