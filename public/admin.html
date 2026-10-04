@@ -1261,6 +1261,59 @@
           </div>
         </div>
       </div>
+
+      <!-- Cloud Run & System Environment Settings Card -->
+      <div class="card" style="border-left: 4px solid #a855f7; margin-bottom: 1.5rem;">
+        <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 1.3rem;">⚙️</span>
+              <h2 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">Sky- & Miljøinnstillinger (Cloud Run)</h2>
+              <span style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.72rem; padding: 2px 8px; border-radius: 9999px; font-weight: 700;">In-App Management</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; max-width: 750px;">
+              Disse verdiene styres og lagres 100% her i kontrollpanelet, slik at du slipper å legge inn miljøvariabler i Google AI Studio eller Cloud Run manuelt.
+            </p>
+          </div>
+          <button type="button" id="btn-save-env-settings" class="btn btn-primary" style="font-size: 0.85rem;">
+            <span>💾</span> Lagre Sky-innstillinger
+          </button>
+        </div>
+
+        <form id="env-settings-form" style="margin-top: 1rem;">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">CUSTOM_DOMAIN (Aktivt Hoveddomene)</label>
+              <input type="text" id="env-custom-domain" class="form-input" placeholder="aiappsy.com" />
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Hoveddomenet systemet bruker som standard for appen.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">SHORT_DOMAIN (Standard Kortlenkedomene)</label>
+              <input type="text" id="env-short-domain" class="form-input" placeholder="atlastravelclub.com eller aiappsy.com" />
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Standard domene for generering av nye kortlenker.</span>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">CLOUD_RUN_SERVICE (Tjenestenavn)</label>
+              <input type="text" id="env-cloud-run-service" class="form-input" placeholder="aiappsy-link-engine" />
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Google Cloud Run servicenavn for domenekartlegging.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CLOUD_RUN_REGION (Region)</label>
+              <input type="text" id="env-cloud-run-region" class="form-input" placeholder="us-west1" />
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Datasenter-region for Google Cloud Run (f.eks. us-west1, europe-west1).</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">CLOUD_RUN_URL (Direkte Google Cloud Run URL)</label>
+            <input type="url" id="env-cloud-run-url" class="form-input" placeholder="https://aiappsy-link-engine-910579541086.us-west1.run.app" />
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Den underliggende .run.app adressen tildelt av Google Cloud.</span>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- ================================================================= -->
@@ -2611,6 +2664,7 @@
       initCopilot();
       fetchCopilotInsights();
       fetchDomains();
+      fetchSystemSettings();
       fetchLinks();
       fetchCampaign();
       fetchMeetings();
@@ -3351,7 +3405,73 @@
       }
     }
 
-    document.getElementById('btn-refresh-domains')?.addEventListener('click', fetchDomains);
+    document.getElementById('btn-refresh-domains')?.addEventListener('click', () => {
+      fetchDomains();
+      fetchSystemSettings();
+    });
+
+    // =========================================================================
+    // 1C. SKY- & MILJØINNSTILLINGER (CLOUD RUN & SYSTEM)
+    // =========================================================================
+    const envCustomDomain = document.getElementById('env-custom-domain');
+    const envShortDomain = document.getElementById('env-short-domain');
+    const envCloudRunService = document.getElementById('env-cloud-run-service');
+    const envCloudRunRegion = document.getElementById('env-cloud-run-region');
+    const envCloudRunUrl = document.getElementById('env-cloud-run-url');
+    const btnSaveEnvSettings = document.getElementById('btn-save-env-settings');
+
+    async function fetchSystemSettings() {
+      try {
+        const res = await fetch('/api/settings?_t=' + Date.now(), {
+          headers: { 'x-admin-password': getPassword() }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.settings) {
+          const s = data.settings;
+          if (envCustomDomain) envCustomDomain.value = s.activeDomain || 'aiappsy.com';
+          if (envShortDomain) envShortDomain.value = s.shortDomain || s.activeDomain || 'atlastravelclub.com';
+          if (envCloudRunService) envCloudRunService.value = s.serviceName || 'aiappsy-link-engine';
+          if (envCloudRunRegion) envCloudRunRegion.value = s.region || 'us-west1';
+          if (envCloudRunUrl) envCloudRunUrl.value = s.cloudRunUrl || 'https://aiappsy-link-engine-910579541086.us-west1.run.app';
+        }
+      } catch (err) {
+        console.error('Feil ved henting av systeminnstillinger:', err);
+      }
+    }
+
+    if (btnSaveEnvSettings) {
+      btnSaveEnvSettings.addEventListener('click', async () => {
+        btnSaveEnvSettings.disabled = true;
+        btnSaveEnvSettings.innerHTML = '💾 Lagrer...';
+        const payload = {
+          activeDomain: envCustomDomain ? envCustomDomain.value.trim() : '',
+          shortDomain: envShortDomain ? envShortDomain.value.trim() : '',
+          serviceName: envCloudRunService ? envCloudRunService.value.trim() : '',
+          region: envCloudRunRegion ? envCloudRunRegion.value.trim() : '',
+          cloudRunUrl: envCloudRunUrl ? envCloudRunUrl.value.trim() : ''
+        };
+        try {
+          const res = await fetch('/api/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('Sky- og miljøinnstillinger lagret i systemet!');
+            fetchDomains();
+          } else {
+            showToast('Feil: ' + data.error, true);
+          }
+        } catch (err) {
+          showToast('Nettverksfeil: ' + err.message, true);
+        } finally {
+          btnSaveEnvSettings.disabled = false;
+          btnSaveEnvSettings.innerHTML = '<span>💾</span> Lagre Sky-innstillinger';
+        }
+      });
+    }
 
     // =========================================================================
     // 2. LIVE CAMPAIGN STUDIO

@@ -58,7 +58,11 @@ function parseDomainEntry(domainStr, label = '', isDefault = false, rootDestinat
 }
 
 const DEFAULT_SETTINGS = {
-  activeDomain: process.env.CUSTOM_DOMAIN || process.env.SHORT_DOMAIN || 'aiappsy.com',
+  activeDomain: 'aiappsy.com',
+  shortDomain: 'aiappsy.com',
+  serviceName: 'aiappsy-link-engine',
+  region: 'us-west1',
+  cloudRunUrl: 'https://aiappsy-link-engine-910579541086.us-west1.run.app',
   domains: [
     parseDomainEntry('aiappsy.com', 'aiappsy.com (Hoveddomene – 11 tegn)', true, '', ''),
     parseDomainEntry('atlastravelclub.com', 'atlastravelclub.com (Atlas Travel Club – 19 tegn)', false, 'https://atlaslaunch.ai.studio', ''),
@@ -3519,15 +3523,16 @@ app.get('/api/domains', (req, res) => {
   const settings = loadSettings();
   const proto = req.headers['x-forwarded-proto'] || req.protocol;
   const host = req.headers['x-forwarded-host'] || req.get('host');
-  const cloudRunUrl = `${proto}://${host}`;
+  const cloudRunUrl = settings.cloudRunUrl || `${proto}://${host}`;
 
   res.json({
     success: true,
-    activeDomain: settings.activeDomain,
+    activeDomain: settings.activeDomain || 'aiappsy.com',
+    shortDomain: settings.shortDomain || settings.activeDomain || 'aiappsy.com',
     domains: settings.domains,
     cloudRunUrl,
-    serviceName: process.env.CLOUD_RUN_SERVICE || 'aiappsy-link-engine',
-    region: process.env.CLOUD_RUN_REGION || 'us-west1'
+    serviceName: settings.serviceName || 'aiappsy-link-engine',
+    region: settings.region || 'us-west1'
   });
 });
 
@@ -3670,13 +3675,14 @@ app.get('/api/settings', (req, res) => {
 
 // API: Oppdater innstillinger og miljøverdier
 app.post('/api/settings', (req, res) => {
-  const { serviceName, region, cloudRunUrl, customer, dns, activeDomain } = req.body;
+  const { serviceName, region, cloudRunUrl, customer, dns, activeDomain, shortDomain } = req.body;
   const settings = loadSettings();
 
   if (serviceName) settings.serviceName = serviceName.trim();
   if (region) settings.region = region.trim();
   if (cloudRunUrl) settings.cloudRunUrl = cloudRunUrl.trim();
   if (activeDomain) settings.activeDomain = activeDomain.trim();
+  if (shortDomain) settings.shortDomain = shortDomain.trim();
   if (customer && typeof customer === 'object') {
     settings.customer = { ...settings.customer, ...customer };
   }
@@ -3700,7 +3706,7 @@ app.get('/api/info', (req, res) => {
     service: 'AIAppsy Link Engine',
     version: '1.0.0',
     platform: 'Google Cloud Run',
-    region: process.env.CLOUD_RUN_REGION || 'us-west1',
+    region: settings.region || 'us-west1',
     activeDomain: settings.activeDomain,
     totalLinks: Object.keys(links).length,
     uptimeSeconds: Math.floor(process.uptime())

@@ -1,5 +1,6 @@
 {
   "activeDomain": "aiappsy.com",
+  "shortDomain": "atlastravelclub.com",
   "serviceName": "aiappsy-link-engine",
   "region": "us-west1",
   "cloudRunUrl": "https://aiappsy-link-engine-910579541086.us-west1.run.app",
