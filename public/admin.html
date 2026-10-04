@@ -875,10 +875,10 @@
 
         <div style="display: flex; align-items: center; gap: 10px;">
           <div style="display: flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 8px; padding: 3px 10px;">
-            <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Aktivt Domene:</span>
+            <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Forvalgt domene for nye lenker:</span>
             <select id="topbar-active-domain-select" class="form-select" style="padding: 2px 8px; font-size: 0.82rem; height: auto; background: transparent; border: none; color: #38bdf8; font-weight: 800; cursor: pointer; outline: none;">
-              <option value="aiappsy.com">aiappsy.com</option>
               <option value="atlastravelclub.com">atlastravelclub.com</option>
+              <option value="aiappsy.com">aiappsy.com</option>
             </select>
           </div>
           <a href="/" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">
@@ -1092,16 +1092,16 @@
         <!-- Quick Info Banner -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
           <div style="background: rgba(15, 23, 42, 0.6); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Aktivt Hoveddomene</div>
-            <div id="domains-stat-active" style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; font-family: var(--font-mono); margin-top: 4px;">aiappsy.com</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Driftsmodus: Parallell Multi-Tenancy</div>
+            <div id="domains-stat-active" style="font-size: 1.1rem; font-weight: 800; color: #34d399; font-family: var(--font-mono); margin-top: 4px;">🟢 Alle domener aktive samtidig</div>
           </div>
           <div style="background: rgba(15, 23, 42, 0.6); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Tilkoblede Domener</div>
-            <div id="domains-stat-count" style="font-size: 1.1rem; font-weight: 800; color: #34d399; margin-top: 4px;">Laster...</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Sanntids-Ruting</div>
+            <div id="domains-stat-count" style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-top: 4px;">2 online & lytter</div>
           </div>
           <div style="background: rgba(15, 23, 42, 0.6); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
             <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Google Cloud Run Klynge</div>
-            <div style="font-size: 0.9rem; font-weight: 700; color: #f8fafc; margin-top: 4px;">us-west1 (Serverless)</div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: #f8fafc; margin-top: 4px;">us-west1 (Multi-Domain Router)</div>
           </div>
         </div>
       </div>
@@ -1110,21 +1110,27 @@
       <div class="card" style="margin-bottom: 1.5rem;">
         <div class="card-header">
           <div class="card-title"><span>📋</span> Registrerte Domener & Subdomener</div>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">Rediger rot-omdirigering eller sett som standard</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Alle domener under er 100% aktive parallelt</span>
         </div>
+
+        <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.25); border-left: 4px solid #22c55e; padding: 12px 16px; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.86rem; color: #dcfce7; line-height: 1.5;">
+          🟢 <strong>Alle domener og subdomener er aktive samtidig:</strong> Både <code>aiappsy.com</code> og <code>atlastravelclub.com</code> (og alle subdomener du oppretter) kjører parallelt og tar imot trafikk i sanntid. Ingen domener slås av! «Forvalgt domene» bestemmer kun hvilket domene som forhåndsvelges i skjemaet når du oppretter en ny kortlenke.
+        </div>
+
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th style="width: 220px;">Domene / Vert</th>
-                <th style="width: 140px;">Type</th>
+                <th style="width: 110px;">Status</th>
+                <th style="width: 130px;">Type</th>
                 <th>Hoveddestinasjon (Root URL)</th>
-                <th style="width: 140px;">DNS Type</th>
-                <th style="width: 180px;">Handling</th>
+                <th style="width: 130px;">DNS Type</th>
+                <th style="width: 200px;">Handling</th>
               </tr>
             </thead>
             <tbody id="domains-tbody">
-              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Laster inn domener...</td></tr>
+              <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Laster inn domener...</td></tr>
             </tbody>
           </table>
         </div>
@@ -3240,10 +3246,17 @@
 
       domainsTbody.innerHTML = domains.map(d => {
         const isCurrent = (d.domain === activeDomain || d.isDefault);
-        const rootText = d.rootDestination 
-          ? `<a href="${d.rootDestination}" target="_blank" style="color: #38bdf8; font-family: var(--font-mono); font-size: 0.8rem; text-decoration: none;">${d.rootDestination} ↗</a>` 
+        let effectiveRoot = d.rootDestination;
+        if (d.domain.includes('atlastravelclub') && (!effectiveRoot || effectiveRoot === '')) {
+          effectiveRoot = 'https://atlaslaunch.ai.studio';
+        }
+
+        const rootText = effectiveRoot 
+          ? `<a href="${effectiveRoot}" target="_blank" style="color: #38bdf8; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; text-decoration: none;">${effectiveRoot} ↗</a>` 
           : '<span style="color: var(--text-muted); font-size: 0.8rem;">Standard (AIAppsy Forside)</span>';
         
+        const statusBadge = `<span style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">🟢 AKTIV</span>`;
+
         const typeBadge = d.isSubdomain 
           ? '<span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">Subdomene</span>'
           : '<span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">Toppdomene (@)</span>';
@@ -3257,10 +3270,11 @@
             <td>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-family: var(--font-mono); font-weight: 800; color: #fff; font-size: 0.88rem;">${d.domain}</span>
-                ${isCurrent ? '<span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); font-size: 0.68rem; font-weight: 700; padding: 1px 6px; border-radius: 4px;">AKTIV</span>' : ''}
+                ${isCurrent ? '<span style="background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); font-size: 0.68rem; font-weight: 700; padding: 1px 6px; border-radius: 4px;">★ FORVALGT</span>' : ''}
               </div>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">${d.label || ''}</div>
             </td>
+            <td>${statusBadge}</td>
             <td>${typeBadge}</td>
             <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
               ${rootText}
@@ -3269,7 +3283,7 @@
             <td>
               <div style="display: flex; align-items: center; gap: 6px;">
                 <button class="btn btn-secondary" onclick="editDomainPrompt('${d.domain}')" title="Rediger destinasjon og fallback" style="padding: 3px 8px; font-size: 0.75rem;">✏️ Rediger</button>
-                ${!isCurrent ? `<button class="btn btn-secondary" onclick="setDefaultDomain('${d.domain}')" title="Sett som aktivt standarddomene" style="padding: 3px 8px; font-size: 0.75rem;">⭐ Sett aktiv</button>` : ''}
+                ${!isCurrent ? `<button class="btn btn-secondary" onclick="setDefaultDomain('${d.domain}')" title="Sett som forvalgt domene for nye kortlenker" style="padding: 3px 8px; font-size: 0.75rem;">⭐ Sett forvalg</button>` : ''}
                 <a href="https://${d.domain}" target="_blank" class="btn btn-secondary" title="Åpne domenet i ny fane" style="padding: 3px 6px; font-size: 0.75rem; text-decoration: none;">↗</a>
                 ${domains.length > 1 ? `<button class="btn btn-danger" onclick="deleteDomain('${d.domain}')" title="Slett domene" style="padding: 3px 8px; font-size: 0.75rem;">🗑️</button>` : ''}
               </div>

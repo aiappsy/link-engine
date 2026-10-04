@@ -85,8 +85,16 @@ function loadSettingsFromFile() {
       }
       // Sikre at eksisterende domener har rootDestination og fallback404
       data.domains = data.domains.map(d => {
-        const parsed = parseDomainEntry(d.domain, d.label, d.isDefault, d.rootDestination || '', d.fallback404 || '');
-        return { ...parsed, ...d };
+        let rootDest = d.rootDestination;
+        if (d.domain && d.domain.includes('atlastravelclub') && (!rootDest || rootDest === '')) {
+          rootDest = 'https://atlaslaunch.ai.studio';
+        }
+        let fallback = d.fallback404;
+        if (d.domain && d.domain.includes('atlastravelclub') && (!fallback || fallback === '')) {
+          fallback = 'https://atlaslaunch.ai.studio';
+        }
+        const parsed = parseDomainEntry(d.domain, d.label, d.isDefault, rootDest || '', fallback || '');
+        return { ...parsed, ...d, rootDestination: rootDest || '', fallback404: fallback || '' };
       });
       return data;
     }
@@ -258,10 +266,11 @@ app.use((req, res, next) => {
 
   if (domainConfig) {
     req.domainConfig = domainConfig;
+    const dest = domainConfig.rootDestination || (domainConfig.domain.includes('atlastravelclub') ? 'https://atlaslaunch.ai.studio' : '');
     // Dersom noen besøker rotkatalogen '/' eller '/index.html' på et domene med en spesifisert rootDestination
-    if ((req.path === '/' || req.path === '/index.html') && domainConfig.rootDestination) {
-      console.log(`[Host Routing] Rotforespørsel for ${host} -> 302 omdirigering til ${domainConfig.rootDestination}`);
-      return res.redirect(302, domainConfig.rootDestination);
+    if ((req.path === '/' || req.path === '/index.html') && dest) {
+      console.log(`[Host Routing] Rotforespørsel for ${host} -> 302 omdirigering til ${dest}`);
+      return res.redirect(302, dest);
     }
   }
 
