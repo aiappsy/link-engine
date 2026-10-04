@@ -3579,11 +3579,55 @@ app.post('/api/domains', (req, res) => {
   });
 });
 
+// API: Sett standard domene (Definert FØR /:domain for å unngå rute-konflikt)
+app.put('/api/domains/default', (req, res) => {
+  const defaultDomain = req.body.defaultDomain || req.body.domain;
+  if (!defaultDomain) {
+    return res.status(400).json({ success: false, error: 'Ingen domene oppgitt.' });
+  }
+
+  const clean = defaultDomain.trim().toLowerCase();
+  const settings = loadSettings();
+  const match = settings.domains.find(d => d.domain.toLowerCase() === clean);
+  if (!match) {
+    return res.status(404).json({ success: false, error: `Domenet ${clean} finnes ikke i listen.` });
+  }
+
+  settings.domains.forEach(d => d.isDefault = (d.domain.toLowerCase() === clean));
+  match.isDefault = true;
+  settings.activeDomain = clean;
+  saveSettings(settings);
+
+  res.json({
+    success: true,
+    message: `Standard domene er nå satt til ${clean}`,
+    activeDomain: clean,
+    domains: settings.domains
+  });
+});
+
 // API: Oppdater eksisterende domeneinnstillinger
 app.put('/api/domains/:domain', (req, res) => {
   const targetDomain = (req.params.domain || '').trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/+$/, '');
-  const { label, rootDestination, fallback404, isDefault } = req.body;
+  
+  if (targetDomain === 'default') {
+    const def = req.body.defaultDomain || req.body.domain;
+    if (def) {
+      const clean = def.trim().toLowerCase();
+      const settings = loadSettings();
+      const match = settings.domains.find(d => d.domain.toLowerCase() === clean);
+      if (match) {
+        settings.domains.forEach(d => d.isDefault = (d.domain.toLowerCase() === clean));
+        match.isDefault = true;
+        settings.activeDomain = clean;
+        saveSettings(settings);
+        return res.json({ success: true, message: `Standard domene er nå satt til ${clean}`, activeDomain: clean, domains: settings.domains });
+      }
+    }
+    return res.status(400).json({ success: false, error: 'Ingen gyldig standard-domene oppgitt.' });
+  }
 
+  const { label, rootDestination, fallback404, isDefault } = req.body;
   const settings = loadSettings();
   const match = settings.domains.find(d => d.domain.toLowerCase() === targetDomain);
   if (!match) {
@@ -3605,32 +3649,6 @@ app.put('/api/domains/:domain', (req, res) => {
     message: `Domenet ${targetDomain} ble oppdatert!`,
     domain: match,
     activeDomain: settings.activeDomain,
-    domains: settings.domains
-  });
-});
-
-// API: Sett standard domene
-app.put('/api/domains/default', (req, res) => {
-  const { defaultDomain } = req.body;
-  if (!defaultDomain) {
-    return res.status(400).json({ success: false, error: 'Ingen domene oppgitt.' });
-  }
-
-  const clean = defaultDomain.trim().toLowerCase();
-  const settings = loadSettings();
-  const match = settings.domains.find(d => d.domain === clean);
-  if (!match) {
-    return res.status(404).json({ success: false, error: `Domenet ${clean} finnes ikke i listen.` });
-  }
-
-  settings.domains.forEach(d => d.isDefault = (d.domain === clean));
-  settings.activeDomain = clean;
-  saveSettings(settings);
-
-  res.json({
-    success: true,
-    message: `Standard domene er nå satt til ${clean}`,
-    activeDomain: clean,
     domains: settings.domains
   });
 });

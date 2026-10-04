@@ -2510,10 +2510,15 @@
     function showToast(msg, isError = false) {
       const t = document.getElementById('admin-toast');
       const m = document.getElementById('toast-msg');
-      m.textContent = msg;
-      t.style.borderLeftColor = isError ? 'var(--accent-danger)' : 'var(--accent)';
-      t.style.display = 'flex';
-      setTimeout(() => { t.style.display = 'none'; }, 4000);
+      const ic = document.getElementById('toast-icon');
+      if (m) m.textContent = msg;
+      if (ic) ic.textContent = isError ? '⚠️' : '✓';
+      if (t) {
+        t.style.borderLeftColor = isError ? '#f43f5e' : 'var(--accent)';
+        t.style.display = 'flex';
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => { t.style.display = 'none'; }, 4000);
+      }
     }
 
     // Auth verification
