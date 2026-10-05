@@ -257,6 +257,9 @@ app.use((req, res, next) => {
   const rawHost = (req.headers['x-forwarded-host'] || req.get('host') || '').toLowerCase();
   const host = rawHost.split(':')[0];
 
+  // Send HSTS header slik at nettlesere alltid bruker HTTPS automatisk uten advarsel
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+
   // Ignorer localhost, lokale IP-er eller direkte Cloud Run URL
   if (!host || host === 'localhost' || host === '127.0.0.1' || host.includes('.run.app')) {
     return next();
